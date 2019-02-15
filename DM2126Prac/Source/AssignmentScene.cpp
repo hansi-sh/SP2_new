@@ -180,8 +180,8 @@ void AssignmentScene::Init() //defines what shader to use
 	//Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 3.0f, 3.0f, 3.0f);
 	Obj[OBJ_BOX0] = new ObjectBox(Vector3(0.0f, 0.0f, 50.0f), 6.0f, 6.0f, 6.0f);
 	Obj[OBJ_BOX] = new ObjectBox(Vector3(50.0f, 0.0f, 0.0f), 6.0f, 6.0f, 6.0f);
-	//Obj[OBJ_BOX2] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 6.0f, 6.0f, 6.0f);
-	Obj[OBJ_BOX2] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 6.0f, 6.0f, 6.0f);
+	//Obj[OBJ_BOX2] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
 	//<----Face---->
 	meshList[GEO_FACE] = MeshBuilder::GenerateCube("Face", Color(0.7109375f, 0.99609375f, 0.77734375f), 4.0f, 2.6f, 3.0f);
 	meshList[GEO_FACE]->material.kAmbient.Set(0.7f, 0.7f, 0.7f);
@@ -378,7 +378,12 @@ void AssignmentScene::PlayMusic()
 
 void AssignmentScene::Update(double dt)
 {
-
+	if (Application::IsKeyPressed('5'))
+	{
+		Application app;
+		app.SetSceneNumber(1);
+		app.Run();
+	}
 	if (Application::IsKeyPressed('6'))
 	{	
 		glEnable(GL_CULL_FACE);
@@ -478,15 +483,15 @@ void AssignmentScene::Update(double dt)
 
 	Obj[OBJ_BOX2]->setRotatingAxis(updatedangle, 0.0f, 1.0f, 0.0f);
 	updatedangle = 0;
-	Obj[OBJ_BOX2]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
+	Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 	//<collision>
 	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
 	{
 		if (ObjectBox::checkCollision(*Obj[OBJ_BOX2], *Obj[AllObjs]))
 		{
 			collide = true;
-			camera.position = currentCamPos;
-			camera.target = currentCamTarget;
+			//camera.position = currentCamPos;
+			//camera.target = currentCamTarget;
 			TranslateBodyX = prevBodyX;
 			TranslateBodyZ = prevBodyZ;
 			rotationangle = prevAngle;
@@ -497,8 +502,8 @@ void AssignmentScene::Update(double dt)
 
 	if (!collide)
 	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
+		//currentCamPos = camera.position;
+		//currentCamTarget = camera.target;
 		prevBodyX = TranslateBodyX;
 		prevBodyZ = TranslateBodyZ;
 		prevAngle = rotationangle;
