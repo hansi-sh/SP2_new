@@ -5,19 +5,19 @@
 #include "MeshBuilder.h"
 #include "Camera2.h"
 #include "GLFW/glfw3.h"
-#include "AssignmentScene.h"
+#include "Racing.h"
 #include "Utility.h"
 #include <string>
 
-float AssignmentScene::lastX = 0.0f;
-float AssignmentScene::lastY = 0.0f;
-Camera2 AssignmentScene::camera = Camera2();
+float RaceScene::lastX = 0.0f;
+float RaceScene::lastY = 0.0f;
+Camera2 RaceScene::camera = Camera2();
 
-AssignmentScene::AssignmentScene()
+RaceScene::RaceScene()
 {
 }
 
-void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void RaceScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	float xoffset = (float)xpos - lastX;
 	float yoffset = (float)ypos - lastY;
@@ -41,11 +41,11 @@ void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypo
 	camera.target = camera.position + view;
 }
 
-AssignmentScene::~AssignmentScene()
+RaceScene::~RaceScene()
 {
 }
 
-void AssignmentScene::Init() //defines what shader to use
+void RaceScene::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
@@ -242,7 +242,7 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
 }
 
-void AssignmentScene::Update(double dt)
+void RaceScene::Update(double dt)
 {
 	if (Application::IsKeyPressed('1'))
 	{
@@ -328,7 +328,7 @@ void AssignmentScene::Update(double dt)
 	camera.Update(dt);
 }
 
-void AssignmentScene::Render()
+void RaceScene::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -440,7 +440,7 @@ void AssignmentScene::Render()
 	modelStack.PopMatrix();
 }
 
-void AssignmentScene::RenderMesh(Mesh *mesh, bool enableLight)
+void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -485,7 +485,7 @@ void AssignmentScene::RenderMesh(Mesh *mesh, bool enableLight)
 
 static const float SKYBOXSIZE = 300.f;
 
-void AssignmentScene::RenderSkybox()
+void RaceScene::RenderSkybox()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
@@ -534,7 +534,7 @@ void AssignmentScene::RenderSkybox()
 	modelStack.PopMatrix();
 }
 
-void AssignmentScene::RenderButton(int geo_circle, int geo_cylinder)
+void RaceScene::RenderButton(int geo_circle, int geo_cylinder)
 {
 	//<----Button circle---->
 	RenderMesh(meshList[geo_circle], false);
@@ -545,7 +545,7 @@ void AssignmentScene::RenderButton(int geo_circle, int geo_cylinder)
 	modelStack.PopMatrix();
 }
 
-void AssignmentScene::RenderText(Mesh* mesh, std::string text, Color color)
+void RaceScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0)
 		return;
@@ -574,7 +574,7 @@ void AssignmentScene::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void AssignmentScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void RaceScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -613,7 +613,7 @@ void AssignmentScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color col
 	glEnable(GL_DEPTH_TEST);
 }
 
-void AssignmentScene::Exit()
+void RaceScene::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{

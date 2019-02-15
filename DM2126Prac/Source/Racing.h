@@ -1,5 +1,5 @@
-#ifndef ASSIGNMENTSCENE_H
-#define ASSIGNMENTSCENE_H
+#ifndef RACING_H
+#define RACING_H
 
 #include "Scene.h"
 #include "Camera2.h"
@@ -10,7 +10,7 @@
 #include "LoadTGA.h"
 #include <Windows.h>
 
-class AssignmentScene : public Scene
+class RaceScene : public Scene
 {
 	enum UNIFORM_TYPE
 	{
@@ -77,8 +77,8 @@ class AssignmentScene : public Scene
 		U_TOTAL,
 	};
 public:
-	AssignmentScene();
-	~AssignmentScene();
+	RaceScene();
+	~RaceScene();
 
 	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include "Application.h"
 #include "PuzzleRoom.h"
-#include "AssignmentScene.h"
+#include "Racing.h"
 #include "Scene2.h"
 
 GLFWwindow* m_window;
@@ -120,8 +120,8 @@ void Application::Run()
 	}
 	else if (GetSceneNumber() == 3)
 	{
-		scene = new AssignmentScene();
-		glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new RaceScene();
+		glfwSetCursorPosCallback(m_window, RaceScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	else
 	{
