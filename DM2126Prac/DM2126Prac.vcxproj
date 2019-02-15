@@ -148,6 +148,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\AssignmentScene.cpp" />
+    <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Racing.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
     <ClCompile Include="Source\Camera2.cpp" />
@@ -164,6 +166,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\AssignmentScene.h" />
+    <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Racing.h" />
     <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\Camera2.h" />

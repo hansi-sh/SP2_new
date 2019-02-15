@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "Application.h"
 #include "PuzzleRoom.h"
+#include "AssignmentScene.h"
 #include "Racing.h"
 #include "Scene2.h"
 
@@ -122,6 +123,11 @@ void Application::Run()
 	{
 		scene = new RaceScene();
 		glfwSetCursorPosCallback(m_window, RaceScene::mouse_callback);// when ever the cursor moves, this function will be called
+	}
+	else if (GetSceneNumber() == 4)
+	{
+		scene = new AssignmentScene();
+		glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	else
 	{

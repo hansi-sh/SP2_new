@@ -313,7 +313,12 @@ void PuzzleRoom::Update(double dt)
 		app.SetSceneNumber(3);
 		app.Run();
 	}
-
+	if (Application::IsKeyPressed('4'))
+	{
+		Application app;
+		app.SetSceneNumber(4);
+		app.Run();
+	}
 	if (Application::IsKeyPressed('6'))
 	{
 		glEnable(GL_CULL_FACE);
