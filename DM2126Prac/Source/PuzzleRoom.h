@@ -82,7 +82,7 @@ private:
 	float TranslateBodyZ;
 	float elapsedtime = 0;
 	float bouncetime = 0;
-	float RotateDoor1 = 0;
+	float RotateDoor1=0;
 	bool door1open;
 	//<--Music-->
 	void PlayMusic();
@@ -93,7 +93,7 @@ private:
 
 	enum GEOMETRY_TYPE
 	{
-
+		
 		//GEO_AXES,
 		GEO_LIGHTBALL,
 		GEO_HOUSE,
@@ -110,11 +110,17 @@ private:
 		GEO_TVTABLE,
 		GEO_TVTABLEDRAWER,
 		GEO_BOOKSHELF,
-		//GEO_BOOK1,
-		//GEO_BOOK2,
-		//GEO_BOOK3,
-		//GEO_BOOK4,
-		//GEO_BOOKBLACK,
+		GEO_BOOK1,
+		GEO_BOOK2,
+		GEO_BOOK3,
+		GEO_BOOK4,
+		GEO_BOOKBLACK,
+		GEO_MATTRESS,
+		GEO_BEDFRAME,
+		GEO_PILLOW,
+		GEO_SECRETWALL,
+		GEO_SAFE,
+		GEO_SAFEDOOR,
 		NUM_GEOMETRY,
 	};
 

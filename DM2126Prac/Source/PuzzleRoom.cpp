@@ -159,9 +159,9 @@ void PuzzleRoom::Init() //defines what shader to use
 	//Guide lines - Turn on if need
 	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	//walls
-	meshList[GEO_HOUSE] = MeshBuilder::GenerateOBJ("House", "OBJ//house.obj");
+	meshList[GEO_HOUSE] = MeshBuilder::GenerateOBJ("House" ,"OBJ//house.obj");
 	meshList[GEO_HOUSE]->textureID = LoadTGA("Image//house.tga");
-
+	
 	meshList[GEO_ROOM1WALL] = MeshBuilder::GenerateOBJ("Room1Wall", "OBJ//room1walls.obj");
 	meshList[GEO_ROOM1WALL]->textureID = LoadTGA("Image//woodwall.tga");
 
@@ -189,23 +189,56 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_DOORENTRANCE] = MeshBuilder::GenerateOBJ("doorentrance", "OBJ//doorentrance.obj");
 	meshList[GEO_DOORENTRANCE]->textureID = LoadTGA("Image//DoorTextures.tga");
-
+	
 	meshList[GEO_TV] = MeshBuilder::GenerateOBJ("TV", "OBJ//tv.obj");
 	meshList[GEO_TV]->textureID = LoadTGA("Image//TVTextures.tga");
 
 	meshList[GEO_TVTABLE] = MeshBuilder::GenerateOBJ("TV", "OBJ//tvtable.obj");
-	meshList[GEO_TVTABLE]->textureID = LoadTGA("Image//TVTableTextures.tga");
+	meshList[GEO_TVTABLE]->textureID=LoadTGA("Image//TVTableTextures.tga");
 
 	meshList[GEO_TVTABLEDRAWER] = MeshBuilder::GenerateOBJ("TVTableDrawer", "OBJ//tvtabledrawer.obj");
 	meshList[GEO_TVTABLEDRAWER]->textureID = LoadTGA("Image//TVTableDrawerTextures.tga");
 
 	meshList[GEO_BOOKSHELF] = MeshBuilder::GenerateOBJ("BookShelve", "OBJ//bookshelf.obj");
 	meshList[GEO_BOOKSHELF]->textureID = LoadTGA("Image//BookShelfTexture.tga");
+
+	meshList[GEO_BOOK1] = MeshBuilder::GenerateOBJ("Book1", "OBJ//book1.obj");
+	meshList[GEO_BOOK1]->textureID = LoadTGA("Image//Red.tga");
+
+	meshList[GEO_BOOK2] = MeshBuilder::GenerateOBJ("Book2", "OBJ//book2.obj");
+	meshList[GEO_BOOK2]->textureID = LoadTGA("Image//Green.tga");
+
+	meshList[GEO_BOOK3] = MeshBuilder::GenerateOBJ("Book3", "OBJ//book3.obj");
+	meshList[GEO_BOOK3]->textureID = LoadTGA("Image//Blue.tga");
+
+	meshList[GEO_BOOK4] = MeshBuilder::GenerateOBJ("Book1", "OBJ//book4.obj");
+	meshList[GEO_BOOK4]->textureID = LoadTGA("Image//Purple.tga");
+
+	meshList[GEO_BOOKBLACK] = MeshBuilder::GenerateOBJ("Book1", "OBJ//blackbook.obj");
+	meshList[GEO_BOOKBLACK]->textureID = LoadTGA("Image//Black.tga");
+
+	meshList[GEO_MATTRESS] = MeshBuilder::GenerateOBJ("Book1", "OBJ//mattress.obj");
+	meshList[GEO_MATTRESS]->textureID = LoadTGA("Image//.tga");
+
+	meshList[GEO_BEDFRAME] = MeshBuilder::GenerateOBJ("Book1", "OBJ//bedframe.obj");
+	meshList[GEO_BEDFRAME]->textureID = LoadTGA("Image//BedFrame.tga");
+
+	meshList[GEO_PILLOW] = MeshBuilder::GenerateOBJ("Book1", "OBJ//pillow.obj");
+	meshList[GEO_PILLOW]->textureID = LoadTGA("Image//Pillow.tga");
+
+	meshList[GEO_SECRETWALL] = MeshBuilder::GenerateOBJ("Book1", "OBJ//secretwall.obj");
+	meshList[GEO_SECRETWALL]->textureID = LoadTGA("Image//SecretWall.tga");
+
+	meshList[GEO_SAFE] = MeshBuilder::GenerateOBJ("Book1", "OBJ//safebox.obj");
+	meshList[GEO_SAFE]->textureID = LoadTGA("Image//SafeBox.tga");
+				 
+	meshList[GEO_SAFEDOOR] = MeshBuilder::GenerateOBJ("Book1", "OBJ//safedoor.obj");
+	meshList[GEO_SAFEDOOR]->textureID = LoadTGA("Image//SafeDoor.tga");
 }
 
 void PuzzleRoom::PlayMusic()
 {
-
+	
 	if ((TranslateBodyX > 30 && (TranslateBodyZ > 0 && TranslateBodyZ < 90)))
 		b_checkinPM = true;
 	else
@@ -260,7 +293,7 @@ void PuzzleRoom::Update(double dt)
 			bouncetime = elapsedtime + 0.2f;
 		}
 	}
-	if (door1open && RotateDoor1 < 85)
+	if (door1open && RotateDoor1< 85)
 	{
 		RotateDoor1 += 15 * dt * 2;
 	}
@@ -557,12 +590,12 @@ void PuzzleRoom::Render()
 
 	//<--Get cameras position-->
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x) + ", Y:" + std::to_string(camera.position.y) + " , Z:" + std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
 	modelStack.PopMatrix();
-
+	
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x) + ", Y:" + std::to_string(camera.target.y) + " , Z:" + std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	modelStack.PopMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	 modelStack.PopMatrix();
 
 
 
@@ -620,6 +653,42 @@ void PuzzleRoom::RenderSkybox()
 
 void PuzzleRoom::RenderPokeCenter()
 {
+	//Safe
+	RenderMesh(meshList[GEO_SAFE], true);
+	RenderMesh(meshList[GEO_SAFEDOOR], true);
+	//SecretWall
+	RenderMesh(meshList[GEO_SECRETWALL], true);
+
+	//BedSet
+	RenderMesh(meshList[GEO_MATTRESS], true);
+	RenderMesh(meshList[GEO_BEDFRAME], true);
+	RenderMesh(meshList[GEO_PILLOW], true);
+
+	//Copied books
+	for (int i = 1; i < 18; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(0 - i*0.1  ,0,0);
+		//Book1
+		RenderMesh(meshList[GEO_BOOK1], true);
+		//Book2	
+		RenderMesh(meshList[GEO_BOOK2], true);
+		//Book3
+		RenderMesh(meshList[GEO_BOOK3], true);
+		//Book4
+		RenderMesh(meshList[GEO_BOOK4], true);
+		modelStack.PopMatrix();
+	}
+	//Book1
+	RenderMesh(meshList[GEO_BOOK1], true);
+	//Book2	
+	RenderMesh(meshList[GEO_BOOK2], true);
+	//Book3
+	RenderMesh(meshList[GEO_BOOK3], true);
+	//Book4
+	RenderMesh(meshList[GEO_BOOK4], true);
+	//BookBlack
+	RenderMesh(meshList[GEO_BOOKBLACK], true);
 	//BookShelfe
 	RenderMesh(meshList[GEO_BOOKSHELF], true);
 	//TV
@@ -637,19 +706,19 @@ void PuzzleRoom::RenderPokeCenter()
 	//castlepainting
 	RenderMesh(meshList[GEO_PAINTINGCASTLE], true);
 	//fruitpainting
-	RenderMesh(meshList[GEO_PAINTINGFRUIT], true);
+	RenderMesh(meshList[GEO_PAINTINGFRUIT],true);
 
 	//Sofa
 	RenderMesh(meshList[GEO_SOFA], true);
 	//Room1Door
-	modelStack.PushMatrix();
-	modelStack.Translate(5.93, 5, -2.08);
+	modelStack.PushMatrix(); 
+	modelStack.Translate(7.93, 5, -2.08);
 	modelStack.Rotate(-90, 0.f, 1.f, 0.f);
 	modelStack.Rotate(RotateDoor1, 0, 1, 0);
-	modelStack.Translate(-5.93, -5, 2.08);
-	RenderMesh(meshList[GEO_DOORTOROOM1], true);
+	modelStack.Translate(-7.93, -5, 2.08);
+	RenderMesh(meshList[GEO_DOORTOROOM1],true);
 	modelStack.PopMatrix();
-
+	
 	//RoomWall1
 	RenderMesh(meshList[GEO_ROOM1WALL], true);
 
@@ -666,6 +735,7 @@ void PuzzleRoom::RenderPokeCenter()
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_WALLS], true); //back
 	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(100.0f*2.5, 100.0f, 100.0f);
 	modelStack.Translate(0.0f, 1.0f, 0.98f);
@@ -673,6 +743,7 @@ void PuzzleRoom::RenderPokeCenter()
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_WALLS], true); //front
 	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(2.5f, 1.f, 1.f);
 	modelStack.PushMatrix();
@@ -682,12 +753,14 @@ void PuzzleRoom::RenderPokeCenter()
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
 	RenderMesh(meshList[GEO_ROOF], true); //top
 	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(100.0f, 100.0f, 100.0f);
 	modelStack.Translate(0.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_FLOOR], true); //bottom
 	modelStack.PopMatrix();
 	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(100.0f, 100.0f, 100.0f);
 	modelStack.Translate(-0.98*2.5f, 1.0f, 0.0f);
@@ -695,6 +768,7 @@ void PuzzleRoom::RenderPokeCenter()
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_WALLS], true); //left
 	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(100.0f, 100.0f, 100.0f);
 	modelStack.Translate(0.98*2.5f, 1.0f, 0.0f);
