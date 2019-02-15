@@ -975,13 +975,13 @@ void AssignmentScene::Render()
 	modelStack.PopMatrix(); 
 
 	//<--Get cameras position-->
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-	//
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	modelStack.PopMatrix();
 
 
 
