@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera3.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\AssignmentScene.cpp" />
     <ClCompile Include="Source\Racing.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera3.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\AssignmentScene.h" />
     <ClInclude Include="Source\Racing.h" />
