@@ -91,6 +91,9 @@ private:
 	float TranslateBodyY;
 	float TranslateBodyZ;
 
+	float TranslateAIX;
+	float TranslateAIZ;
+
 	//<--Music-->
 	void PlayMusic();
 	bool b_musicSelected;
