@@ -521,8 +521,9 @@ void AssignmentScene::Update(double dt)
 
 	Obj[OBJ_BOX2]->setRotatingAxis(updatedangle, 0.0f, 1.0f, 0.0f);
 	updatedangle = 0;
-	Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
-	Obj[OBJ_BOX0]->setOBB(Vector3(TranslateAIX, 0, TranslateAIZ));
+	/*Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));*/
+	/*Obj[OBJ_BOX0]->setOBB(Vector3(TranslateAIX, 0, TranslateAIZ));*/
+	Obj[OBJ_BOX2]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
 
 	//<collision>
 	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
@@ -530,11 +531,11 @@ void AssignmentScene::Update(double dt)
 		if (ObjectBox::checkCollision(*Obj[OBJ_BOX2], *Obj[AllObjs]))
 		{
 			collide = true;
-			//camera.position = currentCamPos;
-			//camera.target = currentCamTarget;
-			TranslateBodyX = prevBodyX;
-			TranslateBodyZ = prevBodyZ;
-			rotationangle = prevAngle;
+			camera.position = currentCamPos;
+			camera.target = currentCamTarget;
+			//TranslateBodyX = prevBodyX;
+			//TranslateBodyZ = prevBodyZ;
+			//rotationangle = prevAngle;
 			break;
 		}
 		collide = false;
@@ -542,11 +543,11 @@ void AssignmentScene::Update(double dt)
 
 	if (!collide)
 	{
-		//currentCamPos = camera.position;
-		//currentCamTarget = camera.target;
-		prevBodyX = TranslateBodyX;
-		prevBodyZ = TranslateBodyZ;
-		prevAngle = rotationangle;
+		currentCamPos = camera.position;
+		currentCamTarget = camera.target;
+		//prevBodyX = TranslateBodyX;
+		//prevBodyZ = TranslateBodyZ;
+		//prevAngle = rotationangle;
 	}
 
 	//If collision is true, disable player movement,

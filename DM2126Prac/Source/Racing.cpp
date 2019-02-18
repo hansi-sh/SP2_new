@@ -56,12 +56,19 @@ void RaceScene::Init() //defines what shader to use
 	b_BMO = true;
 	b_viewStats = false;
 
+	//<collison class>
+	collide = false;
+	rotationangle = 0;
+	updatedangle = 0;
+	TranslateAIX = 0;
+	TranslateAIZ = 50;
+
 	//<----for BMO body animation movement when running---->
 	LeftLegX = 90.0f;
 	RightLegX = 90.0f;
 	ArmRotation = 0.0f;
 	TranslateBodyX = 0.0f;
-	TranslateBodyY = 15.0f;
+	TranslateBodyY = 0.0f;
 	TranslateBodyZ = 0.0f;
 	RotateBody = 0.0f;
 
@@ -80,7 +87,7 @@ void RaceScene::Init() //defines what shader to use
 
 	LSPEED = 30.0f;
 
-	camera.Init(Vector3(0, 160, 80), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(0, 100, -80), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
@@ -157,6 +164,7 @@ void RaceScene::Init() //defines what shader to use
 
 	//Guide lines - Turn on if need
 	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 3.0f, 3.0f, 3.0f);//For Player
 
 	////<--USB-->
 	//meshList[GEO_USB] = MeshBuilder::GenerateCube("USB", Color(0.01171875f, 0.19140625f, 0.23046875f), 2.0f, 0.4f, 3.0f);
@@ -240,6 +248,8 @@ void RaceScene::Init() //defines what shader to use
 
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
+	Obj[OBJ_BOX1] = new ObjectBox(Vector3(36.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-45.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
 }
 
 void RaceScene::Update(double dt)
@@ -282,6 +292,33 @@ void RaceScene::Update(double dt)
 		b_viewStats = true;
 	else
 		b_viewStats = false;
+
+	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
+
+	//<collision>
+	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
+	{
+		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
+		{
+			collide = true;
+			camera.position = currentCamPos;
+			camera.target = currentCamTarget;
+			//TranslateBodyX = prevBodyX;
+			//TranslateBodyZ = prevBodyZ;
+			//rotationangle = prevAngle;
+			break;
+		}
+		collide = false;
+	}
+	if (!collide)
+	{
+		currentCamPos = camera.position;
+		currentCamTarget = camera.target;
+		//prevBodyX = TranslateBodyX;
+		//prevBodyZ = TranslateBodyZ;
+		//prevAngle = rotationangle;
+	}
+
 
 	fps = 1.0f / (float)dt;
 
@@ -382,15 +419,15 @@ void RaceScene::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
-	modelStack.Translate(/*-34*/-12, 8, 0);
-	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(/*-34*/0, 8, 12);
+	modelStack.Rotate(180, 0, 1, 0);
 	RenderMesh(meshList[GEO_HOSPITAL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
 	modelStack.Translate(/*-22.5f*/ -0.5f, 8, 0);
-	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Rotate(270, 0, 1, 0);
 	RenderMesh(meshList[GEO_RACETRACK], true);
 		//modelStack.PushMatrix();
 		//modelStack.Translate(-11, -0.01f, 0);
@@ -426,10 +463,6 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("PLayer:BMO"), Color(1, 1, 1), 3, 2, 55);
-	modelStack.PopMatrix();
-
 	//<--Get cameras position-->
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
@@ -438,6 +471,19 @@ void RaceScene::Render()
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();
+
+	if (collide)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
+		modelStack.PopMatrix();
+	}
 }
 
 void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
