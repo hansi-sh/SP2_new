@@ -554,60 +554,6 @@ void AssignmentScene::Update(double dt)
 
 	fps = 1.0f / (float)dt;
 
-	// Light movement
-	//if (Application::IsKeyPressed('I'))
-	//	light[0].position.z -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('K'))
-	//	light[0].position.z += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('J'))
-	//	light[0].position.x -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('L'))
-	//	light[0].position.x += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('U'))
-	//	light[0].position.y -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('O'))
-	//	light[0].position.y += (float)(LSPEED * dt);
-
-	//<--Walking animation-->
-	/*if (checkmodelStack)
-	{
-		if (running)
-		{
-			ArmRotation -= (float)(dt * 3) * 90;
-			LeftLegX += (float)(dt) * 50;
-			RightLegX -= (float)(dt) * 50;
-			if (LeftLegX > 100)
-			{
-				running = false;
-			}
-		}
-		else
-		{
-			ArmRotation += (float)(dt * 3) * 90;
-			LeftLegX -= (float)(dt) * 50;
-			RightLegX += (float)(dt) * 50;
-			if (LeftLegX < 80)
-			{
-				running = true;
-			}
-		}
-
-		if (bodyMovement)
-		{
-			TranslateBodyY += (float)(dt * 5);
-			if (TranslateBodyY > 16.0f)
-			{
-				bodyMovement = false;
-			}
-		}
-		else {
-			TranslateBodyY -= (float)(dt * 5);
-			if (TranslateBodyY <= 15.0f)
-			{
-				bodyMovement = true;
-			}
-		}
-	}*/
 
 	if (getCurrentCam)
 	{
