@@ -1,6 +1,4 @@
 #include "Camera3.h"
-#include "Application.h"
-#include "Mtx44.h"
 
 Camera3::Camera3()
 {
@@ -17,9 +15,12 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	this->up = defaultUp = up;
 }
 
-void Camera3::Update(const Vector3& Origin, const Vector3& PlayerMoveBy)
+void Camera3::Update(float degree, float x, float y, float z)
 {
-	
+	Mtx44 rotateBy;
+	rotateBy.SetToRotation(degree, 0, 1, 0);
+
+	position = rotateBy * position;
 }
 
 
