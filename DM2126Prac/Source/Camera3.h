@@ -2,6 +2,8 @@
 #define CAMERA_3_H
 
 #include "Camera.h"
+#include "Application.h"
+#include "Mtx44.h"
 
 class Camera3 : public Camera
 {
@@ -14,7 +16,7 @@ public:
 	Camera3();
 	~Camera3();
 	virtual void Init(const Vector3& pos, const Vector3& target, const Vector3& up);
-	virtual void Update(const Vector3& Origin, const Vector3& PlayerMoveBy); //third person camera should take it X and Z position of player to update it
+	virtual void Update(float degree, float x, float y, float z); //third person camera should take it X and Z position of player to update it and degree to rotate camera by
 	virtual void Reset();
 };
 
