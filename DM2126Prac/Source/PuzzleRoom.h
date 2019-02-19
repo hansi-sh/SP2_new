@@ -34,6 +34,18 @@ class PuzzleRoom : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
+		//U_LIGHT1_POSITION,
+		//U_LIGHT1_COLOR,
+		//U_LIGHT1_POWER,
+		//U_LIGHT1_KC,
+		//U_LIGHT1_KL,
+		//U_LIGHT1_KQ,
+		////U_LIGHT1NABLED,
+		//U_LIGHT1_TYPE,
+		//U_LIGHT1_SPOTDIRECTION,
+		//U_LIGHT1_COSCUTOFF,
+		//U_LIGHT1_COSINNER,
+		//U_LIGHT1_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -63,7 +75,7 @@ private:
 	bool getCurrentCam;
 
 	void RenderSkybox();
-	void RenderPokeCenter();
+	void CreepyHouse();
 
 	bool b_BMO;
 	bool b_viewStats;
@@ -73,34 +85,40 @@ private:
 	Vector3 currentCamTarget;
 	
 
-
-	//For Running Animation
-	bool checkmodelStack;
-	float RotateBody;
-	bool running;
-	bool bodyMovement;
-	float LeftLegX;
-	float RightLegX;
-	float ArmRotation;
-	float TranslateBodyX;
-	float TranslateBodyY;
-	float TranslateBodyZ;
+	//time
 	float elapsedtime = 0;
 	float bouncetime = 0;
+	//For Running Animation
+	bool checkmodelStack;
+	//secret door
+	float openup = 0;
+	bool secretdooropen;
+	bool secretdoorint ;
+	bool lockeddoortext;
+	//door1
 	float RotateDoor1=0;
 	bool door1open;
+	bool doorint ;
+	//key
+	bool keyint;
+	bool havekey = false;
+	//Promtp on screen
+	bool interaction;
+	bool interactioncomplete;
+	bool paintingint;
 	//<--Music-->
-	void PlayMusic();
+	/*void PlayMusic();
 	bool b_musicSelected;
 	bool b_inPM;
 	bool b_checkinPM;
 	bool b_inPC;
-
+*/
 	enum GEOMETRY_TYPE
 	{
 		
 		//GEO_AXES,
-		GEO_LIGHTBALL,
+		GEO_LIGHTBALL1,
+		GEO_LIGHTBALL2,
 		GEO_HOUSE,
 		GEO_ROOM1WALL,
 		GEO_DOORTOROOM1,
@@ -127,6 +145,7 @@ private:
 		GEO_SAFE,
 		GEO_SAFEDOOR,
 		GEO_KEY,
+		GEO_TABLEPAINTING,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
@@ -151,6 +170,13 @@ private:
 		OBJ_SAFE,
 		OBJ_BED,
 		OBJ_DOORINT,
+		OBJ_KEY,
+		OBJ_SECRETWALL,
+		OBJ_SECRETWALLINT,
+		OBJ_PAINTINGCASTLE,
+		OBJ_PAINTINGFOREST,
+		OBJ_PAINTINGFRUIT,
+		OBJ_ALL,
 		NUM_OBJ
 	};
 	MS modelStack, viewStack, projectionStack;
