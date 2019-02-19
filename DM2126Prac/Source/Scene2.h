@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
+#include "item.h"
 #include <Windows.h>
 #include "ObjectBox.h"
 
@@ -213,6 +214,12 @@ private:
 
 	void RenderMission();
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
+
+	void uploadItem(int);
+	void printNext();
+	void printPrev();
+	void rendertag();
+	Item *first, *last, *forward, *current, *backward;
 };
 
 #endif

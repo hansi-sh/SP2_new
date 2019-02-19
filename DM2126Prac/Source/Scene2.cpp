@@ -965,6 +965,101 @@ void Scene2::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, floa
 	glEnable(GL_DEPTH_TEST);
 }
 
+void Scene2::uploadItem(int newobject)
+{
+	forward = new Item(newobject);
+	if (first == NULL)
+	{
+		first = last = forward;
+		current = first;
+	}
+	else
+	{
+		last->next = forward;
+		forward->prev = last;
+		last = forward;
+	}
+}
+
+void Scene2::printNext()
+{
+	Item *check;
+	check = current->next;
+	if (check != NULL)
+	{
+		current = check;
+		rendertag();
+	}
+	else if (check == NULL && current == first)
+	{
+		current = last;
+		rendertag();
+	}
+	else if (check == NULL && current == last)
+	{
+		current = first;
+		rendertag();
+	}
+}
+
+void Scene2::printPrev()
+{
+	Item *check;
+	check = current->prev;
+	if (check != NULL)
+	{
+		current = check;
+		rendertag();
+	}
+	else if (check == NULL && current == first)
+	{
+		current = last;
+		rendertag();
+	}
+	else if (check == NULL && current == last)
+	{
+		current = first;
+		rendertag();
+	}
+}
+
+void Scene2::rendertag()
+{
+	for (int i = 0; i < 34; i++)
+	{
+		if (current->data == i)
+		{
+			DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 8, 2);
+		}
+		if (current->prev != NULL && current->next != NULL)
+		{
+			if (current->prev->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
+			}
+			if (current->next->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
+			}
+		}
+		else if (current->prev == NULL && current->next != NULL)
+		{
+			if (current->next->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
+			}
+		}
+		else if (current->prev != NULL && current->next == NULL)
+		{
+			if (current->prev->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
+
+			}
+		}
+	}
+}
+
 void Scene2::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
