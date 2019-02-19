@@ -9,6 +9,7 @@
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
 #include <Windows.h>
+#include "ObjectBox.h"
 
 class PuzzleRoom : public Scene
 {
@@ -59,8 +60,6 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
 	bool getCurrentCam;
 
 	void RenderSkybox();
@@ -68,6 +67,12 @@ private:
 
 	bool b_BMO;
 	bool b_viewStats;
+	//For collision
+	bool collide;
+	Vector3 currentCamPos;
+	Vector3 currentCamTarget;
+	
+
 
 	//For Running Animation
 	bool checkmodelStack;
@@ -82,7 +87,7 @@ private:
 	float TranslateBodyZ;
 	float elapsedtime = 0;
 	float bouncetime = 0;
-	float RotateDoor1 = 0;
+	float RotateDoor1=0;
 	bool door1open;
 	//<--Music-->
 	void PlayMusic();
@@ -93,7 +98,7 @@ private:
 
 	enum GEOMETRY_TYPE
 	{
-
+		
 		//GEO_AXES,
 		GEO_LIGHTBALL,
 		GEO_HOUSE,
@@ -110,17 +115,52 @@ private:
 		GEO_TVTABLE,
 		GEO_TVTABLEDRAWER,
 		GEO_BOOKSHELF,
-		//GEO_BOOK1,
-		//GEO_BOOK2,
-		//GEO_BOOK3,
-		//GEO_BOOK4,
-		//GEO_BOOKBLACK,
+		GEO_BOOK1,
+		GEO_BOOK2,
+		GEO_BOOK3,
+		GEO_BOOK4,
+		GEO_BOOKBLACK,
+		GEO_MATTRESS,
+		GEO_BEDFRAME,
+		GEO_PILLOW,
+		GEO_SECRETWALL,
+		GEO_SAFE,
+		GEO_SAFEDOOR,
+		GEO_KEY,
 		NUM_GEOMETRY,
 	};
+	enum OBJECT_TYPE
+	{
+		OBJ_PLAYER, // player
+		OBJ_ROOMWALL1,
+		OBJ_ROOMWALL2,
+		OBJ_HOUSEWALL1,
+		OBJ_HOUSEWALL2,
+		OBJ_HOUSEWALL3,
+		OBJ_HOUSEWALL4,
+		OBJ_HOUSEWALL5,
+		OBJ_HOUSEWALL6,
+		OBJ_HOUSEWALL7,
+		OBJ_HOUSEWALL8,
+		OBJ_HOUSEWALL9,
+		OBJ_HOUSEWALL10,
+		OBJ_SOFA,
+		OBJ_DOOR,
+		OBJ_TABLE,
+		OBJ_BOOKSHELF,
+		OBJ_SAFE,
 
+
+
+
+		OBJ_BED,
+		NUM_OBJ
+	};
 	MS modelStack, viewStack, projectionStack;
 
 	Mesh* meshList[NUM_GEOMETRY];
+
+	ObjectBox* Obj[NUM_OBJ];
 
 	static Camera2 camera;
 

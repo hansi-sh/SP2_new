@@ -45,7 +45,7 @@ AssignmentScene::~AssignmentScene()
 {
 }
 
-void AssignmentScene::Init() //defines what shader to use
+void AssignmentScene::Init()
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
@@ -61,6 +61,8 @@ void AssignmentScene::Init() //defines what shader to use
 	collide = false;
 	rotationangle = 0;
 	updatedangle = 0;
+	TranslateAIX = 0;
+	TranslateAIZ = 50;
 
 	//<----for BMO body animation movement when running---->
 	LeftLegX = 90.0f;
@@ -180,7 +182,7 @@ void AssignmentScene::Init() //defines what shader to use
 	
 
 	//Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 3.0f, 3.0f, 3.0f);
-	Obj[OBJ_BOX0] = new ObjectBox(Vector3(0.0f, 0.0f, 50.0f), 6.0f, 6.0f, 6.0f);
+	Obj[OBJ_BOX0] = new ObjectBox(Vector3(TranslateAIX, 0.0f, TranslateAIZ), 6.0f, 6.0f, 6.0f);
 	Obj[OBJ_BOX] = new ObjectBox(Vector3(50.0f, 0.0f, 0.0f), 6.0f, 6.0f, 6.0f);
 	// Obj[OBJ_BOX2] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 6.0f, 6.0f, 6.0f);
 	Obj[OBJ_BOX2] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
@@ -457,6 +459,23 @@ void AssignmentScene::Update(double dt)
 		//TranslateBodyY = 15.0f;
 	}
 
+	if (Application::IsKeyPressed(VK_LEFT))
+	{
+		TranslateAIX -= (float)(dt * 16);
+	}
+	if (Application::IsKeyPressed(VK_RIGHT))
+	{
+		TranslateAIX += (float)(dt * 16);
+	}
+	if (Application::IsKeyPressed(VK_UP))
+	{
+		TranslateAIZ -= (float)(dt * 16);
+	}
+	if (Application::IsKeyPressed(VK_DOWN))
+	{
+		TranslateAIZ += (float)(dt * 16);
+	}
+
 	if (Application::IsKeyPressed('P')) //Pointer pointing to an object
 		b_viewStats = true;
 	else
@@ -484,6 +503,25 @@ void AssignmentScene::Update(double dt)
 		rotationangle -= 1.0f;
 		updatedangle = -1.0f;
 	}
+
+	//for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
+	//{
+	//	if (!ObjectBox::checkCollision(*Obj[OBJ_BOX2], *Obj[AllObjs]))
+	//	{
+	//		if (Application::IsKeyPressed('1'))
+	//		{
+	//			rotationangle += 1.0f;
+	//			updatedangle = 1.0f;
+	//		}
+	//		else if (Application::IsKeyPressed('2'))
+	//		{
+	//			rotationangle -= 1.0f;
+	//			updatedangle = -1.0f;
+	//		}
+	//	}
+	//	else
+	//		break;
+	//}
 
 	Obj[OBJ_BOX2]->setRotatingAxis(updatedangle, 0.0f, 1.0f, 0.0f);
 	updatedangle = 0;
@@ -519,60 +557,6 @@ void AssignmentScene::Update(double dt)
 
 	fps = 1.0f / (float)dt;
 
-	// Light movement
-	//if (Application::IsKeyPressed('I'))
-	//	light[0].position.z -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('K'))
-	//	light[0].position.z += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('J'))
-	//	light[0].position.x -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('L'))
-	//	light[0].position.x += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('U'))
-	//	light[0].position.y -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('O'))
-	//	light[0].position.y += (float)(LSPEED * dt);
-
-	//<--Walking animation-->
-	/*if (checkmodelStack)
-	{
-		if (running)
-		{
-			ArmRotation -= (float)(dt * 3) * 90;
-			LeftLegX += (float)(dt) * 50;
-			RightLegX -= (float)(dt) * 50;
-			if (LeftLegX > 100)
-			{
-				running = false;
-			}
-		}
-		else
-		{
-			ArmRotation += (float)(dt * 3) * 90;
-			LeftLegX -= (float)(dt) * 50;
-			RightLegX += (float)(dt) * 50;
-			if (LeftLegX < 80)
-			{
-				running = true;
-			}
-		}
-
-		if (bodyMovement)
-		{
-			TranslateBodyY += (float)(dt * 5);
-			if (TranslateBodyY > 16.0f)
-			{
-				bodyMovement = false;
-			}
-		}
-		else {
-			TranslateBodyY -= (float)(dt * 5);
-			if (TranslateBodyY <= 15.0f)
-			{
-				bodyMovement = true;
-			}
-		}
-	}*/
 
 	if (getCurrentCam)
 	{
@@ -687,10 +671,10 @@ void AssignmentScene::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
-	modelStack.PopMatrix();
-
+	modelStack.PopMatrix(); 
+		
 	modelStack.PushMatrix();
-	modelStack.Translate(0,0,50);
+	modelStack.Translate(TranslateAIX,0, TranslateAIZ);
 	RenderMesh(meshList[GEO_BOX0], false);
 	modelStack.PopMatrix();
 	
@@ -940,13 +924,13 @@ void AssignmentScene::Render()
 	modelStack.PopMatrix(); 
 
 	//<--Get cameras position-->
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-	//
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	modelStack.PopMatrix();
 
 
 

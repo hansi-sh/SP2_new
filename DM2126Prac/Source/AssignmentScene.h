@@ -72,6 +72,8 @@ private:
 	bool collide;
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
+	Vector3 TPCcamPos;
+	Vector3 TPCcamTarget;
 
 	float rotationangle;
 	float updatedangle;
@@ -90,6 +92,9 @@ private:
 	float TranslateBodyX;
 	float TranslateBodyY;
 	float TranslateBodyZ;
+
+	float TranslateAIX;
+	float TranslateAIZ;
 
 	//<--Music-->
 	void PlayMusic();
