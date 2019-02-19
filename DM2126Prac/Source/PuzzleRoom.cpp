@@ -735,7 +735,7 @@ void PuzzleRoom::RenderPokeCenter()
 		modelStack.PushMatrix();
 		modelStack.Translate(0 - i*0.1  ,0,0);
 		//Book1
-		RenderMesh(meshList[GEO_BOOK1], true);
+		// RenderMesh(meshList[GEO_BOOK1], true);
 		//Book2	
 		RenderMesh(meshList[GEO_BOOK2], true);
 		//Book3

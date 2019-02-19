@@ -67,6 +67,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Physics.cpp">
+    <ClCompile Include="Source\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -129,6 +130,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Physics.h">
+    <ClInclude Include="Source\Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
