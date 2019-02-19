@@ -59,13 +59,19 @@ void Scene2::Init() //defines what shader to use
 	bodyMovement = true;
 	b_BMO = true;
 	b_viewStats = false;
+	speed = 0;
+
+	//<collison class>
+	collide = false;
+	rotationangle = 0;
+	updatedangle = 0;
 
 	//<----for BMO body animation movement when running---->
 	LeftLegX = 90.0f;
 	RightLegX = 90.0f;
 	ArmRotation = 0.0f;
 	TranslateBodyX = 0.0f;
-	TranslateBodyY = 15.0f;
+	TranslateBodyY = 0.0f;
 	TranslateBodyZ = 0.0f;
 	RotateBody = 0.0f;
 
@@ -185,35 +191,54 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
 	// Stuff added so far
-	meshList[GEO_STRETCHER] = MeshBuilder::GenerateOBJ("Stretcher", "OBJ//StretcherNew.obj");
+	meshList[GEO_STRETCHER] = MeshBuilder::GenerateOBJ("Stretcher", "OBJ//Stretcher.obj");
 	meshList[GEO_STRETCHER]->textureID = LoadTGA("Image//Stretcher.tga"); 
+	Obj[OBJ_STRETCHER] = new ObjectBox(Vector3(0, 0, 6), 40, 24, 12);
 
 	meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateOBJ("Defibrillator", "OBJ//Defibrillator2.obj");
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
+	 Obj[OBJ_DEFIBRILLATOR] = new ObjectBox(Vector3(20, 21, 0), 2, 2, 2);
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
 	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
+	 Obj[OBJ_FIRSTAIDKIT] = new ObjectBox(Vector3(20, 20, -5), 3, 1, 3);
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
-	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga");
+	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
+	 Obj[OBJ_CABINET] = new ObjectBox(Vector3(-15, 10, -15), 16, 26, 6); 
 
 	meshList[GEO_CABINET2] = MeshBuilder::GenerateOBJ("Cabinet2", "OBJ//Cabinet2New.obj"); // med cabinet
 	meshList[GEO_CABINET2]->textureID = LoadTGA("Image//Cabinet2NewNew.tga"); 
+	// Obj[OBJ_CABINET2] = new ObjectBox(Vector3(-23, 0, 15), 14, 24, 6); 
+	Obj[OBJ_CABINET2] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
 	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJ("Chair", "OBJ//Chair.obj");
 	meshList[GEO_CHAIR]->textureID = LoadTGA("Image//Chair.tga");
+	 Obj[OBJ_CHAIR] = new ObjectBox(Vector3(20, 10, 13), 8, 12, 7); 
 
 	meshList[GEO_TOPSHELVE1] = MeshBuilder::GenerateOBJ("TopShelve1", "OBJ//TopShelve.obj");
 	meshList[GEO_TOPSHELVE1]->textureID = LoadTGA("Image//TopShelve1.tga");
+	 Obj[OBJ_TOPSHELVE1] = new ObjectBox(Vector3(3, 23, -15), 20, 5, 5);
 
 	meshList[GEO_TOPSHELVE2] = MeshBuilder::GenerateOBJ("TopShelve2", "OBJ//TopShelve.obj");
 	meshList[GEO_TOPSHELVE2]->textureID = LoadTGA("Image//TopShelve2.tga");
+	 Obj[OBJ_TOPSHELVE2] = new ObjectBox(Vector3(-10, 23, 15), 20, 5, 5);
 
 	meshList[GEO_TOPSHELVE3] = MeshBuilder::GenerateOBJ("TopShelve3", "OBJ//TopShelve.obj");
 	meshList[GEO_TOPSHELVE3]->textureID = LoadTGA("Image//TopShelve3.tga");
+	 Obj[OBJ_TOPSHELVE3] = new ObjectBox(Vector3(10, 23, 15), 20, 5, 5);
 
-	meshList[GEO_METALSHELVE] = MeshBuilder::GenerateOBJ("MetalShelve", "OBJ//MetalShelve.obj");
+	meshList[GEO_METALSHELVE] = MeshBuilder::GenerateOBJ("MetalShelve", "OBJ//MetalShelve2.obj");
 	meshList[GEO_METALSHELVE]->textureID = LoadTGA("Image//MetalShelveNew.tga");
+	Obj[OBJ_METALSHELVE] = new ObjectBox(Vector3(22.0f, 5.0f, -3.0f), 10, 30, 30); 
+
+	// Collision Box for Camera/Player -> brot from A2 Scene
+	meshList[GEO_PLAYER] = MeshBuilder::GenerateCube("Box", Color(0, 0, 1), 10.0f, 15.0f, 15.0f);
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
+
+	// Random stuff to test collision box of individual obj
+	//meshList[GEO_TEST] = MeshBuilder::GenerateCube("Test", Color(0, 0, 1), 7.0f, 12.0f, 4.0f);
+	//Obj[OBJ_TEST] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 }
 
 //void Scene2::PlayMusic()
@@ -356,6 +381,31 @@ void Scene2::Update(double dt)
 	else
 		b_viewStats = false;
 
+	// Collision Box
+	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
+
+	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
+	{
+		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
+		{
+			collide = true;
+			camera.position = currentCamPos;
+			camera.target = currentCamTarget;
+			break;
+		}
+		collide = false;
+	}
+
+	if (!collide)
+	{
+		currentCamPos = camera.position;
+		currentCamTarget = camera.target;
+	}
+
+	// If collision is true, disable player movement,
+	// When the player moves, check which keypress is selected and if detected
+	// , set previous position to current
+
 	fps = 1.0f / (float)dt;
 
 	// Light movement
@@ -473,55 +523,31 @@ void Scene2::Render()
 	//RenderMesh(meshList[GEO_AXES], false);
 	//modelStack.PopMatrix();
 
-	//<-----------Light ball Sphere lighting 1----------->
-	modelStack.PushMatrix();
-	modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	RenderMesh(meshList[GEO_LIGHTBALL], false);
-	modelStack.PopMatrix();
-
-
 	//<--BMO--> removed
 
-	if (b_viewStats)
-	{
-		//<--FPS-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
-		modelStack.PopMatrix();
 
-		//<--Get BMOS x position-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("X:" + std::to_string(TranslateBodyX)), Color(0, 0, 0), 2, 56, 56);
-		modelStack.PopMatrix();
 
-		//<--Get BMOS z position-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Z:" + std::to_string(TranslateBodyZ)), Color(0, 0, 0), 2, 56, 54);
-		modelStack.PopMatrix();
-	}
-	else
-	{
-		//<--View stats for nerds-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("View stats:[P]"), Color(0, 0, 0), 2, 54, 58);
-		modelStack.PopMatrix();
-	}
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("PLayer:BMO"), Color(1, 1, 1), 3, 2, 55);
-	modelStack.PopMatrix();
-
-	//<--Get cameras position-->
+	//<-----------Light ball Sphere lighting 1----------->
 	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-	//
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	//modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
+	//RenderMesh(meshList[GEO_LIGHTBALL], false);
 	//modelStack.PopMatrix();
 
+	//<-----------Collision Box-------------->
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	//modelStack.Rotate(rotationangle, 0, 1, 0);
+	//RenderMesh(meshList[GEO_BOX2], false);
+	//modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//RenderTextOnScreen(meshList[GEO_TEXT], ("PLayer:BMO"), Color(1, 1, 1), 3, 2, 55);
+	//modelStack.PopMatrix();
+
+	//<--Stuff in Ambulance Scene-->
+
 	modelStack.PushMatrix();
-	//modelStack.Translate(-5, 0, 10);
 	modelStack.Translate(0, 0, 6);
 	modelStack.Scale(1.5, 1, 1.5);
 	RenderMesh(meshList[GEO_STRETCHER], setTrueFalse);
@@ -541,8 +567,7 @@ void Scene2::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Translate(-18, 0, 15);
+	modelStack.Translate(-18, 0, -15);
 	modelStack.Scale(2, 2, 2);
 	RenderMesh(meshList[GEO_CABINET], setTrueFalse);
 	modelStack.PopMatrix();
@@ -552,6 +577,11 @@ void Scene2::Render()
 	modelStack.Scale(1.5, 1.5, 1.5);
 	RenderMesh(meshList[GEO_CABINET2], setTrueFalse);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-23, 10, 12);
+	//RenderMesh(meshList[GEO_TEST], setTrueFalse);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 0, 13);
@@ -581,10 +611,69 @@ void Scene2::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Translate(5, 0, 20);
 	modelStack.Scale(2, 2, 2);
+	modelStack.Translate(10, 0, -3);
 	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
+	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(22, 5, -3);
+	//RenderMesh(meshList[GEO_BOX2], setTrueFalse);
+	//modelStack.PopMatrix();
+
+	if (b_viewStats)
+	{
+		//<--FPS-->
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
+		modelStack.PopMatrix();
+
+		//<--Get BMOS x position-->
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("X:" + std::to_string(TranslateBodyX)), Color(0, 0, 0), 2, 56, 56);
+		modelStack.PopMatrix();
+
+		//<--Get BMOS z position-->
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Z:" + std::to_string(TranslateBodyZ)), Color(0, 0, 0), 2, 56, 54);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		//<--View stats for nerds-->
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("View stats:[P]"), Color(0, 0, 0), 2, 54, 58);
+		modelStack.PopMatrix();
+	}
+
+	if (collide)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
+		modelStack.PopMatrix();
+	}
+
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
+		modelStack.PopMatrix();
+	}
+
+	int speedct = abs(speed); // no idea what this does
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(speedct), Color(1, 1, 1), 3, 2, 55);
+	modelStack.PopMatrix();
+
+
+	//<--Get cameras position-->
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();
 }
 
