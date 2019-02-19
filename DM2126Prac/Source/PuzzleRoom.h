@@ -149,11 +149,8 @@ private:
 		OBJ_TABLE,
 		OBJ_BOOKSHELF,
 		OBJ_SAFE,
-
-
-
-
 		OBJ_BED,
+		OBJ_DOORINT,
 		NUM_OBJ
 	};
 	MS modelStack, viewStack, projectionStack;

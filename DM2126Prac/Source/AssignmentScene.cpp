@@ -525,8 +525,10 @@ void AssignmentScene::Update(double dt)
 
 	Obj[OBJ_BOX2]->setRotatingAxis(updatedangle, 0.0f, 1.0f, 0.0f);
 	updatedangle = 0;
-	// Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	/*Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));*/
+	/*Obj[OBJ_BOX0]->setOBB(Vector3(TranslateAIX, 0, TranslateAIZ));*/
 	Obj[OBJ_BOX2]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
+
 	//<collision>
 	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
 	{

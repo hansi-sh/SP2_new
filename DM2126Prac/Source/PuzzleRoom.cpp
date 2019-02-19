@@ -181,6 +181,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_DOORTOROOM1] = MeshBuilder::GenerateOBJ("Room1Wall", "OBJ//doortoroom12.obj");
 	meshList[GEO_DOORTOROOM1]->textureID = LoadTGA("Image//DoorTextures.tga");
+
 	//<----BMO body---->
 	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJ("Sofa", "OBJ//sofa.obj");
 	meshList[GEO_SOFA]->textureID = LoadTGA("Image//sofatxt.tga");
@@ -237,7 +238,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_BOOKBLACK]->textureID = LoadTGA("Image//Black.tga");
 
 	meshList[GEO_MATTRESS] = MeshBuilder::GenerateOBJ("Book1", "OBJ//mattress.obj");
-	meshList[GEO_MATTRESS]->textureID = LoadTGA("Image//.tga");
+	meshList[GEO_MATTRESS]->textureID = LoadTGA("Image//Mattress.tga");
 
 	meshList[GEO_BEDFRAME] = MeshBuilder::GenerateOBJ("Book1", "OBJ//bedframe.obj");
 	meshList[GEO_BEDFRAME]->textureID = LoadTGA("Image//BedFrame.tga");
