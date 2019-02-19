@@ -5,7 +5,7 @@ Physics::Physics()
 {
 	f_CarSpeed = 0;
 	f_Acceleration = 20.0f;
-	V_Position = (0, 0, 0);
+	V_Position = Vector3(0, 0, 0);
 	V_Direction = Vector3(0.0f, 0.0f, 1.0f);
 }
 
