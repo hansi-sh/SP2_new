@@ -248,8 +248,10 @@ void RaceScene::Init() //defines what shader to use
 
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
-	Obj[OBJ_BOX1] = new ObjectBox(Vector3(36.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
-	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-45.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
+	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 40.0f);
+	Obj[OBJ_BOX1] = new ObjectBox(Vector3(40.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
+	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(0, 0, 1), 10.0f, 25.0f, 40.0f);
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-40.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
 }
 
 void RaceScene::Update(double dt)
@@ -417,16 +419,26 @@ void RaceScene::Render()
 	//	RenderMesh(meshList[GEO_USB], false);
 	//	modelStack.PopMatrix();
 
+	//modelStack.PushMatrix();
+	//modelStack.Translate(40, 84, 180);
+	//RenderMesh(meshList[GEO_BOX1], false);
+	//modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-45, 88, 180);
+	//RenderMesh(meshList[GEO_BOX2], false);
+	//modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
-	modelStack.Translate(/*-34*/0, 8, 12);
+	modelStack.Translate(0, 8, 10 /*34*/);
 	modelStack.Rotate(180, 0, 1, 0);
 	RenderMesh(meshList[GEO_HOSPITAL], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
-	modelStack.Translate(/*-22.5f*/ -0.5f, 8, 0);
+	modelStack.Translate(0, 8, 0 /*22.5f*/);
 	modelStack.Rotate(270, 0, 1, 0);
 	RenderMesh(meshList[GEO_RACETRACK], true);
 		//modelStack.PushMatrix();
@@ -535,14 +547,14 @@ void RaceScene::RenderSkybox()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-	modelStack.Translate(0.0f, 0.96f, -1.0f);
+	modelStack.Translate(0.0f, 0.96f, -0.99f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-	modelStack.Translate(0.0f, 0.96f, 1.0f);
+	modelStack.Translate(0.0f, 0.96f, 0.99f);
 	modelStack.Rotate(180, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_FRONT], false);
@@ -550,7 +562,7 @@ void RaceScene::RenderSkybox()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-	modelStack.Translate(0.0f, 1.96f, 0.0f);
+	modelStack.Translate(0.0f, 1.95f, 0.0f);
 	modelStack.Rotate(180, 0.0f, 0.0f, 1.0f);
 	/*modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);*/
 	RenderMesh(meshList[GEO_TOP], false);
@@ -565,7 +577,7 @@ void RaceScene::RenderSkybox()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-	modelStack.Translate(-1.0f, 0.96f, 0.0f);
+	modelStack.Translate(-0.99f, 0.96f, 0.0f);
 	modelStack.Rotate(90, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_LEFT], false);
@@ -573,7 +585,7 @@ void RaceScene::RenderSkybox()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
-	modelStack.Translate(1.0f, 0.96f, 0.0f);
+	modelStack.Translate(0.99f, 0.96f, 0.0f);
 	modelStack.Rotate(-90, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_RIGHT], false);

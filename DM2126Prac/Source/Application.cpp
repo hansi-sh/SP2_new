@@ -131,8 +131,8 @@ void Application::Run()
 	}
 	else
 	{
-		scene = new PuzzleRoom();
-		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new RaceScene();
+		glfwSetCursorPosCallback(m_window, RaceScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	
 
