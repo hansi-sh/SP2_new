@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
+#include "ObjectBox.h"
 #include <Windows.h>
 
 class RaceScene : public Scene
@@ -99,6 +100,13 @@ private:
 	Vector3 currentCamTarget;
 	bool getCurrentCam;
 
+	bool collide;
+	float rotationangle;
+	float updatedangle;
+	float prevBodyX;
+	float prevBodyZ;
+	float prevAngle;
+
 	void RenderSkybox();
 	
 	bool b_BMO;
@@ -115,6 +123,9 @@ private:
 	float TranslateBodyX;
 	float TranslateBodyY;
 	float TranslateBodyZ;
+
+	float TranslateAIX;
+	float TranslateAIZ;
 
 	//<--Music-->
 	/*void PlayMusic();*/
@@ -147,13 +158,27 @@ private:
 		GEO_HOSPITAL,
 		GEO_RACETRACK,
 
+		GEO_BOX1,
+		GEO_BOX2,
+
 		GEO_TEXT,
 		NUM_GEOMETRY,
+	};
+
+	enum OBJECT_TYPE
+	{
+		OBJ_PLAYER,
+		OBJ_BOX1,
+		OBJ_BOX2,
+
+		NUM_OBJ
 	};
 
 	MS modelStack, viewStack, projectionStack;
 
 	Mesh* meshList[NUM_GEOMETRY];
+
+	ObjectBox* Obj[NUM_OBJ];
 
 	static Camera2 camera;
 

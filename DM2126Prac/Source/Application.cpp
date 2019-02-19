@@ -121,18 +121,18 @@ void Application::Run()
 	}
 	else if (GetSceneNumber() == 3)
 	{
-		scene = new RaceScene();
-		glfwSetCursorPosCallback(m_window, RaceScene::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new PuzzleRoom();
+		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	else if (GetSceneNumber() == 4)
 	{
-		scene = new AssignmentScene();
-		glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new RaceScene();
+		glfwSetCursorPosCallback(m_window, RaceScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
-	else
+	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new PuzzleRoom();
-		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new AssignmentScene();
+		//glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	
 
