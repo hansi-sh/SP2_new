@@ -9,7 +9,7 @@
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
 #include <Windows.h>
-#include <Windows.h>
+#include "ObjectBox.h"
 
 class Scene2 : public Scene
 {
@@ -95,14 +95,24 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
 	bool getCurrentCam;
+	float speed;
 
 	void RenderSkybox();
 
 	bool b_BMO;
 	bool b_viewStats;
+
+	// For Box collision
+	bool collide;
+	Vector3 currentCamPos;
+	Vector3 currentCamTarget;
+
+	float rotationangle; // not needed but jus leave here
+	float updatedangle; // not needed but jus leave here
+	float prevBodyX;
+	float prevBodyZ;
+	float prevAngle;
 
 	//For Running Animation
 	bool checkmodelStack;
@@ -143,15 +153,40 @@ private:
 		GEO_TOPSHELVE1,
 		GEO_TOPSHELVE2,
 		GEO_TOPSHELVE3,
-		GEO_METALSHELVE,
+		GEO_METALSHELVE, 
+
+		GEO_PLAYER,
+		//GEO_TEST, // Cabinet2
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
 
+	enum OBJECT_TYPE
+	{
+		OBJ_PLAYER,	//player 0
+
+		OBJ_METALSHELVE, // -> done
+		OBJ_STRETCHER, // - > done
+		OBJ_CABINET, // - > done
+		OBJ_CHAIR, // - > done
+		OBJ_DEFIBRILLATOR, // -> done
+		OBJ_FIRSTAIDKIT, // -> done
+		OBJ_CABINET2, // -> done
+		OBJ_TOPSHELVE1, // - > done
+		OBJ_TOPSHELVE2, // - > done
+		OBJ_TOPSHELVE3, // - > done
+
+		//OBJ_TEST, // Cabinet2
+
+		NUM_OBJ
+	};
+
 	MS modelStack, viewStack, projectionStack;
 
 	Mesh* meshList[NUM_GEOMETRY];
+
+	ObjectBox* Obj[NUM_OBJ]; // for box collision
 
 	static Camera2 camera;
 

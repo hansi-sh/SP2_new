@@ -179,11 +179,15 @@ void AssignmentScene::Init()
 	meshList[GEO_BOX0] = MeshBuilder::GenerateCube("Box", Color(0, 0, 1), 3.0f, 3.0f, 3.0f);
 	meshList[GEO_BOX] = MeshBuilder::GenerateCube("Box", Color(1, 0, 0), 3.0f, 3.0f, 3.0f);
 	meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Box", Color(1, 1, 1), 3.0f, 3.0f, 3.0f);
+	
+
 	//Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 3.0f, 3.0f, 3.0f);
 	Obj[OBJ_BOX0] = new ObjectBox(Vector3(TranslateAIX, 0.0f, TranslateAIZ), 6.0f, 6.0f, 6.0f);
 	Obj[OBJ_BOX] = new ObjectBox(Vector3(50.0f, 0.0f, 0.0f), 6.0f, 6.0f, 6.0f);
-	Obj[OBJ_BOX2] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 6.0f, 6.0f, 6.0f);
-	//Obj[OBJ_BOX2] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
+	// Obj[OBJ_BOX2] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 6.0f, 6.0f, 6.0f);
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
+
+
 	//<----Face---->
 	meshList[GEO_FACE] = MeshBuilder::GenerateCube("Face", Color(0.7109375f, 0.99609375f, 0.77734375f), 4.0f, 2.6f, 3.0f);
 	meshList[GEO_FACE]->material.kAmbient.Set(0.7f, 0.7f, 0.7f);
@@ -521,20 +525,19 @@ void AssignmentScene::Update(double dt)
 
 	Obj[OBJ_BOX2]->setRotatingAxis(updatedangle, 0.0f, 1.0f, 0.0f);
 	updatedangle = 0;
-	Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
-	Obj[OBJ_BOX0]->setOBB(Vector3(TranslateAIX, 0, TranslateAIZ));
-
+	// Obj[OBJ_BOX2]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	Obj[OBJ_BOX2]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
 	//<collision>
 	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
 	{
 		if (ObjectBox::checkCollision(*Obj[OBJ_BOX2], *Obj[AllObjs]))
 		{
 			collide = true;
-			//camera.position = currentCamPos;
-			//camera.target = currentCamTarget;
-			TranslateBodyX = prevBodyX;
-			TranslateBodyZ = prevBodyZ;
-			rotationangle = prevAngle;
+			camera.position = currentCamPos;
+			camera.target = currentCamTarget;
+			//TranslateBodyX = prevBodyX;
+			//TranslateBodyZ = prevBodyZ;
+			//rotationangle = prevAngle;
 			break;
 		}
 		collide = false;
@@ -542,11 +545,11 @@ void AssignmentScene::Update(double dt)
 
 	if (!collide)
 	{
-		//currentCamPos = camera.position;
-		//currentCamTarget = camera.target;
-		prevBodyX = TranslateBodyX;
-		prevBodyZ = TranslateBodyZ;
-		prevAngle = rotationangle;
+		currentCamPos = camera.position;
+		currentCamTarget = camera.target;
+		//prevBodyX = TranslateBodyX;
+		//prevBodyZ = TranslateBodyZ;
+		//prevAngle = rotationangle;
 	}
 
 	//If collision is true, disable player movement,
