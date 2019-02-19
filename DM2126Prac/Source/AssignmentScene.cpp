@@ -11,35 +11,35 @@
 
 float AssignmentScene::lastX = 0.0f;
 float AssignmentScene::lastY = 0.0f;
-Camera2 AssignmentScene::camera = Camera2();
+//Camera2 AssignmentScene::camera = Camera2();
 
 AssignmentScene::AssignmentScene()
 {
 }
 
-void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
-}
+//void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//	float xoffset = (float)xpos - lastX;
+//	float yoffset = (float)ypos - lastY;
+//	float sensitivity = 0.05f;
+//
+//	lastX = (float)xpos;
+//	lastY = (float)ypos;
+//
+//	xoffset *= sensitivity;
+//	yoffset *= sensitivity;
+//
+//	Vector3 view = camera.target - camera.position;
+//	Mtx44 rotate;
+//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
+//	view = rotate * view;
+//
+//	Vector3 rightVector = view.Cross(camera.up);
+//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
+//	view = rotate * view;
+//
+//	camera.target = camera.position + view;
+//}
 
 AssignmentScene::~AssignmentScene()
 {
@@ -68,6 +68,8 @@ void AssignmentScene::Init() //defines what shader to use
 	b_StepBrakes = false;
 	b_Steer = false;
 	f_RotateAmt = 0.0f;
+
+	f_TPCRotateBy = 0.0f;
 	
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -356,7 +358,9 @@ void AssignmentScene::Update(double dt)
 	}
 
 	
-	camera.Update(dt);
+	//camera.Update(dt);
+	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	f_TPCRotateBy = 0.0f;
 }
 
 void AssignmentScene::Render()

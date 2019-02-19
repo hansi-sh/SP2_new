@@ -13,7 +13,7 @@ void Camera3::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	this->position = defaultPosition = pos;
 	this->target = defaultTarget = target;
 	this->up = defaultUp = up;
-	this->offSet = Vector3(0, 30, 100);	//How far it is away from object
+	this->offSet = Vector3(0, 40, -70);	//How far it is away from object
 	Vector3 view = (target - position).Normalized();
 	Vector3 right = view.Cross(up);
 }

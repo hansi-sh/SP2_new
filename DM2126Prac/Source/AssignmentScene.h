@@ -2,7 +2,7 @@
 #define RACIASSIGNMENTSCENE_HNG_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -170,7 +170,9 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	static Camera2 camera;
+	//static Camera2 camera;
+	Camera3 camera;
+	float f_TPCRotateBy;
 
 	Light light[1];
 
