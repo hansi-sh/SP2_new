@@ -69,7 +69,7 @@ void Application::Init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
 
 	//Create a window and create its OpenGL context
-	m_window = glfwCreateWindow(800, 600, "Test Window", NULL, NULL);
+	m_window = glfwCreateWindow(1200, 800, "Test Window", NULL, NULL);
 
 	//New to Scene 2
 	glfwSetWindowSizeCallback(m_window, resize_callback);
@@ -131,8 +131,8 @@ void Application::Run()
 	}
 	else
 	{
-		scene = new PuzzleRoom();
-		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new RaceScene();
+		glfwSetCursorPosCallback(m_window, RaceScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	
 
