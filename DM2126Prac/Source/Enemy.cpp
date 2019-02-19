@@ -7,7 +7,7 @@ Enemy::Enemy()
 	E_carSpeed = 0;
 	E_maxSpeed = 30.0f;
 	E_Position = (0, 0, 0);
-	E_Direction = (0, 0, 1);
+	E_Direction = (1, 0, 0);
 	srand(time(NULL));
 	randomChoices = 0;
 }
@@ -19,8 +19,8 @@ Enemy::~Enemy()
 
 Vector3 Enemy::Enemymove(double dt)
 {
-	/*randomChoices = rand() % 4;
-	randomChoices;*/
+	/*randomchoices = rand() % 4;
+	randomchoices;*/
 	if (E_carSpeed < E_maxSpeed)
 	{
 		E_carSpeed += (5 * dt);
