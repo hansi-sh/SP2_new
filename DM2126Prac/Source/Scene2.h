@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
+#include "item.h"
 #include <Windows.h>
 #include "ObjectBox.h"
 
@@ -97,6 +98,7 @@ private:
 	float fps;
 	bool getCurrentCam;
 	float speed;
+	double delay;
 
 	void RenderSkybox();
 
@@ -157,8 +159,13 @@ private:
 
 		GEO_PLAYER,
 		//GEO_TEST, // Cabinet2
-
+		// GEO_TEST1, // Front
+		// GEO_TEST2, // back
 		GEO_TEXT,
+		GEO_INSTRUCTION1,
+		GEO_INSTRUCTION2,
+		GEO_NOTIFICATION1,
+		GEO_NOTIFICATION2,
 		NUM_GEOMETRY,
 	};
 
@@ -170,14 +177,19 @@ private:
 		OBJ_STRETCHER, // - > done
 		OBJ_CABINET, // - > done
 		OBJ_CHAIR, // - > done
-		OBJ_DEFIBRILLATOR, // -> done
-		OBJ_FIRSTAIDKIT, // -> done
+		// OBJ_DEFIBRILLATOR, // -> done
+		// OBJ_FIRSTAIDKIT, // -> done
 		OBJ_CABINET2, // -> done
 		OBJ_TOPSHELVE1, // - > done
 		OBJ_TOPSHELVE2, // - > done
 		OBJ_TOPSHELVE3, // - > done
 
-		//OBJ_TEST, // Cabinet2
+		OBJ_FRONT, // - > done
+		OBJ_BACK, // 
+
+		// OBJ_TEST, // Cabinet2
+		// OBJ_TEST1, // Front
+		// OBJ_TEST2, // Back
 
 		NUM_OBJ
 	};
@@ -198,10 +210,22 @@ private:
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
+	// Stuff Added
 	bool setTrueFalse = false;
-	// for Cabinet 2
-	// when on light the grooves show
-	// off light grooves doesnt show
+	int instruction;
+	bool collectDefi = false;
+	bool collectKit = false;
+	bool notification1 = false;
+	bool notification2 = false;
+
+	void RenderMission();
+	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
+
+	void uploadItem(int);
+	void printNext();
+	void printPrev();
+	void rendertag();
+	Item *first, *last, *forward, *current, *backward;
 };
 
 #endif
