@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
+#include "item.h"
 #include <Windows.h>
 #include "ObjectBox.h"
 
@@ -97,6 +98,7 @@ private:
 	float fps;
 	bool getCurrentCam;
 	float speed;
+	double delay;
 
 	void RenderSkybox();
 
@@ -162,6 +164,8 @@ private:
 		GEO_TEXT,
 		GEO_INSTRUCTION1,
 		GEO_INSTRUCTION2,
+		GEO_NOTIFICATION1,
+		GEO_NOTIFICATION2,
 		NUM_GEOMETRY,
 	};
 
@@ -173,8 +177,8 @@ private:
 		OBJ_STRETCHER, // - > done
 		OBJ_CABINET, // - > done
 		OBJ_CHAIR, // - > done
-		OBJ_DEFIBRILLATOR, // -> done
-		OBJ_FIRSTAIDKIT, // -> done
+		// OBJ_DEFIBRILLATOR, // -> done
+		// OBJ_FIRSTAIDKIT, // -> done
 		OBJ_CABINET2, // -> done
 		OBJ_TOPSHELVE1, // - > done
 		OBJ_TOPSHELVE2, // - > done
@@ -210,9 +214,18 @@ private:
 	bool setTrueFalse = false;
 	int instruction;
 	bool collectDefi = false;
+	bool collectKit = false;
+	bool notification1 = false;
+	bool notification2 = false;
 
 	void RenderMission();
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
+
+	void uploadItem(int);
+	void printNext();
+	void printPrev();
+	void rendertag();
+	Item *first, *last, *forward, *current, *backward;
 };
 
 #endif
