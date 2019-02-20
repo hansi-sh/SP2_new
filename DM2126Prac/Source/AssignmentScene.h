@@ -9,6 +9,7 @@
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
 #include "ObjectBox.h"
+#include "Enemy.h"
 #include <Windows.h>
 #include "Physics.h"
 
@@ -151,6 +152,7 @@ private:
 		GEO_RACETRACK,
 		GEO_AMBULANCE,
 
+		GEO_CAR,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
@@ -175,6 +177,9 @@ private:
 	float f_TPCRotateBy;
 
 	Light light[1];
+	Enemy e[1];
+	Vector3 enemyPos[1];
+	float enemyX, enemyY, enemyZ;
 
 	void RenderMesh(Mesh *mesh, bool enableLight);
 

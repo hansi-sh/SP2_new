@@ -71,6 +71,10 @@ void AssignmentScene::Init() //defines what shader to use
 
 	f_TPCRotateBy = 0.0f;
 	
+	enemyX = 15;
+	enemyY = 64;
+	enemyZ = -200;
+
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
@@ -157,6 +161,8 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 3.0f, 3.0f, 3.0f);//For Player
 
+	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
 
@@ -194,6 +200,10 @@ void AssignmentScene::Init() //defines what shader to use
 
 void AssignmentScene::Update(double dt)
 {
+	enemyPos[0] = e[0].Enemymove(dt);
+	enemyX += enemyPos[0].x;
+	enemyY += enemyPos[0].y;
+	enemyZ += enemyPos[0].z;
 	if (Application::IsKeyPressed('1'))
 	{
 		Application app;
@@ -373,6 +383,11 @@ void AssignmentScene::Render()
 	modelStack.LoadIdentity();
 
 	RenderSkybox();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(enemyX, enemyY, enemyZ);
+	RenderMesh(meshList[GEO_CAR], false);
+	modelStack.PopMatrix();
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
