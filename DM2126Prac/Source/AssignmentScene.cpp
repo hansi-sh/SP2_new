@@ -11,35 +11,35 @@
 
 float AssignmentScene::lastX = 0.0f;
 float AssignmentScene::lastY = 0.0f;
-Camera2 AssignmentScene::camera = Camera2();
+//Camera2 AssignmentScene::camera = Camera2();
 
 AssignmentScene::AssignmentScene()
 {
 }
 
-void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
-}
+//void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//	float xoffset = (float)xpos - lastX;
+//	float yoffset = (float)ypos - lastY;
+//	float sensitivity = 0.05f;
+//
+//	lastX = (float)xpos;
+//	lastY = (float)ypos;
+//
+//	xoffset *= sensitivity;
+//	yoffset *= sensitivity;
+//
+//	Vector3 view = camera.target - camera.position;
+//	Mtx44 rotate;
+//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
+//	view = rotate * view;
+//
+//	Vector3 rightVector = view.Cross(camera.up);
+//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
+//	view = rotate * view;
+//
+//	camera.target = camera.position + view;
+//}
 
 AssignmentScene::~AssignmentScene()
 {
@@ -72,13 +72,11 @@ void AssignmentScene::Init() //defines what shader to use
 	f_UpdatedAngle = 0.0f;
 	///////////////////////////
 	enemyX[0] = 15;
-	enemyY[0] = 65;
+	enemyY[0] = 64;
 	enemyZ[0]= -200;
-
 	enemyX[1] = -15;
 	enemyY[1] = 64;
 	enemyZ[1] = -200;
-
 	RotateEnemyBody = 0.0f;
 
 	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
@@ -86,7 +84,7 @@ void AssignmentScene::Init() //defines what shader to use
 	enemyUpdatePos[0] = Vector3(0, 0, 0);
 	enemyUpdatePos[1] = Vector3(0, 0, 0);
 	f_RotateENEMYPrevFrame = 0.0f;
-	b_StepENEMYAccelerator = false;
+	b_StepENEMYAccelerator = true;
 	b_StepENEMYBrakes = false;
 	b_ENEMYSteer = false;
 	f_ENEMYRotateAmt = 0.0f;
@@ -217,9 +215,9 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
 	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 40.0f);
-	//Obj[OBJ_BOX1] = new ObjectBox(Vector3(40.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
+	Obj[OBJ_BOX1] = new ObjectBox(Vector3(40.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
 	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(0, 0, 1), 10.0f, 25.0f, 40.0f);
-	//Obj[OBJ_BOX2] = new ObjectBox(Vector3(-40.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-40.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
 }
 
 void AssignmentScene::Update(double dt)
@@ -263,6 +261,32 @@ void AssignmentScene::Update(double dt)
 	else
 		b_viewStats = false;
 
+	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
+
+	//<collision>
+	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
+	{
+		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
+		{
+			collide = true;
+			camera.position = currentCamPos;
+			camera.target = currentCamTarget;
+			//TranslateBodyX = prevBodyX;
+			//TranslateBodyZ = prevBodyZ;
+			//rotationangle = prevAngle;
+			break;
+		}
+		collide = false;
+	}
+	if (!collide)
+	{
+		currentCamPos = camera.position;
+		currentCamTarget = camera.target;
+		//prevBodyX = TranslateBodyX;
+		//prevBodyZ = TranslateBodyZ;
+		//prevAngle = rotationangle;
+	}
+
 
 	f_RotateENEMYPrevFrame = RotateEnemyBody;
 	f_RotatePrevFrame = RotateBody;
@@ -304,7 +328,7 @@ void AssignmentScene::Update(double dt)
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
 	}
-	else if (Application::IsKeyPressed('G'))//backward
+	else if (Application::IsKeyPressed('S'))//backward
 	{
 		b_StepAccelerator = false;
 		b_StepBrakes = true;
@@ -453,8 +477,8 @@ void AssignmentScene::Update(double dt)
 	}
 
 	
-	camera.Update(dt);
-	//camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	//camera.Update(dt);
+	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
 	f_TPCRotateBy = 0.0f;
 }
 
@@ -593,31 +617,12 @@ void AssignmentScene::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();
 
-	//if (collide)
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
-	//	modelStack.PopMatrix();
-	//}
-	//else
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
-	//	modelStack.PopMatrix();
-	//}
-
-	int speedct = fabs(PlayerCar.f_GetSpeed());
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Speed:" + std::to_string(speedct)), Color(0, 0, 0), 2, 2, 3);
-	modelStack.PopMatrix();
-
 	if (collide)
 	{
 		modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
 		modelStack.PopMatrix();
 	}
-
 	else
 	{
 		modelStack.PushMatrix();
