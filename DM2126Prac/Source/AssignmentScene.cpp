@@ -62,18 +62,35 @@ void AssignmentScene::Init() //defines what shader to use
 	RotateBody = 0.0f;
 
 	PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+
 	V_UpdatedPlayerPos = Vector3(0, 0, 0);
 	f_RotatePrevFrame = 0.0f;
 	b_StepAccelerator = false;
 	b_StepBrakes = false;
 	b_Steer = false;
 	f_RotateAmt = 0.0f;
+	///////////////////////////
+	enemyX[0] = 15;
+	enemyY[0] = 64;
+	enemyZ[0]= -200;
+	enemyX[1] = -15;
+	enemyY[1] = 64;
+	enemyZ[1] = -200;
+	RotateEnemyBody = 0.0f;
 
+	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
+	e[1].SetEnemyPosition(Vector3(enemyX[1], enemyY[1], enemyZ[1]));
+	enemyUpdatePos[0] = Vector3(0, 0, 0);
+	enemyUpdatePos[1] = Vector3(0, 0, 0);
+	f_RotateENEMYPrevFrame = 0.0f;
+	b_StepENEMYAccelerator = true;
+	b_StepENEMYBrakes = false;
+	b_ENEMYSteer = false;
+	f_ENEMYRotateAmt = 0.0f;
+	///////////////////////////
 	f_TPCRotateBy = 0.0f;
 	
-	enemyX = 15;
-	enemyY = 64;
-	enemyZ = -200;
+	
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -200,10 +217,6 @@ void AssignmentScene::Init() //defines what shader to use
 
 void AssignmentScene::Update(double dt)
 {
-	enemyPos[0] = e[0].Enemymove(dt);
-	enemyX += enemyPos[0].x;
-	enemyY += enemyPos[0].y;
-	enemyZ += enemyPos[0].z;
 	if (Application::IsKeyPressed('1'))
 	{
 		Application app;
@@ -270,10 +283,10 @@ void AssignmentScene::Update(double dt)
 	}
 
 
-
+	f_RotateENEMYPrevFrame = RotateEnemyBody;
 	f_RotatePrevFrame = RotateBody;
 	fps = 1.0f / (float)dt;
-
+/////////////////////////////
 	if (Application::IsKeyPressed('T'))//forward
 	{
 		b_StepAccelerator = true;
@@ -289,7 +302,7 @@ void AssignmentScene::Update(double dt)
 		b_StepAccelerator = false;
 		b_StepBrakes = false;
 	}
-
+/////////////////////////
 	if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
 	{
 		f_RotateAmt = 0.0f;
@@ -341,7 +354,21 @@ void AssignmentScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 
+	//e[0].enemyMove(b_StepENEMYAccelerator, b_StepENEMYBrakes);
 
+	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody, f_RotateENEMYPrevFrame);
+	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
+	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
+	enemyX[0] = enemyUpdatePos[0].x;
+	enemyY[0] = enemyUpdatePos[0].y;
+	enemyZ[0] = enemyUpdatePos[0].z;
+	e[1].v_UpdateEnemyCarDirection(RotateEnemyBody, f_RotateENEMYPrevFrame);
+	e[1].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
+	enemyUpdatePos[1] = e[1].V_UpdateenemyCarPos(dt);
+	enemyX[1] = enemyUpdatePos[1].x;
+	enemyY[1] = enemyUpdatePos[1].y;
+	enemyZ[1] = enemyUpdatePos[1].z;
+	
 	if (getCurrentCam)
 	{
 		currentCamPos = camera.position;
@@ -385,7 +412,14 @@ void AssignmentScene::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(enemyX, enemyY, enemyZ);
+	modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
+	modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(meshList[GEO_CAR], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(enemyX[1], enemyY[1], enemyZ[1]);
+	modelStack.Rotate(90, 0, 1, 0);
 	RenderMesh(meshList[GEO_CAR], false);
 	modelStack.PopMatrix();
 
