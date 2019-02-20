@@ -2,7 +2,7 @@
 #define RACIASSIGNMENTSCENE_HNG_H
 
 #include "Scene.h"
-#include "Camera3.h"
+#include "Camera2.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -12,6 +12,7 @@
 #include "Enemy.h"
 #include <Windows.h>
 #include "Physics.h"
+#include <cmath>
 
 class AssignmentScene : public Scene
 {
@@ -138,6 +139,8 @@ private:
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
+		GEO_CUBE,		
+		GEO_AICUBE,
 
 		/*GEO_USB,
 		GEO_YELLOWBUTTONCUBOID,
@@ -169,8 +172,9 @@ private:
 	enum OBJECT_TYPE
 	{
 		OBJ_PLAYER,
-		OBJ_BOX1,
-		OBJ_BOX2,
+		OBJ_ENEMY1,
+		//OBJ_BOX1,
+		//OBJ_BOX2,
 
 		NUM_OBJ
 	};
@@ -181,8 +185,8 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	//static Camera2 camera;
-	Camera3 camera;
+	static Camera2 camera;
+	//Camera3 camera;
 	float f_TPCRotateBy;
 
 	Light light[1];
