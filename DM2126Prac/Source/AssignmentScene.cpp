@@ -264,12 +264,12 @@ void AssignmentScene::Update(double dt)
 	f_RotatePrevFrame = RotateBody;
 	fps = 1.0f / (float)dt;
 
-	if (Application::IsKeyPressed('T'))//forward
+	if (Application::IsKeyPressed('W'))//forward
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
 	}
-	else if (Application::IsKeyPressed('G'))//backward
+	else if (Application::IsKeyPressed('S'))//backward
 	{
 		b_StepAccelerator = false;
 		b_StepBrakes = true;
@@ -307,12 +307,12 @@ void AssignmentScene::Update(double dt)
 	}
 
 	//f_RotateAmt = 1.0f;
-	if (Application::IsKeyPressed('F'))//rotate left
+	if (Application::IsKeyPressed('A'))//rotate left
 	{
 		b_Steer = true;
 		RotateBody += f_RotateAmt;
 	}
-	else if (Application::IsKeyPressed('H'))//rotate right
+	else if (Application::IsKeyPressed('D'))//rotate right
 	{
 		b_Steer = true;
 		RotateBody -= f_RotateAmt;
