@@ -132,7 +132,7 @@ void Application::Run()
 	else // change back to PuzzleRoom when pushing 
 	{
 		scene = new AssignmentScene();
-		//glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called
+		glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	
 
