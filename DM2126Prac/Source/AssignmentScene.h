@@ -1,15 +1,17 @@
 #ifndef ASSIGNMENTSCENE_H
-#define ASSIGNMENTSCENE_H
+#define RACIASSIGNMENTSCENE_HNG_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
-#include <Windows.h>
 #include "ObjectBox.h"
+#include "Enemy.h"
+#include <Windows.h>
+#include "Physics.h"
 
 class AssignmentScene : public Scene
 {
@@ -34,6 +36,42 @@ class AssignmentScene : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
+		//U_LIGHT1_POSITION,
+		//U_LIGHT1_COLOR,
+		//U_LIGHT1_POWER,
+		//U_LIGHT1_KC,
+		//U_LIGHT1_KL,
+		//U_LIGHT1_KQ,
+		//U_LIGHT1NABLED,
+		//U_LIGHT1_TYPE,
+		//U_LIGHT1_SPOTDIRECTION,
+		//U_LIGHT1_COSCUTOFF,
+		//U_LIGHT1_COSINNER,
+		//U_LIGHT1_EXPONENT,
+		//U_LIGHT2_POSITION,
+		//U_LIGHT2_COLOR,
+		//U_LIGHT2_POWER,
+		//U_LIGHT2_KC,
+		//U_LIGHT2_KL,
+		//U_LIGHT2_KQ,
+		//U_LIGHT2NABLED,
+		//U_LIGHT2_TYPE,
+		//U_LIGHT2_SPOTDIRECTION,
+		//U_LIGHT2_COSCUTOFF,
+		//U_LIGHT2_COSINNER,
+		//U_LIGHT2_EXPONENT,
+		//U_LIGHT3_POSITION,
+		//U_LIGHT3_COLOR,
+		//U_LIGHT3_POWER,
+		//U_LIGHT3_KC,
+		//U_LIGHT3_KL,
+		//U_LIGHT3_KQ,
+		//U_LIGHT3NABLED,
+		//U_LIGHT3_TYPE,
+		//U_LIGHT3_SPOTDIRECTION,
+		//U_LIGHT3_COSCUTOFF,
+		//U_LIGHT3_COSINNER,
+		//U_LIGHT3_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -60,66 +98,48 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	bool getCurrentCam;
-	float speed;
-
-	void RenderSkybox();
-	void RenderPokeCenter();
-	
-	bool b_BMO;
-	bool b_viewStats;
-
-	bool collide;
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
-	Vector3 TPCcamPos;
-	Vector3 TPCcamTarget;
+	bool getCurrentCam;
 
+	bool collide;
 	float rotationangle;
 	float updatedangle;
 	float prevBodyX;
 	float prevBodyZ;
 	float prevAngle;
 
-	//For Running Animation
-	bool checkmodelStack;
+	void RenderSkybox();
+
+	bool b_viewStats;
+	//for enemy
+	float RotateEnemyBody;
+	float enemyX[2], enemyY[2], enemyZ[2];
+	Enemy e[2];
+	Vector3 enemyUpdatePos[2];
+	float f_RotateENEMYPrevFrame;
+	bool b_StepENEMYAccelerator;
+	bool b_StepENEMYBrakes;
+	bool b_ENEMYSteer;
+	float f_ENEMYRotateAmt;
+	//For Car
 	float RotateBody;
-	bool running;
-	bool bodyMovement;
-	float LeftLegX;
-	float RightLegX;
-	float ArmRotation;
 	float TranslateBodyX;
 	float TranslateBodyY;
 	float TranslateBodyZ;
-
-	float TranslateAIX;
-	float TranslateAIZ;
-
-	//<--Music-->
-	void PlayMusic();
-	bool b_musicSelected;
-	bool b_inPM;
-	bool b_checkinPM;
-	bool b_inPC;
+	Physics PlayerCar;
+	Vector3 V_UpdatedPlayerPos;
+	float f_RotatePrevFrame;
+	bool b_StepAccelerator;
+	bool b_StepBrakes;
+	bool b_Steer;
+	float f_RotateAmt;
 
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
-		GEO_AXES,
-		GEO_BODY,
-		GEO_FACE,
-		GEO_FACEOFF,
-		GEO_ARMS,
-		GEO_HAND,
-		GEO_LEG,
-		GEO_FEET,
-		GEO_EYESCIRCLE,
-		GEO_EYESCYLINDER,
-		GEO_MOUTHSEMICIRCLE,
-		GEO_MOUTHCYLINDER,
-		GEO_MOUTHQUAD,
-		GEO_USB,
+
+		/*GEO_USB,
 		GEO_YELLOWBUTTONCUBOID,
 		GEO_BLUEBUTTONCIRCLE,
 		GEO_BLUEBUTTONCYLINDER,
@@ -127,28 +147,30 @@ private:
 		GEO_GREENBUTTONCYLINDER,
 		GEO_REDBUTTONCIRCLE,
 		GEO_REDBUTTONCYLINDER,
-		GEO_TRIPRISM,
+		GEO_TRIPRISM,*/
+		GEO_AXES,
+
 		GEO_LEFT,
 		GEO_RIGHT,
 		GEO_TOP,
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-		GEO_POKECWALLWW,
-		GEO_POKECEILING,
-		GEO_POKECFLOOR,
-		GEO_BOX0,
-		GEO_BOX,
-		GEO_BOX2,
+
+		GEO_HOSPITAL,
+		GEO_RACETRACK,
+		GEO_AMBULANCE,
+
+		GEO_CAR,
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
 
 	enum OBJECT_TYPE
 	{
-		OBJ_BOX2,	//player 0
-		OBJ_BOX0,	//1
-		OBJ_BOX,	//2
+		OBJ_PLAYER,
+		OBJ_BOX1,
+		OBJ_BOX2,
 
 		NUM_OBJ
 	};
@@ -159,7 +181,9 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	static Camera2 camera;
+	//static Camera2 camera;
+	Camera3 camera;
+	float f_TPCRotateBy;
 
 	Light light[1];
 
