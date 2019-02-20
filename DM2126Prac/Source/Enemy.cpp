@@ -65,7 +65,7 @@ void Enemy::v_SetEnemySpeed(float newSpeed)
 Vector3 Enemy::V_UpdateenemyCarPos(double dt)
 {
 	E_Position += E_carSpeed * E_Direction * dt;
-	if (E_Position.z>230)
+	if (E_Position.z>200)
 	{
 		E_Position.z = -200;
 	}
