@@ -183,7 +183,7 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
 	Obj[OBJ_ENEMY1] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
 
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6);
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
@@ -349,7 +349,7 @@ void AssignmentScene::Update(double dt)
 	enemyZ[1] = enemyUpdatePos[1].z;
 	
 
-	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4));
 	for (int i = 0; i < 2; i++)
 	{
 		Obj[i+1]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
@@ -424,7 +424,7 @@ void AssignmentScene::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ+5);
+	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4);
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
