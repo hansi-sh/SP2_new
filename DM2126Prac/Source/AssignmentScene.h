@@ -123,6 +123,7 @@ private:
 	bool b_StepENEMYBrakes;
 	bool b_ENEMYSteer;
 	float f_ENEMYRotateAmt;
+
 	//For Car
 	float RotateBody;
 	float TranslateBodyX;
@@ -135,6 +136,7 @@ private:
 	bool b_StepBrakes;
 	bool b_Steer;
 	float f_RotateAmt;
+	float f_UpdatedAngle;
 
 	enum GEOMETRY_TYPE
 	{
