@@ -15,6 +15,7 @@ Camera2 Scene2::camera = Camera2();
 
 Scene2::Scene2()
 {
+	first = last = forward = current = backward = NULL;
 }
 
 // Errors:
@@ -60,6 +61,8 @@ void Scene2::Init() //defines what shader to use
 	b_BMO = true;
 	b_viewStats = false;
 	speed = 0;
+
+	delay = 0;
 
 	//<collison class>
 	collide = false;
@@ -209,11 +212,11 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateOBJ("Defibrillator", "OBJ//Defibrillator2.obj");
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
-	 Obj[OBJ_DEFIBRILLATOR] = new ObjectBox(Vector3(20, 21, 0), 2, 2, 2);
+	// Obj[OBJ_DEFIBRILLATOR] = new ObjectBox(Vector3(20, 21, 0), 2, 2, 2);
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
 	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
-	 Obj[OBJ_FIRSTAIDKIT] = new ObjectBox(Vector3(20, 20, -5), 3, 1, 3);
+	// Obj[OBJ_FIRSTAIDKIT] = new ObjectBox(Vector3(20, 20, -5), 3, 1, 3);
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
 	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
@@ -256,6 +259,12 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_INSTRUCTION2] = MeshBuilder::GenerateQuad("UI", Color(0, 0, 1), 15.0, 15.0, 15.0);
 	meshList[GEO_INSTRUCTION2]->textureID = LoadTGA("Image//Instruction2.tga");
+
+	meshList[GEO_NOTIFICATION1] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 15, 15, 15);
+	meshList[GEO_NOTIFICATION1]->textureID = LoadTGA("Image//Notification1.tga");
+
+	meshList[GEO_NOTIFICATION2] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 15, 15, 15);
+	meshList[GEO_NOTIFICATION2]->textureID = LoadTGA("Image//Notification2.tga");
 }
 
 //void Scene2::PlayMusic()
@@ -305,6 +314,8 @@ void Scene2::Init() //defines what shader to use
 
 void Scene2::Update(double dt)
 {
+	delay += dt;
+
 	if (Application::IsKeyPressed('1'))
 	{
 		Application app;
@@ -314,7 +325,7 @@ void Scene2::Update(double dt)
 	}
 	if (Application::IsKeyPressed('2'))
 	{
-
+		printNext();
 	}
 	if (Application::IsKeyPressed('3'))
 	{
@@ -400,16 +411,50 @@ void Scene2::Update(double dt)
 
 	if (camera.position.x > 10 && camera.position.x < 13)
 	{
-		if (Application::IsKeyPressed('C')) // Get key delay from sihan
+		if (Application::IsKeyPressed('C') && (delay > 0.3)) // Get key delay from sihan
+		{
+			delay = 0;
 			collectDefi = true;
-		if (Application::IsKeyPressed('V'))
+			notification1 = true;
+		}
+		// not suppose to be in actual game
+		// cheat key for obj to reappear
+		if (Application::IsKeyPressed('V') && (delay>0.3)) 
+		{
+			delay = 0;
 			collectDefi = false;
+
+			//if (collectDefi == false)
+			//{
+			//	uploadItem(8);
+			//}
+		}
 	}
 
+	if (camera.position.x > -3 && camera.position.x < 3 && 
+		camera.position.z > -8 && camera.position.z < -5)
+	{ 
+		if (Application::IsKeyPressed('C'))
+		{
+			collectKit = true;
+			notification2 = true;
+		}
+		if (Application::IsKeyPressed('V'))
+		{
+			collectKit = false;
+		}
+	}
 
+	if (Application::IsKeyPressed('M')) // Defi
+	{
+		notification1 = false;
+	}
 
-
-
+	if (Application::IsKeyPressed('N')) // Kit
+	{
+		notification2 = false;
+	}
+	
 	// Collision Box
 	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
 
@@ -570,10 +615,6 @@ void Scene2::Render()
 	//RenderMesh(meshList[GEO_PLAYER], false);
 	//modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("PLayer:BMO"), Color(1, 1, 1), 3, 2, 55);
-	//modelStack.PopMatrix();
-
 	//<--Stuff in Ambulance Scene-->
 
 	modelStack.PushMatrix();
@@ -589,14 +630,18 @@ void Scene2::Render()
 		modelStack.Scale(2, 2, 2);
 		RenderMesh(meshList[GEO_DEFIBRILLATOR], setTrueFalse);
 		modelStack.PopMatrix();
+	}	
+
+	if (!collectKit)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 7, -15);
+		modelStack.Scale(2, 2, 2);
+		modelStack.Rotate(90, 1, 0, 0);
+		RenderMesh(meshList[GEO_FIRSTAIDKIT], setTrueFalse);
+		modelStack.PopMatrix();
 	}
 
-	modelStack.PushMatrix();
-	modelStack.Translate(20, 20, -5);
-	modelStack.Scale(2, 2, 2);
-	modelStack.Rotate(270, 0, 1, 0);
-	RenderMesh(meshList[GEO_FIRSTAIDKIT], setTrueFalse);
-	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-18, 0, -15);
@@ -655,26 +700,11 @@ void Scene2::Render()
 
 	if (b_viewStats)
 	{
-		////<--FPS-->
-		//modelStack.PushMatrix();
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
-		//modelStack.PopMatrix();
-
-		////<--Get BMOS x position-->
-		//modelStack.PushMatrix();
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("X:" + std::to_string(TranslateBodyX)), Color(0, 0, 0), 2, 56, 56);
-		//modelStack.PopMatrix();
-
-		////<--Get BMOS z position-->
-		//modelStack.PushMatrix();
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("Z:" + std::to_string(TranslateBodyZ)), Color(0, 0, 0), 2, 56, 54);
-		//modelStack.PopMatrix();
-
 		RenderMission();
 	}
+
 	else
 	{
-		//<--View stats for nerds-->
 		modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Instructions:[P]"), Color(0, 0, 0), 2, 50, 58);
 		modelStack.PopMatrix();
@@ -708,9 +738,26 @@ void Scene2::Render()
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();
+
+	if (collectDefi && notification1)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_NOTIFICATION1], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
+
+	if (collectKit && notification2)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_NOTIFICATION2], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
+
+
+
 }
 
-void Scene2::RenderMission()
+void Scene2::RenderMission() // has transparent box now
 {
 	if (instruction == 0)
 	{
