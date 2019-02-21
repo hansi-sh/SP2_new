@@ -45,7 +45,7 @@ void Physics::v_UpdateCarSpeed(bool stepAccelerator, bool stepBrakes, bool steer
 void Physics::v_UpdateCarDirection(float Degree, float previousDegree) //caculate rotation
 {
 	float rad = Math::DegreeToRadian(Degree);
-	Mtx44 rotateBy;
+	//Mtx44 rotateBy;
 	V_Direction = Vector3(sin(rad), 0, cos(rad));
 	//rotateBy.SetToRotation((Degree - previousDegree), 0, 1, 0);
 
