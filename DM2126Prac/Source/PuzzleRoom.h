@@ -1,6 +1,6 @@
 #ifndef PUZZLEROOM_H
 #define PUZZLEROOM_H
-
+#include <iostream>
 #include "Scene.h"
 #include "Camera2.h"
 #include "Mesh.h"
@@ -10,6 +10,7 @@
 #include "LoadTGA.h"
 #include <Windows.h>
 #include "ObjectBox.h"
+#include "item.h"
 
 class PuzzleRoom : public Scene
 {
@@ -64,7 +65,13 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
-
+	//item
+	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
+	void uploadItem(int);
+	void printNext();
+	void printPrev();
+	void rendertag();
+	Item *first, *last, *forward, *current, *backward;
 private:
 	void RenderButton(int, int);
 	unsigned m_vertexArrayID;
@@ -117,15 +124,28 @@ private:
 	//key2
 	bool key2int;
 	bool havekey2 = false;
+	//Patient
+	bool patientint;
+	bool patienthint;
 	//safe
 	float rotatesafedoor;
-	bool safeint;
-	bool safeopen;
+	bool safeint = false;
+	bool safeopen = false;
 	bool havekey3;
+	bool safecracking = false;
+	bool codecracked = false;
+	bool wrongcode;
+	std::string code;
 	//Promtp on screen
 	bool interaction;
-	bool interactioncomplete;
+	bool interactioncomplete = false;
 	bool paintingint;
+	//codepress
+	bool eight = false;
+	bool   six = false;
+	bool   one = false;
+	bool   two = false;
+	bool other = false;
 	//<--Music-->
 	/*void PlayMusic();
 	bool b_musicSelected;
@@ -169,7 +189,16 @@ private:
 		GEO_SWITCHONE,
 		GEO_SWITCHTWO,
 		GEO_KEY2,
-		
+		GEO_HAIR, // patient
+		GEO_FACE,
+		GEO_BODY,
+		GEO_RARM,
+		GEO_LARM,
+		GEO_RHAND,
+		GEO_LHAND,
+		GEO_RLEG,
+		GEO_LLEG,
+		GEO_CROTCH,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
@@ -207,6 +236,8 @@ private:
 		OBJ_KEY2,
 		OBJ_TVTABLEDRAWERINT,
 		OBJ_SAFEINT,
+		OBJ_PATIENT,
+		OBJ_PATIENTINT,
 		OBJ_ALL,//when adding add directly above 
 		NUM_OBJ
 	};
