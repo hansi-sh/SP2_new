@@ -69,6 +69,7 @@ void AssignmentScene::Init() //defines what shader to use
 	b_StepBrakes = false;
 	b_Steer = false;
 	f_RotateAmt = 0.0f;
+	f_UpdatedAngle = 0.0f;
 	///////////////////////////
 	enemyX[0] = 15;
 	enemyY[0] = 65;
@@ -104,7 +105,7 @@ void AssignmentScene::Init() //defines what shader to use
 
 	LSPEED = 30.0f;
 
-	camera.Init(Vector3(0, 100, -80), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(0, 100, -180), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
@@ -178,6 +179,7 @@ void AssignmentScene::Init() //defines what shader to use
 
 	//Guide lines - Turn on if need
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
+<<<<<<< HEAD
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);//For Player
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
@@ -186,6 +188,15 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
+=======
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 13);//For Player
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
+
+	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
+	Obj[OBJ_ENEMY1] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
+
+>>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
 
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
@@ -238,23 +249,23 @@ void AssignmentScene::Update(double dt)
 	}
 	if (Application::IsKeyPressed('3'))
 	{
-		
+
 	}
 
 	if (Application::IsKeyPressed('6'))
-	{	
+	{
 		glEnable(GL_CULL_FACE);
-	}	
+	}
 	if (Application::IsKeyPressed('7'))
-	{	
+	{
 		glDisable(GL_CULL_FACE);
 	}
 	if (Application::IsKeyPressed('8'))
-	{	
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	if (Application::IsKeyPressed('9'))
-	{	
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
@@ -268,6 +279,40 @@ void AssignmentScene::Update(double dt)
 	f_RotatePrevFrame = RotateBody;
 	fps = 1.0f / (float)dt;
 
+<<<<<<< HEAD
+=======
+	//if (Application::IsKeyPressed('I'))//forward
+	//{
+	//	TranslateBodyZ += 0.3f;
+	//}
+	//else if (Application::IsKeyPressed('K'))//backward
+	//{
+	//	TranslateBodyZ -= 0.3f;
+	//}
+	//if (Application::IsKeyPressed('J'))//left
+	//{
+	//	TranslateBodyX += 0.3f;
+	//}
+	//else if (Application::IsKeyPressed('L'))//right
+	//{
+	//	TranslateBodyX -= 0.3f;
+	//}
+	/////////////////////////////rotation
+
+	//f_RotateAmt = 1.0f;
+	//if (Application::IsKeyPressed('Z') && !(ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[OBJ_ENEMY1])))//rotate left
+	//{
+	//	RotateBody += f_RotateAmt;
+	//	f_UpdatedAngle = 1.0f;
+	//}
+	//else if (Application::IsKeyPressed('X') && !(ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[OBJ_ENEMY1])))//rotate right
+	//{
+	//	RotateBody -= f_RotateAmt;
+	//	f_UpdatedAngle = -1.0f;
+	//}
+
+
+>>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
 	if (Application::IsKeyPressed('T'))//forward
 	{
 		b_StepAccelerator = true;
@@ -283,6 +328,7 @@ void AssignmentScene::Update(double dt)
 		b_StepAccelerator = false;
 		b_StepBrakes = false;
 	}
+<<<<<<< HEAD
 /////////////////////////rotation
 	if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
 	{
@@ -303,52 +349,129 @@ void AssignmentScene::Update(double dt)
 			f_RotateAmt += 0.05f;
 	}
 	else if (fabs(PlayerCar.f_GetSpeed()) < 60.0f)
-	{
-		if (f_RotateAmt >= 1.0f)
-			f_RotateAmt -= 0.05f;
-		else
-			f_RotateAmt += 0.05f;
-	}
+=======
+	///////////////////////rotation
+	if(!collide)
+		{
+			/*if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
+			{
+				f_RotateAmt = 0.0f;
+			}
+			else if (fabs(PlayerCar.f_GetSpeed()) < 20.0f)
+			{
+				if (f_RotateAmt >= 0.3f)
+				{
+					f_RotateAmt -= 0.05f;
+					f_UpdatedAngle = -0.05f;
+				}
+				else
+				{
+					f_RotateAmt += 0.05f;
+					f_UpdatedAngle = 0.05f;
+				}
+			}
+			else if (fabs(PlayerCar.f_GetSpeed()) < 40.0f)
+			{
+				if (f_RotateAmt >= 0.5f)
+				{
+					f_RotateAmt -= 0.05f;
+					f_UpdatedAngle = -0.05f;
+				}
+				else
+				{
+					f_RotateAmt += 0.05f;
+					f_UpdatedAngle = 0.05f;
+				}
+			}
+			else if (fabs(PlayerCar.f_GetSpeed()) < 60.0f)
+			{
+				if (f_RotateAmt >= 1.0f)
+				{
+					f_RotateAmt -= 0.05f;
+					f_UpdatedAngle = -0.05f;
+				}
+				else
+				{
+					f_RotateAmt += 0.05f;
+					f_UpdatedAngle = 0.05f;
+				}
+			}*/
 
-	//f_RotateAmt = 1.0f;
-	if (Application::IsKeyPressed('F'))//rotate left
-	{
-		b_Steer = true;
-		RotateBody += f_RotateAmt;
-	}
-	else if (Application::IsKeyPressed('H'))//rotate right
-	{
-		b_Steer = true;
-		RotateBody -= f_RotateAmt;
-	}
-	else
-	{
-		TranslateBodyY = 15.0f;
-		b_Steer = false;
-	}
-
-	PlayerCar.v_UpdateCarDirection(RotateBody, f_RotatePrevFrame);
+			//f_RotateAmt = 1.0f;
+			if (Application::IsKeyPressed('F'))//rotate left
+			{
+				b_Steer = true;
+				RotateBody += 1.0f;
+				f_UpdatedAngle = 1.0f;
+			}
+			else if (Application::IsKeyPressed('H'))//rotate left
+			{
+				b_Steer = true;
+				RotateBody -= 1.0f;
+				f_UpdatedAngle = -1.0f;
+			}
+			else
+			{
+				b_Steer = false;
+			}
+			PlayerCar.v_UpdateCarDirection(RotateBody, f_RotatePrevFrame);
+		}
 	PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
 	V_UpdatedPlayerPos = PlayerCar.V_UpdateCarPos(dt);
 
 	TranslateBodyX = V_UpdatedPlayerPos.x;
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
+	
 
-	//e[0].enemyMove(b_StepENEMYAccelerator, b_StepENEMYBrakes);
+	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
+	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 
-	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody, f_RotateENEMYPrevFrame);
-	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
-	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
-	enemyX[0] = enemyUpdatePos[0].x;
-	enemyY[0] = enemyUpdatePos[0].y;
-	enemyZ[0] = enemyUpdatePos[0].z;
-	e[1].v_UpdateEnemyCarDirection(RotateEnemyBody, f_RotateENEMYPrevFrame);
-	e[1].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
-	enemyUpdatePos[1] = e[1].V_UpdateenemyCarPos(dt);
-	enemyX[1] = enemyUpdatePos[1].x;
-	enemyY[1] = enemyUpdatePos[1].y;
-	enemyZ[1] = enemyUpdatePos[1].z;
+	for (int i = 0; i < 1; i++)
+>>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
+	{
+		Obj[i+1]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
+	}
+
+<<<<<<< HEAD
+	//f_RotateAmt = 1.0f;
+	if (Application::IsKeyPressed('F'))//rotate left
+=======
+	//<collision>
+	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
+>>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
+	{
+		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
+		{
+			collide = true;
+			break;
+		}
+		collide = false;
+	}
+<<<<<<< HEAD
+	else if (Application::IsKeyPressed('H'))//rotate right
+=======
+
+	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
+>>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
+	{
+		PlayerCar.v_SetSpeed(0.0f);
+		TranslateBodyX = prevBodyX;
+		TranslateBodyZ = prevBodyZ;
+		RotateBody = prevAngle;
+
+		Obj[OBJ_PLAYER]->setRotatingAxis((-1 * f_UpdatedAngle), 0.0f, 1.0f, 0.0f);
+		Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+		PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	}
+	else	//if it does not collides, what ever happened in the previous frame will be saved
+	{
+		prevBodyX = TranslateBodyX;
+		prevBodyZ = TranslateBodyZ;
+		prevAngle = RotateBody;
+	}
+
+	f_UpdatedAngle = 0.0f;
 	
 
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4));
@@ -427,6 +550,7 @@ void AssignmentScene::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
+<<<<<<< HEAD
 	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4);
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
@@ -444,15 +568,30 @@ void AssignmentScene::Render()
 	//RenderMesh(meshList[GEO_AICUBE], false);
 	//modelStack.PopMatrix();
 
+=======
+	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	//modelStack.Translate(0, 0, -4);
+	modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
+	//modelStack.Translate(0, 0, 4);
+	RenderMesh(meshList[GEO_CUBE], false);
+	modelStack.PopMatrix();
+
+
+>>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
 	modelStack.PushMatrix();
 	modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
-	modelStack.Rotate(90, 0, 1, 0);
-	RenderMesh(meshList[GEO_CAR], false);
+	RenderMesh(meshList[GEO_AICUBE], false);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
+	////modelStack.Rotate(90, 0, 1, 0);
+	//RenderMesh(meshList[GEO_CAR], false);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(enemyX[1], enemyY[1], enemyZ[1]);
-	modelStack.Rotate(90, 0, 1, 0);
+	//modelStack.Rotate(90, 0, 1, 0);
 	RenderMesh(meshList[GEO_CAR], false);
 	modelStack.PopMatrix();
 
@@ -493,11 +632,11 @@ void AssignmentScene::Render()
 
 
 
-	modelStack.PushMatrix();
-	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
-	RenderMesh(meshList[GEO_AMBULANCE], false);
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	//modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
+	//RenderMesh(meshList[GEO_AMBULANCE], false);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
