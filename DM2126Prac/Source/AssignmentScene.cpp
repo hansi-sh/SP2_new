@@ -64,7 +64,6 @@ void AssignmentScene::Init() //defines what shader to use
 	PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 
 	V_UpdatedPlayerPos = Vector3(0, 0, 0);
-	f_RotatePrevFrame = 0.0f;
 	b_StepAccelerator = false;
 	b_StepBrakes = false;
 	b_Steer = false;
@@ -72,13 +71,11 @@ void AssignmentScene::Init() //defines what shader to use
 	f_UpdatedAngle = 0.0f;
 	///////////////////////////
 	enemyX[0] = 15;
-	enemyY[0] = 65;
+	enemyY[0] = 64;
 	enemyZ[0]= -200;
-
 	enemyX[1] = -15;
 	enemyY[1] = 64;
 	enemyZ[1] = -200;
-
 	RotateEnemyBody = 0.0f;
 
 	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
@@ -86,7 +83,7 @@ void AssignmentScene::Init() //defines what shader to use
 	enemyUpdatePos[0] = Vector3(0, 0, 0);
 	enemyUpdatePos[1] = Vector3(0, 0, 0);
 	f_RotateENEMYPrevFrame = 0.0f;
-	b_StepENEMYAccelerator = false;
+	b_StepENEMYAccelerator = true;
 	b_StepENEMYBrakes = false;
 	b_ENEMYSteer = false;
 	f_ENEMYRotateAmt = 0.0f;
@@ -198,6 +195,7 @@ void AssignmentScene::Init() //defines what shader to use
 
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 12);//For Player
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front3.tga");
@@ -226,9 +224,9 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
 	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 40.0f);
-	//Obj[OBJ_BOX1] = new ObjectBox(Vector3(40.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
+	Obj[OBJ_BOX1] = new ObjectBox(Vector3(40.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
 	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(0, 0, 1), 10.0f, 25.0f, 40.0f);
-	//Obj[OBJ_BOX2] = new ObjectBox(Vector3(-40.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-40.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
 }
 
 void AssignmentScene::Update(double dt)
@@ -272,9 +270,7 @@ void AssignmentScene::Update(double dt)
 	else
 		b_viewStats = false;
 
-
 	f_RotateENEMYPrevFrame = RotateEnemyBody;
-	f_RotatePrevFrame = RotateBody;
 	fps = 1.0f / (float)dt;
 
 	//if (Application::IsKeyPressed('I'))//forward
@@ -379,7 +375,7 @@ void AssignmentScene::Update(double dt)
 			{
 				b_Steer = false;
 			}
-			PlayerCar.v_UpdateCarDirection(RotateBody, f_RotatePrevFrame);
+			PlayerCar.v_UpdateCarDirection(RotateBody);
 		}
 	PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
 	V_UpdatedPlayerPos = PlayerCar.V_UpdateCarPos(dt);
@@ -389,9 +385,7 @@ void AssignmentScene::Update(double dt)
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 	
 
-	//Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4));
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
-	//Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ + 4));
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 
 	for (int i = 0; i < 1; i++)
@@ -421,9 +415,7 @@ void AssignmentScene::Update(double dt)
 		TranslateBodyZ = prevBodyZ;
 		RotateBody = prevAngle;
 
-		//Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4));
 		Obj[OBJ_PLAYER]->setRotatingAxis((-1 * f_UpdatedAngle), 0.0f, 1.0f, 0.0f);
-		//Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ + 4));
 		Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 		PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 	}
@@ -436,40 +428,6 @@ void AssignmentScene::Update(double dt)
 
 	f_UpdatedAngle = 0.0f;
 	
-
-	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4));
-
-	for (int i = 0; i < 1; i++)
-	{
-		Obj[i+1]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
-	}
-	
-
-	//<collision>
-	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
-	{
-		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
-		{
-			collide = true;
-			//camera.position = currentCamPos;
-			//camera.target = currentCamTarget;
-			TranslateBodyX = prevBodyX;
-			TranslateBodyZ = prevBodyZ;
-			//rotationangle = prevAngle;
-			break;
-		}
-		collide = false;
-	}
-	if (!collide)
-	{
-		//currentCamPos = camera.position;
-		//currentCamTarget = camera.target;
-		prevBodyX = TranslateBodyX;
-		prevBodyZ = TranslateBodyZ;
-		//prevAngle = rotationangle;
-	}
-
-
 	if (getCurrentCam)
 	{
 		currentCamPos = camera.position;
@@ -517,10 +475,8 @@ void AssignmentScene::Render()
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 	//modelStack.PushMatrix();
-	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4);
-	////modelStack.Translate(0, 0, -4);
+	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
 	//modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
-	////modelStack.Translate(0, 0, 4);
 	//RenderMesh(meshList[GEO_CUBE], false);
 	//modelStack.PopMatrix();
 
@@ -656,31 +612,12 @@ void AssignmentScene::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();*/
 
-	//if (collide)
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
-	//	modelStack.PopMatrix();
-	//}
-	//else
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
-	//	modelStack.PopMatrix();
-	//}
-
-	int speedct = fabs(PlayerCar.f_GetSpeed());
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Speed:" + std::to_string(speedct)), Color(0, 0, 0), 2, 2, 3);
-	modelStack.PopMatrix();
-
 	if (collide)
 	{
 		modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
 		modelStack.PopMatrix();
 	}
-
 	else
 	{
 		modelStack.PushMatrix();

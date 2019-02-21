@@ -1,8 +1,8 @@
 #ifndef ASSIGNMENTSCENE_H
-#define RACIASSIGNMENTSCENE_HNG_H
+#define ASSIGNMENTSCENE_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -12,7 +12,6 @@
 #include "Enemy.h"
 #include <Windows.h>
 #include "Physics.h"
-#include <cmath>
 
 class AssignmentScene : public Scene
 {
@@ -141,7 +140,7 @@ private:
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
-		GEO_CUBE,
+		//GEO_CUBE,
 		GEO_AICUBE,
 
 		/*GEO_USB,
@@ -175,8 +174,8 @@ private:
 	{
 		OBJ_PLAYER,
 		OBJ_ENEMY1,
-		//OBJ_BOX1,
-		//OBJ_BOX2,
+		OBJ_BOX1,
+		OBJ_BOX2,
 
 		NUM_OBJ
 	};
