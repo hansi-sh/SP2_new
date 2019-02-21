@@ -213,10 +213,6 @@ void AssignmentScene::Init() //defines what shader to use
 
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
-	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 40.0f);
-	Obj[OBJ_BOX1] = new ObjectBox(Vector3(40.0f, 84.0f, 0.0f), 20.0f, 40.0f, 80.0f);
-	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(0, 0, 1), 10.0f, 25.0f, 40.0f);
-	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-40.0f, 88.0f, 0.0f), 20.0f, 50.0f, 80.0f);
 }
 
 void AssignmentScene::Update(double dt)

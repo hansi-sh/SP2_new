@@ -174,8 +174,8 @@ private:
 	{
 		OBJ_PLAYER,
 		OBJ_ENEMY1,
-		OBJ_BOX1,
-		OBJ_BOX2,
+		//OBJ_BOX1,
+		//OBJ_BOX2,
 
 		NUM_OBJ
 	};
