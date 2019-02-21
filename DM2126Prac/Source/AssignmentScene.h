@@ -83,7 +83,7 @@ public:
 	AssignmentScene();
 	~AssignmentScene();
 
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	//static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();
@@ -130,12 +130,15 @@ private:
 	float TranslateBodyZ;
 	Physics PlayerCar;
 	Vector3 V_UpdatedPlayerPos;
-	float f_RotatePrevFrame;
 	bool b_StepAccelerator;
 	bool b_StepBrakes;
 	bool b_Steer;
 	float f_RotateAmt;
 	float f_UpdatedAngle;
+	int i_CollidedWith;
+
+	float f_HeightAIP;	//AI + players car height
+	float f_WidthAIP;	//AI + players car width
 
 	enum GEOMETRY_TYPE
 	{
@@ -186,8 +189,8 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	static Camera2 camera;
-	//Camera3 camera;
+	//static Camera2 camera;
+	Camera3 camera;
 	float f_TPCRotateBy;
 
 	Light light[1];

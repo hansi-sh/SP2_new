@@ -11,35 +11,36 @@
 
 float AssignmentScene::lastX = 0.0f;
 float AssignmentScene::lastY = 0.0f;
-Camera2 AssignmentScene::camera = Camera2();
+//Camera2 AssignmentScene::camera = Camera2();
 
 AssignmentScene::AssignmentScene()
 {
+
 }
 
-void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
-}
+//void AssignmentScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//	float xoffset = (float)xpos - lastX;
+//	float yoffset = (float)ypos - lastY;
+//	float sensitivity = 0.05f;
+//
+//	lastX = (float)xpos;
+//	lastY = (float)ypos;
+//
+//	xoffset *= sensitivity;
+//	yoffset *= sensitivity;
+//
+//	Vector3 view = camera.target - camera.position;
+//	Mtx44 rotate;
+//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
+//	view = rotate * view;
+//
+//	Vector3 rightVector = view.Cross(camera.up);
+//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
+//	view = rotate * view;
+//
+//	camera.target = camera.position + view;
+//}
 
 AssignmentScene::~AssignmentScene()
 {
@@ -69,7 +70,11 @@ void AssignmentScene::Init() //defines what shader to use
 	b_Steer = false;
 	f_RotateAmt = 0.0f;
 	f_UpdatedAngle = 0.0f;
-	///////////////////////////
+
+	i_CollidedWith = 0;
+
+	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
+
 	enemyX[0] = 15;
 	enemyY[0] = 64;
 	enemyZ[0]= -200;
@@ -87,7 +92,7 @@ void AssignmentScene::Init() //defines what shader to use
 	b_StepENEMYBrakes = false;
 	b_ENEMYSteer = false;
 	f_ENEMYRotateAmt = 0.0f;
-	///////////////////////////
+
 	f_TPCRotateBy = 0.0f;
 	
 	
@@ -290,12 +295,12 @@ void AssignmentScene::Update(double dt)
 	//}
 
 
-	if (Application::IsKeyPressed('T'))//forward
+	if (Application::IsKeyPressed('W'))//forward
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
 	}
-	else if (Application::IsKeyPressed('G'))//backward
+	else if (Application::IsKeyPressed('S'))//backward
 	{
 		b_StepAccelerator = false;
 		b_StepBrakes = true;
@@ -325,13 +330,13 @@ void AssignmentScene::Update(double dt)
 				f_RotateAmt = 1.0f;
 			}
 
-			if (Application::IsKeyPressed('F'))//rotate left
+			if (Application::IsKeyPressed('A'))//rotate left
 			{
 				b_Steer = true;
 				f_UpdatedAngle = (RotateBody + f_RotateAmt) - RotateBody;
 				RotateBody += f_RotateAmt;
 			}
-			else if (Application::IsKeyPressed('H'))//rotate left
+			else if (Application::IsKeyPressed('D'))//rotate left
 			{
 				b_Steer = true;
 				f_UpdatedAngle = (RotateBody - f_RotateAmt) - RotateBody;
@@ -350,6 +355,12 @@ void AssignmentScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 	
+	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody,0);
+	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
+	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
+	enemyX[0] = enemyUpdatePos[0].x;
+	enemyY[0] = enemyUpdatePos[0].y;
+	enemyZ[0] = enemyUpdatePos[0].z;
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
@@ -365,6 +376,7 @@ void AssignmentScene::Update(double dt)
 		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
 		{
 			collide = true;
+			i_CollidedWith = AllObjs;
 			break;
 		}
 		collide = false;
@@ -372,9 +384,44 @@ void AssignmentScene::Update(double dt)
 
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
-		PlayerCar.v_SetSpeed(0.0f);
-		TranslateBodyX = prevBodyX;
-		TranslateBodyZ = prevBodyZ;
+		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+
+		//if i_CollidedWith the numbers of Car AI
+		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
+
+		if (i_CollidedWith >= 1 /*&& i_CollidedWith <= last car AI*/) //num in object type
+		{
+			if (TranslateBodyZ > enemyZ[i_CollidedWith-1])
+			{
+				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 1]) >= f_HeightAIP)	//if AI directly hits back of the car of player
+				{
+					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.3));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
+				}
+				else
+				{
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
+				}
+			}
+			else
+			{
+				if ((enemyZ[i_CollidedWith - 1] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
+				{
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.3));
+				}
+				else
+				{
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
+				}
+			}
+		}
+
+		/*TranslateBodyX = prevBodyX;
+		TranslateBodyZ = prevBodyZ;*/
 		RotateBody = prevAngle;
 
 		Obj[OBJ_PLAYER]->setRotatingAxis((-1 * f_UpdatedAngle), 0.0f, 1.0f, 0.0f);
@@ -383,8 +430,8 @@ void AssignmentScene::Update(double dt)
 	}
 	else	//if it does not collides, what ever happened in the previous frame will be saved
 	{
-		prevBodyX = TranslateBodyX;
-		prevBodyZ = TranslateBodyZ;
+		/*prevBodyX = TranslateBodyX;
+		prevBodyZ = TranslateBodyZ;*/
 		prevAngle = RotateBody;
 	}
 
@@ -396,16 +443,18 @@ void AssignmentScene::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 
-	if (Application::IsKeyPressed('Z'))
+	if (Application::IsKeyPressed('Q'))
 	{
-		light[0].type = Light::LIGHT_POINT;  // For a lamp post
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
+		f_TPCRotateBy = -1.0f;
+		//light[0].type = Light::LIGHT_POINT;  // For a lamp post
+		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to POINT and pass the information to shader
 	}
-	else if (Application::IsKeyPressed('X'))
+	else if (Application::IsKeyPressed('E'))
 	{
-		light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
+		f_TPCRotateBy = 1.0f;
+		//light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
+		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to DIRECTIONAL and pass the information to shader
 	}
 	else if (Application::IsKeyPressed('C'))
@@ -416,8 +465,8 @@ void AssignmentScene::Update(double dt)
 	}
 
 	
-	camera.Update(dt);
-	//camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	//camera.Update(dt);
+	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
 	f_TPCRotateBy = 0.0f;
 }
 
@@ -501,7 +550,7 @@ void AssignmentScene::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
-	modelStack.Translate(0, 8, 30 /*34*/);
+	modelStack.Translate(0, 8, 30);
 	modelStack.Rotate(180, 0, 1, 0);
 	RenderMesh(meshList[GEO_HOSPITAL], false);
 	modelStack.PopMatrix();
