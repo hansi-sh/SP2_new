@@ -161,11 +161,30 @@ private:
 		//GEO_TEST, // Cabinet2
 		// GEO_TEST1, // Front
 		// GEO_TEST2, // back
+		// GEO_TEST3, // top
+		// GEO_TEST4, // bottom
+		// GEO_TEST5, // left
+		// GEO_TEST6, // right
 		GEO_TEXT,
 		GEO_INSTRUCTION1,
 		GEO_INSTRUCTION2,
 		GEO_NOTIFICATION1,
 		GEO_NOTIFICATION2,
+		GEO_FRAME,
+
+		GEO_HAIR, // patient
+		GEO_FACE,
+		GEO_BODY,
+		GEO_RARM,
+		GEO_LARM,
+
+
+		GEO_RHAND,
+		GEO_LHAND,
+		GEO_RLEG,
+		GEO_LLEG,
+		GEO_CROTCH,
+
 		NUM_GEOMETRY,
 	};
 
@@ -185,11 +204,19 @@ private:
 		OBJ_TOPSHELVE3, // - > done
 
 		OBJ_FRONT, // - > done
-		OBJ_BACK, // 
+		OBJ_BACK, 
+		OBJ_TOP, 
+		OBJ_BOTTOM,
+		OBJ_LEFT,
+		OBJ_RIGHT,
 
 		// OBJ_TEST, // Cabinet2
 		// OBJ_TEST1, // Front
 		// OBJ_TEST2, // Back
+		// OBJ_TEST3, // top
+		// OBJ_TEST4, // bottom
+		// OBJ_TEST5, // left
+		// OBJ_TEST6, // right
 
 		NUM_OBJ
 	};
@@ -217,8 +244,13 @@ private:
 	bool collectKit = false;
 	bool notification1 = false;
 	bool notification2 = false;
+	bool useDefi = false; 
+	bool useKit = false;
+	bool nextStage = false;
+	double score = 1.0;
 
 	void RenderMission();
+	void EndMission();
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
 	void uploadItem(int);
