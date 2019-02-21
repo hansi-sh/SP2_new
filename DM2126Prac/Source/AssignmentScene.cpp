@@ -179,7 +179,7 @@ void AssignmentScene::Init() //defines what shader to use
 
 	//Guide lines - Turn on if need
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
-<<<<<<< HEAD
+
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);//For Player
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
@@ -188,7 +188,6 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
-=======
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 13);//For Player
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
@@ -196,7 +195,7 @@ void AssignmentScene::Init() //defines what shader to use
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
 	Obj[OBJ_ENEMY1] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
 
->>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
+
 
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
@@ -279,8 +278,8 @@ void AssignmentScene::Update(double dt)
 	f_RotatePrevFrame = RotateBody;
 	fps = 1.0f / (float)dt;
 
-<<<<<<< HEAD
-=======
+
+
 	//if (Application::IsKeyPressed('I'))//forward
 	//{
 	//	TranslateBodyZ += 0.3f;
@@ -312,7 +311,7 @@ void AssignmentScene::Update(double dt)
 	//}
 
 
->>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
+
 	if (Application::IsKeyPressed('T'))//forward
 	{
 		b_StepAccelerator = true;
@@ -328,7 +327,7 @@ void AssignmentScene::Update(double dt)
 		b_StepAccelerator = false;
 		b_StepBrakes = false;
 	}
-<<<<<<< HEAD
+
 /////////////////////////rotation
 	if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
 	{
@@ -349,7 +348,7 @@ void AssignmentScene::Update(double dt)
 			f_RotateAmt += 0.05f;
 	}
 	else if (fabs(PlayerCar.f_GetSpeed()) < 60.0f)
-=======
+
 	///////////////////////rotation
 	if(!collide)
 		{
@@ -427,19 +426,15 @@ void AssignmentScene::Update(double dt)
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 
-	for (int i = 0; i < 1; i++)
->>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
-	{
+	for (int i = 0; i < 1; i++)	{
 		Obj[i+1]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
 	}
 
-<<<<<<< HEAD
 	//f_RotateAmt = 1.0f;
 	if (Application::IsKeyPressed('F'))//rotate left
-=======
 	//<collision>
 	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
->>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
+
 	{
 		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
 		{
@@ -448,12 +443,9 @@ void AssignmentScene::Update(double dt)
 		}
 		collide = false;
 	}
-<<<<<<< HEAD
 	else if (Application::IsKeyPressed('H'))//rotate right
-=======
 
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
->>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
 	{
 		PlayerCar.v_SetSpeed(0.0f);
 		TranslateBodyX = prevBodyX;
@@ -550,7 +542,6 @@ void AssignmentScene::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-<<<<<<< HEAD
 	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ+4);
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
@@ -568,7 +559,6 @@ void AssignmentScene::Render()
 	//RenderMesh(meshList[GEO_AICUBE], false);
 	//modelStack.PopMatrix();
 
-=======
 	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
 	//modelStack.Translate(0, 0, -4);
 	modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
@@ -577,7 +567,6 @@ void AssignmentScene::Render()
 	modelStack.PopMatrix();
 
 
->>>>>>> 354e95f7cc47bf98c65a37c04fb7151306c80a2b
 	modelStack.PushMatrix();
 	modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
 	RenderMesh(meshList[GEO_AICUBE], false);

@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include <string>
 
+
 float PuzzleRoom::lastX = 0.0f;
 float PuzzleRoom::lastY = 0.0f;
 Camera2 PuzzleRoom::camera = Camera2();
@@ -16,6 +17,7 @@ Camera2 PuzzleRoom::camera = Camera2();
 
 PuzzleRoom::PuzzleRoom()
 {
+	first = last = current = forward = backward = NULL;
 }
 
 void PuzzleRoom::mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -185,7 +187,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_LIGHTBALL1] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
 	meshList[GEO_LIGHTBALL2] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
-	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.f, 25.f, 10.f);
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 5.f, 25.f, 5.f);
 	//Guide lines - Turn on if need
 	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	//walls
@@ -211,9 +213,8 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_DOORTOROOM1] = MeshBuilder::GenerateOBJ("Room1Wall", "OBJ//doortoroom12.obj");
 	meshList[GEO_DOORTOROOM1]->textureID = LoadTGA("Image//DoorTextures.tga");
-	Obj[OBJ_DOORINT] = new ObjectBox(Vector3(55.7, 58.50, -18.5), 41.82, 65, 79);
+	Obj[OBJ_DOORINT] = new ObjectBox(Vector3(55.7, 58.50, -18.5), 41.82, 65, 55);
 
-	//<----BMO body---->
 	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJ("Sofa", "OBJ//sofa2.obj");
 	meshList[GEO_SOFA]->textureID = LoadTGA("Image//sofatxt.tga");
 	Obj[OBJ_SOFA] = new ObjectBox(Vector3(39, 58.50, 37), 19.5, 65, 40);
@@ -309,6 +310,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_KEY1]->textureID = LoadTGA("Image//Key1.tga");
 	Obj[OBJ_KEY1] = new ObjectBox(Vector3(10, 52.50, 76), 16, 36, 10);
 
+
 	meshList[GEO_TABLEPAINTING] = MeshBuilder::GenerateOBJ("tablepainting", "OBJ//tablepainting.obj");
 	meshList[GEO_TABLEPAINTING]->textureID = LoadTGA("Image//TablePainting.tga");
 	Obj[OBJ_TABLEPAINTING] = new ObjectBox(Vector3(-0.95, 58.50, 65.455), 33.52, 65, 28.8);
@@ -324,8 +326,43 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_KEY2] = MeshBuilder::GenerateOBJ("Key1,", "OBJ//key2.obj");
 	meshList[GEO_KEY2]->textureID = LoadTGA("Image//Key1.tga");
-
 	Obj[OBJ_KEY2] = new ObjectBox(Vector3(21, 58.50, -86.03), 6, 65, 34.82);
+
+	// Patient Obj
+	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
+	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");
+
+	meshList[GEO_FACE] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Face.obj");
+	meshList[GEO_FACE]->textureID = LoadTGA("Image//Face.tga");
+
+	meshList[GEO_BODY] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Body.obj");
+	meshList[GEO_BODY]->textureID = LoadTGA("Image//Chest.tga");
+
+	meshList[GEO_RARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RArm.obj");
+	meshList[GEO_RARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LArm.obj");
+	meshList[GEO_LARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_RHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RHand.obj");
+	meshList[GEO_RHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_LHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LHand.obj");
+	meshList[GEO_LHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_RLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RLeg.obj");
+	meshList[GEO_RLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LLeg.obj");
+	meshList[GEO_LLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_CROTCH] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Crotch.obj");
+	meshList[GEO_CROTCH]->textureID = LoadTGA("Image//Body.tga");
+
+	Obj[OBJ_PATIENT] = new ObjectBox(Vector3(57, 36.50, 45),17, 20, 27);
+	Obj[OBJ_PATIENTINT] = new ObjectBox(Vector3(57, 46.50, 45), 27, 20, 37);
+
+
 	//InteractCheck
 	Obj[OBJ_ALL] = new ObjectBox(Vector3(0,0,0), 1000, 1000, 1000);
 
@@ -345,6 +382,17 @@ void PuzzleRoom::Init() //defines what shader to use
 void PuzzleRoom::Update(double dt)
 {
 	elapsedtime += dt;
+	//Inventory
+	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
+	{
+		elapsedtime = 0;
+		printPrev();
+	}
+	if(Application::IsKeyPressed(VK_RIGHT) && elapsedtime > 1)
+	{
+		elapsedtime = 0;
+		printNext();
+	}
 	//DoorOpening
 	if (doorint == true && havekey1 == true)
 	{
@@ -360,22 +408,22 @@ void PuzzleRoom::Update(double dt)
 			}
 		}
 	}
-	if(doorint == true && havekey1 == false )
+	if(doorint == true && havekey1 == false || drawerint == true && havekey2 == false)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
 		}
 	}
-
+	
 	if (door1open && RotateDoor1< 85)
 	{
-		Obj[OBJ_DOOR] = new ObjectBox(Vector3(55.7, 58.50, -14.5), 31.82, 65, 4);
+		Obj[OBJ_DOOR] = new ObjectBox(Vector3(55.7, 58.50, -16.5), 31.82, 65, 7);
 		RotateDoor1 += 35 * dt * 2;
 	}
 	else if (!door1open && RotateDoor1 > 0)
 	{
-		Obj[OBJ_DOOR] = new ObjectBox(Vector3(68.3, 58.50, -45.28), 4, 65, 31.82);
+		Obj[OBJ_DOOR] = new ObjectBox(Vector3(69, 58.50, -32.28), 7, 65, 30);
 		RotateDoor1 -= 35 * dt * 2;
 	}
 	//SecretDoorOpening
@@ -439,14 +487,84 @@ void PuzzleRoom::Update(double dt)
 	{
 		Obj[OBJ_PILLOW] = new ObjectBox(Vector3(48, 58.50, -86.03), 6, 65, 34.82);
 	}
+	if (Application::IsKeyPressed('G')&& elapsedtime >1)
+	{
+		elapsedtime = 0;
+		havekey1 = true;
+		havekey2 = true; 
+		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
+		meshList[GEO_KEY1]->textureID = LoadTGA("Image/InvKey1.tga");
+		uploadItem(27);
+		std::cout << "0" << std::endl;
+	}
 	//safe
-	if (safeopen == false && safeint == true)
+	if (safeint == true && safeopen == false)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			havekey3 = true;
+			safecracking = true;	
 		}
+	}
+	if (safecracking == true)
+	{
+		other = false;
+		if (Application::IsKeyPressed('8'))
+		{
+			eight = true;
+			other = false;
+			six = false;
+			one = false;
+			two = false;
+		}
+		else if (Application::IsKeyPressed('6'))
+		{
+			six = true;
+			one = false;
+			two = false;
+		}
+		else if (Application::IsKeyPressed('1'))
+		{
+			one = true;
+			two = false;
+		}
+		else if (Application::IsKeyPressed('2'))
+		{
+			two = true;
+		}
+		else if (Application::IsKeyPressed('E'))
+		{
+
+		}
+		else if (Application::IsKeyPressed('3')&& Application::IsKeyPressed('4')&& Application::IsKeyPressed('5') && Application::IsKeyPressed('7') && Application::IsKeyPressed('9') && Application::IsKeyPressed('0'))
+		{
+			other = true;
+			eight = false;
+			six = false;
+			one = false;
+			two = false;
+		}
+
+	}
+	if (eight == true && six == true && one == true && two == true)
+	{
+		codecracked = true;
+	}
+	if (safeopen == false && safeint == true &&codecracked == true)
+	{
+			safeopen = true;
+			havekey3 = true;
+	}
+	if (safeopen == true)
+	{
+
+	}
+	if (havekey3 == true)
+	{
+		eight = false;
+		six = false;
+		one = false;
+		two = false;
 	}
 	//key2
 	if (key2int == true && pillowmoved == true)
@@ -464,6 +582,18 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete = true;
 			havekey1 = true;
+			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_KEY1]->textureID = LoadTGA("Image//Black.tga");
+			uploadItem(27);
+		}
+	}
+	//Patient
+	if (patientint == true)
+	{
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete =true;
+			patienthint = true;
 		}
 	}
 	//switchone
@@ -526,7 +656,7 @@ void PuzzleRoom::Update(double dt)
 	}
 
 
-	if (Application::IsKeyPressed('2'))
+	if (Application::IsKeyPressed('5'))
 	{
 		Application app;
 		app.SetSceneNumber(2);
@@ -544,7 +674,7 @@ void PuzzleRoom::Update(double dt)
 		app.SetSceneNumber(4);
 		app.Run();
 	}
-	if (Application::IsKeyPressed('6'))
+	/*if (Application::IsKeyPressed('6'))
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -559,7 +689,7 @@ void PuzzleRoom::Update(double dt)
 	if (Application::IsKeyPressed('9'))
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
+	}*/
 	
 
 	if (Application::IsKeyPressed('P'))
@@ -664,8 +794,18 @@ void PuzzleRoom::Update(double dt)
 				interaction = true;
 				break;
 			}
+			//PatientInteraction
+			if (AllObjs == 34)
+			{
+				patientint = true;
+				interaction = true;
+				break;
+			}
 			if (AllObjs == NUM_OBJ-1)
 			{
+				safeint = false;
+				patienthint = false;
+				patientint = false;
 				drawerint = false;
 				key2int = false;
 				pillowint = false;
@@ -678,6 +818,7 @@ void PuzzleRoom::Update(double dt)
 				secretdoorint =false;
 				interaction = false;
 				interactioncomplete = false;
+				other = false;
 				break;
 			}
 			collide = true;
@@ -824,13 +965,8 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 0, 0), 2, 14, 48);
 		 modelStack.PopMatrix();
 	 }
-	 if (havekey1 == true)
-	 {
-		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Key"), Color(1, 1, 1), 2, 4, 40);
-		 modelStack.PopMatrix();
-	 }
-	 if (lockeddoortext == true)
+	
+	 if (lockeddoortext == true )
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Door is locked"), Color(1, 1, 1), 2, 14, 42);
@@ -844,16 +980,74 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Nice Painting"), Color(1, 1, 1), 2, 4, 42);
 		 modelStack.PopMatrix();}
 	 }
+	 if (havekey1 == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Unlocks a door perhaps"), Color(1, 1, 1), 1.5, 30, 16);
+		 modelStack.PopMatrix();
+		 rendertag();
+	 }
 	 if (havekey2 == true)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Key 2"), Color(1, 1, 1), 2, 4, 43);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Key 2"), Color(1, 1, 1), 2, 0, 43);
+		 modelStack.PopMatrix();
+	 }
+	 if (havekey3 == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Final Key "), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
 	 if (draweropen == true)
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Found A Note with 8  6  1  2 "), Color(1, 1, 1), 2, 4, 46);
+		 modelStack.PopMatrix();
+	 }
+	 if (patienthint == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("3 Keys , 1 in a thousand words"), Color(1, 1, 1), 2, 4, 46.2);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("	     , 1 is a thousand pages"), Color(1, 1, 1), 2, 4, 45);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("	     , 1 under what u watch"), Color(1, 1, 1), 2, 4, 43.8);
+		 modelStack.PopMatrix();					      
+	 }
+
+	 if(other == true)
+	 { 
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Wrong Code Try Again "), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (eight == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("8"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (six == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], (" 6"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (one == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("  1"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (two == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("   2"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (safeint == true && eight == false  )
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
 		 modelStack.PopMatrix();
 	 }
 }
@@ -914,6 +1108,23 @@ void PuzzleRoom::CreepyHouse()
 	//Scale
 	modelStack.PushMatrix();
 	modelStack.Scale(10.f,10.f,10.f);
+	modelStack.PushMatrix();
+	modelStack.Translate(5.5, 2.8, 5.5);
+	modelStack.Scale(0.7,0.7, 0.7);
+	//modelStack.Rotate(270, 0, 0, 1);
+	//modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(270, 1, 0, 0);
+	RenderMesh(meshList[GEO_HAIR], true);
+	RenderMesh(meshList[GEO_FACE], true);
+	RenderMesh(meshList[GEO_BODY], true);
+	RenderMesh(meshList[GEO_RARM], true);
+	RenderMesh(meshList[GEO_LARM], true);
+	RenderMesh(meshList[GEO_RHAND],true);
+	RenderMesh(meshList[GEO_LHAND],true);
+	RenderMesh(meshList[GEO_RLEG], true);
+	RenderMesh(meshList[GEO_LLEG], true);
+	RenderMesh(meshList[GEO_CROTCH], true);
+	modelStack.PopMatrix();
 	//Key2
 	if (havekey2 == false)
 	{
@@ -1090,7 +1301,156 @@ void PuzzleRoom::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, f
 	modelStack.PopMatrix();
 	glEnable(GL_DEPTH_TEST);
 }
+void PuzzleRoom::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y)
+{
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Scale(size, size, size);
+	modelStack.Translate(x, y, 0);
 
+	Mtx44 MVP, modelView, modelView_inverse_transpose;
+	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	modelView = viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
+
+	if (enableLight)
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
+		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
+		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE,
+			&modelView_inverse_transpose.a[0]);
+		//load material
+		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
+		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
+		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
+		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	}
+	if (mesh->textureID > 0)
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+	}
+	mesh->Render();
+	if (mesh->textureID > 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+
+	glEnable(GL_DEPTH_TEST);
+}
+void PuzzleRoom::uploadItem(int newobject)
+{
+	forward = new Item(newobject);
+	if (first == NULL)
+	{
+		first = last = forward;
+		current = first;
+	}
+	else
+	{
+		last->next = forward;
+		forward->prev = last;
+		last = forward;
+	}
+}
+void PuzzleRoom::printNext()
+{
+	Item *check;
+	check = current->next;
+	if (check != NULL)
+	{
+		current = check;
+		rendertag();
+	}
+	else if (check == NULL && current == first)
+	{
+		current = last;
+		rendertag();
+	}
+	else if (check == NULL && current == last)
+	{
+		current = first;
+		rendertag();
+	}
+}
+void PuzzleRoom::printPrev()
+{
+	Item *check;
+	check = current->prev;
+	if (check != NULL)
+	{
+		current = check;
+		rendertag();
+	}
+	else if (check == NULL && current == first)
+	{
+		current = last;
+		rendertag();
+	}
+	else if (check == NULL && current == last)
+	{
+		current = first;
+		rendertag();
+	}
+}
+void PuzzleRoom::rendertag()
+{
+	for (int i = 0; i < 34; i++)
+	{
+		if (current->data == i)
+		{
+			DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 8, 2);
+		}
+		if (current->prev != NULL && current->next != NULL)
+		{
+			if (current->prev->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
+			}
+			if (current->next->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
+			}
+		}
+		else if (current->prev == NULL && current->next != NULL)
+		{
+			if (current->next->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
+			}
+		}
+		else if (current->prev != NULL && current->next == NULL)
+		{
+			if (current->prev->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
+
+			}
+		}
+	}
+}
 void PuzzleRoom::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
