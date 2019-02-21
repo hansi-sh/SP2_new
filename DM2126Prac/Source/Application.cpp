@@ -11,10 +11,6 @@
 #include "PuzzleRoom.h"
 #include "AssignmentScene.h"
 #include "Racing.h"
-#include "MainMenu.h"
-#include "WinScreen.h"
-#include "LoseScreen.h"
-#include "PauseScreen.h"
 #include "Scene2.h"
 
 GLFWwindow* m_window;
@@ -135,8 +131,8 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new LoseScene();
-		//glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
+		scene = new AssignmentScene();
+		//glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
 	}
 	
 
