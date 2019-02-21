@@ -158,8 +158,8 @@ private:
 		GEO_HOSPITAL,
 		GEO_RACETRACK,
 
-		GEO_BOX1,
-		GEO_BOX2,
+		//GEO_BOX1,
+		//GEO_BOX2,
 
 		GEO_TEXT,
 		NUM_GEOMETRY,

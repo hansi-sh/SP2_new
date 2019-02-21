@@ -2,7 +2,7 @@
 #define RACIASSIGNMENTSCENE_HNG_H
 
 #include "Scene.h"
-#include "Camera3.h"
+#include "Camera2.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -12,6 +12,7 @@
 #include "Enemy.h"
 #include <Windows.h>
 #include "Physics.h"
+#include <cmath>
 
 class AssignmentScene : public Scene
 {

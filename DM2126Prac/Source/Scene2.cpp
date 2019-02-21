@@ -98,7 +98,8 @@ void Scene2::Init() //defines what shader to use
 
 	LSPEED = 30.0f;
 
-	camera.Init(Vector3(0, 20, 80), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	// Change here for camera initial position
+	camera.Init(Vector3(0, 20, 6), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
@@ -130,7 +131,6 @@ void Scene2::Init() //defines what shader to use
 
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-
 
 	//Light 1
 	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
@@ -192,16 +192,32 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//WallExit.tga");
+	Obj[OBJ_LEFT] = new ObjectBox(Vector3(-30, 15, 0), 0.5, 15, 20);
+
+	//meshList[GEO_TEST5] = MeshBuilder::GenerateCube("test", Color(0, 1, 0), 0.5, 15, 20);
+	//Obj[OBJ_TEST5] = new ObjectBox(Vector3(-30, 15, 0), 0.5, 15, 20);
 
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//Wall.tga");
+	Obj[OBJ_RIGHT] = new ObjectBox(Vector3(30, 15, 0), 0.5, 15, 20);
+
+	//meshList[GEO_TEST6] = MeshBuilder::GenerateCube("test", Color(0, 1, 0), 0.5, 15, 20);
+	//Obj[OBJ_TEST6] = new ObjectBox(Vector3(30, 15, 0), 0.5, 15, 20);
 
 	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//Wall.tga");
+	Obj[OBJ_TOP] = new ObjectBox(Vector3(0, 30, 0), 30, 0, 20);
+
+	// meshList[GEO_TEST3] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30, 0, 20);
+	// Obj[OBJ_TEST3] = new ObjectBox(Vector3(0, 30, 0), 30, 0, 20);
 
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//Wall.tga");
+	Obj[OBJ_BOTTOM] = new ObjectBox(Vector3(0, 0, 0), 30, 0, 20);
 	
+	//meshList[GEO_TEST4] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30, 0, 20);
+	//Obj[OBJ_TEST4] = new ObjectBox(Vector3(0, 0, 0), 30, 0, 20);
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
@@ -247,7 +263,7 @@ void Scene2::Init() //defines what shader to use
 	Obj[OBJ_METALSHELVE] = new ObjectBox(Vector3(22.0f, 5.0f, -3.0f), 10, 30, 30); 
 
 	// Collision Box for Camera/Player -> brot from A2 Scene
-	meshList[GEO_PLAYER] = MeshBuilder::GenerateCube("Box", Color(0, 0, 1), 5.0f, 5.0f, 5.0f); // 10, 15, 15
+	meshList[GEO_PLAYER] = MeshBuilder::GenerateCube("Box", Color(0, 0, 1), 3.0f, 3.0f, 3.0f); // 10, 15, 15
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
 
 	// Random stuff to test collision box of individual obj
@@ -265,6 +281,40 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_NOTIFICATION2] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 15, 15, 15);
 	meshList[GEO_NOTIFICATION2]->textureID = LoadTGA("Image//Notification2.tga");
+
+	meshList[GEO_FRAME] = MeshBuilder::GenerateQuad("frame", Color(0, 0, 1), 15, 15, 15);
+	meshList[GEO_FRAME]->textureID = LoadTGA("Image//Frame.tga");
+
+	// Patient Obj
+	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
+	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");
+
+	meshList[GEO_FACE] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Face.obj");
+	meshList[GEO_FACE]->textureID = LoadTGA("Image//Face.tga");
+
+	meshList[GEO_BODY] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Body.obj");
+	meshList[GEO_BODY]->textureID = LoadTGA("Image//Chest.tga");
+
+	meshList[GEO_RARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RArm.obj");
+	meshList[GEO_RARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LArm.obj");
+	meshList[GEO_LARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_RHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RHand.obj");
+	meshList[GEO_RHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_LHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LHand.obj");
+	meshList[GEO_LHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_RLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RLeg.obj");
+	meshList[GEO_RLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LLeg.obj");
+	meshList[GEO_LLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_CROTCH] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Crotch.obj");
+	meshList[GEO_CROTCH]->textureID = LoadTGA("Image//Body.tga");
 }
 
 //void Scene2::PlayMusic()
@@ -316,6 +366,8 @@ void Scene2::Update(double dt)
 {
 	delay += dt;
 
+	score++;
+
 	if (Application::IsKeyPressed('1'))
 	{
 		Application app;
@@ -327,13 +379,12 @@ void Scene2::Update(double dt)
 	{
 		printNext();
 	}
-	if (Application::IsKeyPressed('3'))
+	if (nextStage || Application::IsKeyPressed('3'))
 	{
 		Application app;
-		app.SetSceneNumber(3);
+		app.SetSceneNumber(4); // go to RaceScene when done here
 		app.Run();
 	}
-
 	if (Application::IsKeyPressed('6'))
 	{
 		glEnable(GL_CULL_FACE);
@@ -423,7 +474,6 @@ void Scene2::Update(double dt)
 		{
 			delay = 0;
 			collectDefi = false;
-
 			//if (collectDefi == false)
 			//{
 			//	uploadItem(8);
@@ -455,6 +505,20 @@ void Scene2::Update(double dt)
 		notification2 = false;
 	}
 	
+	if (camera.position.x > 0 && camera.position.x < 5)
+	{
+		if (Application::IsKeyPressed('U') && collectDefi)
+		{
+			useDefi = true;
+		}
+
+		if (Application::IsKeyPressed('I') && collectKit)
+
+		{
+			useKit = true;
+		}
+	}
+
 	// Collision Box
 	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
 
@@ -615,6 +679,25 @@ void Scene2::Render()
 	//RenderMesh(meshList[GEO_PLAYER], false);
 	//modelStack.PopMatrix();
 
+	//<--Lego Model-->
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5, 12, 13);
+	modelStack.Scale(3, 3, 3);
+	modelStack.Rotate(270, 0, 0, 1);
+	modelStack.Rotate(270, 0, 1, 0);
+	RenderMesh(meshList[GEO_HAIR], setTrueFalse);
+	RenderMesh(meshList[GEO_FACE], setTrueFalse);
+	RenderMesh(meshList[GEO_BODY], setTrueFalse);
+	RenderMesh(meshList[GEO_RARM], setTrueFalse);
+	RenderMesh(meshList[GEO_LARM], setTrueFalse);
+	RenderMesh(meshList[GEO_RHAND], setTrueFalse);
+	RenderMesh(meshList[GEO_LHAND], setTrueFalse);
+	RenderMesh(meshList[GEO_RLEG], setTrueFalse);
+	RenderMesh(meshList[GEO_LLEG], setTrueFalse);
+	RenderMesh(meshList[GEO_CROTCH], setTrueFalse);
+	modelStack.PopMatrix();
+
 	//<--Stuff in Ambulance Scene-->
 
 	modelStack.PushMatrix();
@@ -673,19 +756,19 @@ void Scene2::Render()
 	RenderMesh(meshList[GEO_TOPSHELVE1], setTrueFalse); // same side as cabinet
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(-10, 23, 15);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE2], setTrueFalse); // diff side as cabinet
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-10, 23, 15);
+	//modelStack.Rotate(180, 0, 1, 0);
+	//modelStack.Scale(2, 2, 2);
+	//RenderMesh(meshList[GEO_TOPSHELVE2], setTrueFalse); // diff side as cabinet
+	//modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(10, 23, 15);
-	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE3], setTrueFalse); // diff side as cabinet
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//modelStack.Translate(10, 23, 15);
+	//modelStack.Rotate(180, 0, 1, 0);
+	//modelStack.Scale(2, 2, 2);
+	//RenderMesh(meshList[GEO_TOPSHELVE3], setTrueFalse); // diff side as cabinet
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
@@ -706,21 +789,22 @@ void Scene2::Render()
 	else
 	{
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Instructions:[P]"), Color(0, 0, 0), 2, 50, 58);
+		//RenderTextOnScreen(meshList[GEO_TEXT], ("Instructions:[P]"), Color(1, 1, 0), 2, 50, 58);
+		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(score), Color(1, 1, 0), 2, 50, 58);
 		modelStack.PopMatrix();
 	}
 
 	if (collide)
 	{
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(1, 1, 0), 2, 66, 54);
 		modelStack.PopMatrix();
 	}
 
 	else
 	{
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(1, 1, 0), 2, 60, 54);
 		modelStack.PopMatrix();
 	}
 
@@ -753,7 +837,7 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-
+	EndMission();
 
 }
 
@@ -762,22 +846,67 @@ void Scene2::RenderMission() // has transparent box now
 	if (instruction == 0)
 	{
 		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_INSTRUCTION1], Color(0, 0, 1), false, 1, 40, 30);
+		DrawHUD(meshList[GEO_INSTRUCTION1], Color(1, 1, 0), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
 	else if (instruction == 1)
 	{
 		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_INSTRUCTION2], Color(0, 0, 1), false, 1, 40, 30);
+		DrawHUD(meshList[GEO_INSTRUCTION2], Color(1, 1, 0), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
-
-	// x btwn 10 and 13
 
 	// If wanna use text instead of quad
 	//RenderTextOnScreen(meshList[GEO_TEXT], ("Instructions: "), Color(0, 1, 0), 2, 2, 9);
 	//RenderTextOnScreen(meshList[GEO_TEXT], ("1. Find the Defibrillator "), Color(0, 1, 0), 2, 2, 7);
 	//RenderTextOnScreen(meshList[GEO_TEXT], ("2. Collect it [C] "), Color(0, 1, 0), 2, 2, 5);
+}
+
+void Scene2::EndMission()
+{
+	if (instruction == 0) // use defi
+	{
+		if (useDefi) // which is correct
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 0), 2, 34, 32);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 0), 2, 34, 28);
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			modelStack.PopMatrix();
+			nextStage = true;
+		} // then some codes to switch scene
+
+		if (useKit) // which is wrong
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 0), 2, 30, 30);
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			modelStack.PopMatrix();
+			nextStage = true;
+		} // then some codes to switch scene
+		
+	}
+
+	if (instruction == 1) // use kit
+	{
+		if (useKit) // which is correct
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 0), 2, 34, 32);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 0), 2, 34, 28);			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			modelStack.PopMatrix();
+			nextStage = true;
+		} // then some codes to switch scene
+
+		if (useDefi) // which is wrong
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 0), 2, 30, 30);
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			modelStack.PopMatrix();
+			nextStage = true;
+		} // then some codes to switch scene
+	}
 }
 
 void Scene2::RenderMesh(Mesh *mesh, bool enableLight)
@@ -860,12 +989,22 @@ void Scene2::RenderSkybox()
 	RenderMesh(meshList[GEO_TOP], setTrueFalse);
 	modelStack.PopMatrix();
 
+	//modelStack.PushMatrix();
+	//modelStack.Translate(0.0f, 30.0f, 0.0f); 
+	//RenderMesh(meshList[GEO_TEST3], setTrueFalse);
+	//modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, 20.0f);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
 	modelStack.Translate(0.0f, -0.00f, 0.0f);
 	RenderMesh(meshList[GEO_BOTTOM], setTrueFalse);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(0.0f, 0.0f, 0.0f); 
+	//RenderMesh(meshList[GEO_TEST4], setTrueFalse);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
@@ -875,6 +1014,11 @@ void Scene2::RenderSkybox()
 	RenderMesh(meshList[GEO_LEFT], setTrueFalse);
 	modelStack.PopMatrix();
 
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-30.0f, 15.0f, 0.0f);
+	//RenderMesh(meshList[GEO_TEST5], setTrueFalse);
+	//modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.98f, 0.96f, 0.0f);
@@ -882,6 +1026,11 @@ void Scene2::RenderSkybox()
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_RIGHT], setTrueFalse);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(30.0f, 15.0f, 0.0f);
+	//RenderMesh(meshList[GEO_TEST6], setTrueFalse);
+	//modelStack.PopMatrix();
 }
 
 void Scene2::RenderText(Mesh* mesh, std::string text, Color color)
