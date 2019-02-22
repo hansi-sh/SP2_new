@@ -131,6 +131,10 @@ private:
 		GEO_AMBULANCE,
 
 		GEO_CAR,
+
+		//GEO_BOX1,
+		//GEO_BOX2,
+
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};

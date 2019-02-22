@@ -215,10 +215,10 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
 
-	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 1415.0f);
-	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, 636.0f, 20.0f), 20.0f, 40.0f, 2830.0f);
-	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);
-	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, 639.0f, 20.0f), 20.0f, 50.0f, 2830.0f);
+	/*meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 1415.0f);*/
+	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, /*636.0f*/77, 20.0f), 20.0f, 40.0f, 2830.0f);
+	/*meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);*/
+	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, /*639.0f*/77, 20.0f), 20.0f, 50.0f, 2830.0f);
 }
 
 void RaceScene::Update(double dt)
@@ -460,6 +460,15 @@ void RaceScene::Render()
 	//RenderMesh(meshList[GEO_CUBE], false);
 	//modelStack.PopMatrix();
 
+	//modelStack.PushMatrix();
+	//modelStack.Translate(52, 77, 20);
+	//RenderMesh(meshList[GEO_BOX1], false);
+	//modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-52, 77, 20);
+	//RenderMesh(meshList[GEO_BOX1], false);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4);
@@ -645,7 +654,7 @@ void RaceScene::RenderSkybox()
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
-	modelStack.Translate(0.0f, 0.4f, 0.0f);
+	modelStack.Translate(0.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
