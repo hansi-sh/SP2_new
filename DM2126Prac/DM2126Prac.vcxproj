@@ -151,6 +151,7 @@
     <ClCompile Include="Source\AssignmentScene.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\enemy2.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
     <ClCompile Include="Source\PauseScreen.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Source\AssignmentScene.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\enemy2.h" />
     <ClInclude Include="Source\LoseScreen.h" />
     <ClInclude Include="Source\MainMenu.h" />
     <ClInclude Include="Source\PauseScreen.h" />
