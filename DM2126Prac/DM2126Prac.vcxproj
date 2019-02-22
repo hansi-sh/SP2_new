@@ -169,6 +169,7 @@
     <ClCompile Include="Source\PuzzleRoom.cpp" />
     <ClCompile Include="Source\Scene2.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\StopWatchTimer.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\WinScreen.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Scene2.h" />
     <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\StopWatchTimer.h" />
     <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
