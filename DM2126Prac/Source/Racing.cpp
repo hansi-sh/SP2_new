@@ -56,7 +56,7 @@ void RaceScene::Init() //defines what shader to use
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
 	TranslateBodyY = 64.0f;
-	TranslateBodyZ = -200.0f;
+	TranslateBodyZ = -1300.0f;
 	RotateBody = 0.0f;
 
 	PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
@@ -359,7 +359,7 @@ void RaceScene::Update(double dt)
 		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
 		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
 
-		if (i_CollidedWith >= 1 /*&& i_CollidedWith <= last car AI*/) //num in object type
+		if (i_CollidedWith >= 1 && i_CollidedWith < 2) /*&& i_CollidedWith <= last car AI*/ //num in object type
 		{
 			if (TranslateBodyZ > enemyZ[i_CollidedWith - 1])
 			{
@@ -387,6 +387,10 @@ void RaceScene::Update(double dt)
 					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
 				}
 			}
+		}
+		else
+		{
+			PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
 		}
 
 		/*TranslateBodyX = prevBodyX;
@@ -513,7 +517,7 @@ void RaceScene::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
-	modelStack.Translate(0, 30, 180);
+	modelStack.Translate(0, 8, 180);
 	modelStack.Rotate(180, 0, 1, 0);
 	RenderMesh(meshList[GEO_HOSPITAL], false);
 	modelStack.PopMatrix();
@@ -522,7 +526,7 @@ void RaceScene::Render()
 	{
 		modelStack.PushMatrix();
 		modelStack.Scale(8, 8, 8);
-		modelStack.Translate(0, 30, 170.5f - (i*14));
+		modelStack.Translate(0, 8, 170.5f - (i*14));
 		modelStack.Rotate(270, 0, 1, 0);
 		RenderMesh(meshList[GEO_RACETRACK], false);
 		modelStack.PopMatrix();
