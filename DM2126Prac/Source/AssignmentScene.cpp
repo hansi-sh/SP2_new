@@ -53,8 +53,6 @@ void AssignmentScene::Init() //defines what shader to use
 
 	//<collison class>
 	collide = false;
-	rotationangle = 0;
-	updatedangle = 0;
 
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
@@ -396,26 +394,26 @@ void AssignmentScene::Update(double dt)
 			{
 				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 1]) >= f_HeightAIP)	//if AI directly hits back of the car of player
 				{
-					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.3));
+					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
 					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
 				}
 			}
 			else
 			{
 				if ((enemyZ[i_CollidedWith - 1] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
-					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.3));
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.5));
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
 				}
 			}
 		}

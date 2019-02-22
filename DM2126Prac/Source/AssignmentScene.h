@@ -138,7 +138,6 @@ private:
 	int i_CollidedWith;
 
 	float f_HeightAIP;	//AI + players car height
-	float f_WidthAIP;	//AI + players car width
 
 	enum GEOMETRY_TYPE
 	{

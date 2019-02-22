@@ -2,14 +2,16 @@
 #define RACING_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
 #include "MeshBuilder.h"
 #include "LoadTGA.h"
 #include "ObjectBox.h"
+#include "Enemy.h"
 #include <Windows.h>
+#include "Physics.h"
 
 class RaceScene : public Scene
 {
@@ -34,42 +36,6 @@ class RaceScene : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-		//U_LIGHT1_POSITION,
-		//U_LIGHT1_COLOR,
-		//U_LIGHT1_POWER,
-		//U_LIGHT1_KC,
-		//U_LIGHT1_KL,
-		//U_LIGHT1_KQ,
-		//U_LIGHT1NABLED,
-		//U_LIGHT1_TYPE,
-		//U_LIGHT1_SPOTDIRECTION,
-		//U_LIGHT1_COSCUTOFF,
-		//U_LIGHT1_COSINNER,
-		//U_LIGHT1_EXPONENT,
-		//U_LIGHT2_POSITION,
-		//U_LIGHT2_COLOR,
-		//U_LIGHT2_POWER,
-		//U_LIGHT2_KC,
-		//U_LIGHT2_KL,
-		//U_LIGHT2_KQ,
-		//U_LIGHT2NABLED,
-		//U_LIGHT2_TYPE,
-		//U_LIGHT2_SPOTDIRECTION,
-		//U_LIGHT2_COSCUTOFF,
-		//U_LIGHT2_COSINNER,
-		//U_LIGHT2_EXPONENT,
-		//U_LIGHT3_POSITION,
-		//U_LIGHT3_COLOR,
-		//U_LIGHT3_POWER,
-		//U_LIGHT3_KC,
-		//U_LIGHT3_KL,
-		//U_LIGHT3_KQ,
-		//U_LIGHT3NABLED,
-		//U_LIGHT3_TYPE,
-		//U_LIGHT3_SPOTDIRECTION,
-		//U_LIGHT3_COSCUTOFF,
-		//U_LIGHT3_COSINNER,
-		//U_LIGHT3_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -81,7 +47,7 @@ public:
 	RaceScene();
 	~RaceScene();
 
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	//static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();
@@ -108,35 +74,39 @@ private:
 	float prevAngle;
 
 	void RenderSkybox();
-	
-	bool b_BMO;
-	bool b_viewStats;
 
-	//For Running Animation
-	bool checkmodelStack;
+	bool b_viewStats;
+	//for enemy
+	float RotateEnemyBody;
+	float enemyX[2], enemyY[2], enemyZ[2];
+	Enemy e[2];
+	Vector3 enemyUpdatePos[2];
+	bool b_StepENEMYAccelerator;
+	bool b_StepENEMYBrakes;
+	bool b_ENEMYSteer;
+	float f_ENEMYRotateAmt;
+
+	//For Car
 	float RotateBody;
-	bool running;
-	bool bodyMovement;
-	float LeftLegX;
-	float RightLegX;
-	float ArmRotation;
 	float TranslateBodyX;
 	float TranslateBodyY;
 	float TranslateBodyZ;
+	Physics PlayerCar;
+	Vector3 V_UpdatedPlayerPos;
+	bool b_StepAccelerator;
+	bool b_StepBrakes;
+	bool b_Steer;
+	float f_RotateAmt;
+	float f_UpdatedAngle;
+	int i_CollidedWith;
 
-	float TranslateAIX;
-	float TranslateAIZ;
-
-	//<--Music-->
-	/*void PlayMusic();*/
-	bool b_musicSelected;
-	bool b_inPM;
-	bool b_checkinPM;
-	bool b_inPC;
+	float f_HeightAIP;	//AI + players car height
 
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
+		//GEO_CUBE,
+		GEO_AICUBE,
 
 		/*GEO_USB,
 		GEO_YELLOWBUTTONCUBOID,
@@ -147,6 +117,7 @@ private:
 		GEO_REDBUTTONCIRCLE,
 		GEO_REDBUTTONCYLINDER,
 		GEO_TRIPRISM,*/
+		GEO_AXES,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -157,6 +128,9 @@ private:
 
 		GEO_HOSPITAL,
 		GEO_RACETRACK,
+		GEO_AMBULANCE,
+
+		GEO_CAR,
 
 		//GEO_BOX1,
 		//GEO_BOX2,
@@ -168,6 +142,7 @@ private:
 	enum OBJECT_TYPE
 	{
 		OBJ_PLAYER,
+		OBJ_ENEMY1,
 		OBJ_BOX1,
 		OBJ_BOX2,
 
@@ -180,7 +155,9 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	static Camera2 camera;
+	//static Camera2 camera;
+	Camera3 camera;
+	float f_TPCRotateBy;
 
 	Light light[1];
 
