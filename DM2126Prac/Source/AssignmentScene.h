@@ -1,8 +1,8 @@
 #ifndef ASSIGNMENTSCENE_H
-#define RACIASSIGNMENTSCENE_HNG_H
+#define ASSIGNMENTSCENE_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -12,7 +12,6 @@
 #include "Enemy.h"
 #include <Windows.h>
 #include "Physics.h"
-#include <cmath>
 
 class AssignmentScene : public Scene
 {
@@ -84,7 +83,7 @@ public:
 	AssignmentScene();
 	~AssignmentScene();
 
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	//static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();
@@ -123,6 +122,7 @@ private:
 	bool b_StepENEMYBrakes;
 	bool b_ENEMYSteer;
 	float f_ENEMYRotateAmt;
+
 	//For Car
 	float RotateBody;
 	float TranslateBodyX;
@@ -130,16 +130,20 @@ private:
 	float TranslateBodyZ;
 	Physics PlayerCar;
 	Vector3 V_UpdatedPlayerPos;
-	float f_RotatePrevFrame;
 	bool b_StepAccelerator;
 	bool b_StepBrakes;
 	bool b_Steer;
 	float f_RotateAmt;
+	float f_UpdatedAngle;
+	int i_CollidedWith;
+
+	float f_HeightAIP;	//AI + players car height
+	float f_WidthAIP;	//AI + players car width
 
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
-		GEO_CUBE,		
+		//GEO_CUBE,
 		GEO_AICUBE,
 
 		/*GEO_USB,
@@ -185,8 +189,8 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	static Camera2 camera;
-	//Camera3 camera;
+	//static Camera2 camera;
+	Camera3 camera;
 	float f_TPCRotateBy;
 
 	Light light[1];

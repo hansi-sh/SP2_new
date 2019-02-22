@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include <string>
 
+
 float PuzzleRoom::lastX = 0.0f;
 float PuzzleRoom::lastY = 0.0f;
 Camera2 PuzzleRoom::camera = Camera2();
@@ -16,6 +17,7 @@ Camera2 PuzzleRoom::camera = Camera2();
 
 PuzzleRoom::PuzzleRoom()
 {
+	first = last = current = forward = backward = NULL;
 }
 
 void PuzzleRoom::mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -122,7 +124,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	m_parameters[U_LIGHT0_KL] = glGetUniformLocation(m_programID, "lights[0].kL");
 	m_parameters[U_LIGHT0_KQ] = glGetUniformLocation(m_programID, "lights[0].kQ");
 	//light 2
-	/*m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
+	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
 	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
 	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
 	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
@@ -132,14 +134,14 @@ void PuzzleRoom::Init() //defines what shader to use
 	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
 	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");*/
+	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
 	
 	glUseProgram(m_programID);
 
 	light[0].type = Light::LIGHT_POINT; //light of the room
 	light[0].position.Set(0.5, 89.75, 35.9);//position of light
 	light[0].color.Set(1, 1, 1);//color that light emits
-	light[0].power = 5.0f;
+	light[0].power =1.0f;
 	light[0].kC = 1.f;
 	light[0].kL = 0.01f;
 	light[0].kQ = 0.001f;
@@ -148,17 +150,18 @@ void PuzzleRoom::Init() //defines what shader to use
 	light[0].exponent = 3.f;
 	light[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	//light[1].type = Light::LIGHT_POINT; //light of the room
-	//light[1].position.Set(53.94, -80.76, 90);//position of light
-	//light[1].color.Set(1, 1, 1);//color that light emits
-	//light[1].power = 0.0f;
-	//light[1].kC = 1.f;
-	//light[1].kL = 0.01f;
-	//light[1].kQ = 0.001f;
-	//light[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	//light[1].cosInner = cos(Math::DegreeToRadian(30));
-	//light[1].exponent = 3.f;
-	//light[1].spotDirection.Set(0.f, 1.f, 0.f);
+	light[1].type = Light::LIGHT_POINT; //light of the room
+	//light[1].position.Set(72.94, 80.76, 19);//position of light
+	light[1].position.Set(0.5, 89.75, 35.9);
+	light[1].color.Set(1, 1, 1);//color that light emits
+	light[1].power = 1.0f;
+	light[1].kC = 1.f;
+	light[1].kL = 0.01f;
+	light[1].kQ = 0.001f;
+	light[1].cosCutoff = cos(Math::DegreeToRadian(45));
+	light[1].cosInner = cos(Math::DegreeToRadian(30));
+	light[1].exponent = 3.f;
+	light[1].spotDirection.Set(0.f, 1.f, 0.f);
 
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &light[0].color.r);
 	glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
@@ -170,7 +173,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], light[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], light[0].exponent);
 	
-	/*glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &light[1].color.r);
+	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &light[1].color.r);
 	glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
 	glUniform1f(m_parameters[U_LIGHT1_KC], light[1].kC);
 	glUniform1f(m_parameters[U_LIGHT1_KL], light[1].kL);
@@ -178,13 +181,13 @@ void PuzzleRoom::Init() //defines what shader to use
 	glUniform1i(m_parameters[U_LIGHT1_TYPE], light[1].type);
 	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], light[1].cosCutoff);
 	glUniform1f(m_parameters[U_LIGHT1_COSINNER], light[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);*/
+	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], light[1].exponent);
 
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);//if you add lights, add number here
 
 	meshList[GEO_LIGHTBALL1] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
 	meshList[GEO_LIGHTBALL2] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
-	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.f, 25.f, 10.f);
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 5.f, 25.f, 5.f);
 	//Guide lines - Turn on if need
 	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	//walls
@@ -210,10 +213,9 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_DOORTOROOM1] = MeshBuilder::GenerateOBJ("Room1Wall", "OBJ//doortoroom12.obj");
 	meshList[GEO_DOORTOROOM1]->textureID = LoadTGA("Image//DoorTextures.tga");
-	Obj[OBJ_DOORINT] = new ObjectBox(Vector3(55.7, 58.50, -18.5), 41.82, 65, 79);
+	Obj[OBJ_DOORINT] = new ObjectBox(Vector3(55.7, 58.50, -18.5), 41.82, 65, 55);
 
-	//<----BMO body---->
-	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJ("Sofa", "OBJ//sofa.obj");
+	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJ("Sofa", "OBJ//sofa2.obj");
 	meshList[GEO_SOFA]->textureID = LoadTGA("Image//sofatxt.tga");
 	Obj[OBJ_SOFA] = new ObjectBox(Vector3(39, 58.50, 37), 19.5, 65, 40);
 
@@ -249,6 +251,8 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_TVTABLEDRAWER] = MeshBuilder::GenerateOBJ("TVTableDrawer", "OBJ//tvtabledrawer.obj");
 	meshList[GEO_TVTABLEDRAWER]->textureID = LoadTGA("Image//TVTableDrawerTextures.tga");
+	Obj[OBJ_TVTABLEDRAWERINT] = new ObjectBox(Vector3(80.5, 58.50, 35.7), 7, 65, 19.1);
+
 
 	meshList[GEO_BOOKSHELF] = MeshBuilder::GenerateOBJ("BookShelve", "OBJ//bookshelf.obj");
 	meshList[GEO_BOOKSHELF]->textureID = LoadTGA("Image//BookShelfTexture.tga");
@@ -281,6 +285,12 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_PILLOW] = MeshBuilder::GenerateOBJ("Book1", "OBJ//pillow.obj");
 	meshList[GEO_PILLOW]->textureID = LoadTGA("Image//Pillow.tga");
+	if (pillowmoved == false)
+	{
+		Obj[OBJ_PILLOW] = new ObjectBox(Vector3(21, 58.50, -86.03), 6, 65, 34.82);
+	}
+	
+
 
 	meshList[GEO_SECRETWALL] = MeshBuilder::GenerateOBJ("Book1", "OBJ//secretwall.obj");
 	meshList[GEO_SECRETWALL]->textureID = LoadTGA("Image//SecretWall.tga");
@@ -290,14 +300,68 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_SAFE] = MeshBuilder::GenerateOBJ("Book1", "OBJ//safebox.obj");
 	meshList[GEO_SAFE]->textureID = LoadTGA("Image//SafeBox.tga");
 	Obj[OBJ_SAFE] = new ObjectBox(Vector3(110.55, 58.50, 135.23), 48, 65, 48);
+	Obj[OBJ_SAFEINT] = new ObjectBox(Vector3(110.55, 58.50, 135.23), 51, 65, 51);
 
 
 	meshList[GEO_SAFEDOOR] = MeshBuilder::GenerateOBJ("Book1", "OBJ//safedoor.obj");
 	meshList[GEO_SAFEDOOR]->textureID = LoadTGA("Image//SafeDoor.tga");
 
-	meshList[GEO_KEY] = MeshBuilder::GenerateOBJ("Key1,", "OBJ//key1.obj");
-	meshList[GEO_KEY]->textureID = LoadTGA("Image//Key1.tga");
-	Obj[OBJ_KEY] = new ObjectBox(Vector3(0, 52.50, 76), 16, 36, 10);
+	meshList[GEO_KEY1] = MeshBuilder::GenerateOBJ("Key1,", "OBJ//key1.obj");
+	meshList[GEO_KEY1]->textureID = LoadTGA("Image//Key1.tga");
+	Obj[OBJ_KEY1] = new ObjectBox(Vector3(10, 52.50, 76), 16, 36, 10);
+
+
+	meshList[GEO_TABLEPAINTING] = MeshBuilder::GenerateOBJ("tablepainting", "OBJ//tablepainting.obj");
+	meshList[GEO_TABLEPAINTING]->textureID = LoadTGA("Image//TablePainting.tga");
+	Obj[OBJ_TABLEPAINTING] = new ObjectBox(Vector3(-0.95, 58.50, 65.455), 33.52, 65, 28.8);
+
+	meshList[GEO_SWITCHONE] = MeshBuilder::GenerateOBJ("tablepainting", "OBJ//switchone.obj");
+	meshList[GEO_SWITCHONE]->textureID = LoadTGA("Image//Pillow.tga"); 
+	Obj[OBJ_SWITCHONE] = new ObjectBox(Vector3(-77.8, 58.50, -15.9), 3, 65, 9.0);
+
+																			  
+	meshList[GEO_SWITCHTWO] = MeshBuilder::GenerateOBJ("tablepainting", "OBJ//switchtwo.obj");
+	meshList[GEO_SWITCHTWO]->textureID = LoadTGA("Image//Pillow.tga");
+	Obj[OBJ_SWITCHTWO] = new ObjectBox(Vector3(1.8, 58.50, -54), 9, 65, 9.0);
+
+	meshList[GEO_KEY2] = MeshBuilder::GenerateOBJ("Key1,", "OBJ//key2.obj");
+	meshList[GEO_KEY2]->textureID = LoadTGA("Image//Key1.tga");
+	Obj[OBJ_KEY2] = new ObjectBox(Vector3(21, 58.50, -86.03), 6, 65, 34.82);
+
+	// Patient Obj
+	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
+	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");
+
+	meshList[GEO_FACE] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Face.obj");
+	meshList[GEO_FACE]->textureID = LoadTGA("Image//Face.tga");
+
+	meshList[GEO_BODY] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Body.obj");
+	meshList[GEO_BODY]->textureID = LoadTGA("Image//Chest.tga");
+
+	meshList[GEO_RARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RArm.obj");
+	meshList[GEO_RARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LArm.obj");
+	meshList[GEO_LARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_RHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RHand.obj");
+	meshList[GEO_RHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_LHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LHand.obj");
+	meshList[GEO_LHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_RLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RLeg.obj");
+	meshList[GEO_RLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LLeg.obj");
+	meshList[GEO_LLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_CROTCH] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Crotch.obj");
+	meshList[GEO_CROTCH]->textureID = LoadTGA("Image//Body.tga");
+
+	Obj[OBJ_PATIENT] = new ObjectBox(Vector3(57, 36.50, 45),17, 20, 27);
+	Obj[OBJ_PATIENTINT] = new ObjectBox(Vector3(57, 46.50, 45), 27, 20, 37);
+
 
 	//InteractCheck
 	Obj[OBJ_ALL] = new ObjectBox(Vector3(0,0,0), 1000, 1000, 1000);
@@ -307,7 +371,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_KEY]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_KEY]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
  */ 
-	meshList[GEO_KEY]->material.kShininess = 1.0f;
+	meshList[GEO_KEY1]->material.kShininess = 1.0f;
 }
 
 //void PuzzleRoom::PlayMusic()
@@ -318,8 +382,19 @@ void PuzzleRoom::Init() //defines what shader to use
 void PuzzleRoom::Update(double dt)
 {
 	elapsedtime += dt;
+	//Inventory
+	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
+	{
+		elapsedtime = 0;
+		printPrev();
+	}
+	if(Application::IsKeyPressed(VK_RIGHT) && elapsedtime > 1)
+	{
+		elapsedtime = 0;
+		printNext();
+	}
 	//DoorOpening
-	if (doorint == true && havekey == true)
+	if (doorint == true && havekey1 == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
@@ -333,22 +408,22 @@ void PuzzleRoom::Update(double dt)
 			}
 		}
 	}
-	if(doorint == true && havekey == false )
+	if(doorint == true && havekey1 == false || drawerint == true && havekey2 == false)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
 		}
 	}
-
+	
 	if (door1open && RotateDoor1< 85)
 	{
-		Obj[OBJ_DOOR] = new ObjectBox(Vector3(55.7, 58.50, -14.5), 31.82, 65, 4);
+		Obj[OBJ_DOOR] = new ObjectBox(Vector3(55.7, 58.50, -16.5), 31.82, 65, 7);
 		RotateDoor1 += 35 * dt * 2;
 	}
 	else if (!door1open && RotateDoor1 > 0)
 	{
-		Obj[OBJ_DOOR] = new ObjectBox(Vector3(68.3, 58.50, -45.28), 4, 65, 31.82);
+		Obj[OBJ_DOOR] = new ObjectBox(Vector3(69, 58.50, -32.28), 7, 65, 30);
 		RotateDoor1 -= 35 * dt * 2;
 	}
 	//SecretDoorOpening
@@ -364,28 +439,224 @@ void PuzzleRoom::Update(double dt)
 			}
 		}
 	}
-	if (secretdooropen && openup < 30)
+	if (secretdooropen && secretdoortranslation < 30)
 	{
 		Obj[OBJ_SECRETWALL] = new ObjectBox(Vector3(68.7, 58.50, 81.69), 83.5, 70, 2);
-		openup += 10 * dt * 2;
+		secretdoortranslation += 10 * dt * 2;
 	}
-	else if (!secretdooropen && openup> 0)
+	else if (!secretdooropen && secretdoortranslation> 0)
 	{
 		Obj[OBJ_SECRETWALL] = new ObjectBox(Vector3(68.7, 158.50, 81.69), 83.5, 70, 2);
-		openup -= 10 * dt * 2;
+		secretdoortranslation -= 10 * dt * 2;
 	}
-	//key
-	if (keyint == true)
+	//TvTableDrawer
+	if (draweropen == false && havekey2 == true && drawerint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			havekey = true;
+
+		}
+		if (draweropen == false && drawertranslation <= 1.5 && interactioncomplete == true)
+		{
+			drawertranslation += 0.5 * dt;
+			if (drawertranslation >=0.5)
+			{
+				draweropen = true;
+			}
 		}
 	}
-	
+	//Pillow
+	if (pillowmoved == false && pillowint == true)
+	{
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete = true;
 
-	if (Application::IsKeyPressed('2'))
+		}
+		if (pillowmoved == false && pillowtranslation <=3 && interactioncomplete == true)
+		{
+			pillowtranslation += 3 * dt ;
+			if (pillowtranslation >= 3)
+			{
+				pillowmoved = true;
+			}
+		}
+	}
+	if ( pillowmoved == true)
+	{
+		Obj[OBJ_PILLOW] = new ObjectBox(Vector3(48, 58.50, -86.03), 6, 65, 34.82);
+	}
+	if (Application::IsKeyPressed('G')&& elapsedtime >1)
+	{
+		elapsedtime = 0;
+		havekey1 = true;
+		havekey2 = true; 
+		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
+		meshList[GEO_KEY1]->textureID = LoadTGA("Image/InvKey1.tga");
+		uploadItem(27);
+		std::cout << "0" << std::endl;
+	}
+	//safe
+	if (safeint == true && safeopen == false)
+	{
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete = true;
+			safecracking = true;	
+		}
+	}
+	if (safecracking == true)
+	{
+		other = false;
+		if (Application::IsKeyPressed('8'))
+		{
+			eight = true;
+			other = false;
+			six = false;
+			one = false;
+			two = false;
+		}
+		else if (Application::IsKeyPressed('6'))
+		{
+			six = true;
+			one = false;
+			two = false;
+		}
+		else if (Application::IsKeyPressed('1'))
+		{
+			one = true;
+			two = false;
+		}
+		else if (Application::IsKeyPressed('2'))
+		{
+			two = true;
+		}
+		else if (Application::IsKeyPressed('E'))
+		{
+
+		}
+		else if (Application::IsKeyPressed('3')&& Application::IsKeyPressed('4')&& Application::IsKeyPressed('5') && Application::IsKeyPressed('7') && Application::IsKeyPressed('9') && Application::IsKeyPressed('0'))
+		{
+			other = true;
+			eight = false;
+			six = false;
+			one = false;
+			two = false;
+		}
+
+	}
+	if (eight == true && six == true && one == true && two == true)
+	{
+		codecracked = true;
+	}
+	if (safeopen == false && safeint == true &&codecracked == true)
+	{
+			safeopen = true;
+			havekey3 = true;
+	}
+	if (safeopen == true)
+	{
+
+	}
+	if (havekey3 == true)
+	{
+		eight = false;
+		six = false;
+		one = false;
+		two = false;
+	}
+	//key2
+	if (key2int == true && pillowmoved == true)
+	{
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete = true;
+			havekey2 = true;
+		}
+	}
+	//key1
+	if (key1int == true)
+	{
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete = true;
+			havekey1 = true;
+			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_KEY1]->textureID = LoadTGA("Image//Black.tga");
+			uploadItem(27);
+		}
+	}
+	//Patient
+	if (patientint == true)
+	{
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete =true;
+			patienthint = true;
+		}
+	}
+	//switchone
+	if(switchoneint == true)
+	{
+		if (light[0].power >= 1.0f)
+		{
+			lightoneon = true;
+		}
+		else
+		{
+			lightoneon = false;
+		}
+		if (Application::IsKeyPressed('E') && elapsedtime > bouncetime)
+		{
+			bouncetime = elapsedtime += 0.4f;
+			interactioncomplete = true;
+			if (lightoneon == false)
+			{
+				light[0].power = 10.0f;
+				glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
+
+			}
+			else
+			{
+				light[0].power = 0.f;
+				glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
+
+			}
+
+		}
+	}
+	//switchtwo
+	if (switchtwoint == true)
+	{
+		if (light[1].power >= 1.0f)
+		{
+			lighttwoon = true;
+		}
+		else
+		{
+			lighttwoon = false;
+		}
+		if (Application::IsKeyPressed('E'))
+		{
+			interactioncomplete = true;
+			if (lighttwoon == false)
+			{
+				light[1].power = 10.0f;
+				glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
+
+			}
+			else
+			{
+				light[1].power = 0.f;
+				glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
+
+			}
+		}
+	}
+
+
+	if (Application::IsKeyPressed('5'))
 	{
 		Application app;
 		app.SetSceneNumber(2);
@@ -403,7 +674,7 @@ void PuzzleRoom::Update(double dt)
 		app.SetSceneNumber(4);
 		app.Run();
 	}
-	if (Application::IsKeyPressed('6'))
+	/*if (Application::IsKeyPressed('6'))
 	{
 		glEnable(GL_CULL_FACE);
 	}
@@ -418,7 +689,7 @@ void PuzzleRoom::Update(double dt)
 	if (Application::IsKeyPressed('9'))
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
+	}*/
 	
 
 	if (Application::IsKeyPressed('P'))
@@ -427,43 +698,6 @@ void PuzzleRoom::Update(double dt)
 		b_viewStats = false;
 
 	fps = 1.0f / (float)dt;
-
-
-
-	
-	
-
-
-
-	//<For switching camera position and target temporary example>
-	//if (Application::IsKeyPressed('V') && b_NearShowcase == true && i_ShowcaseItem > 0 )//must be near enough, do range check
-	//{
-	//	getCurrentCam = false;
-	//	b_BMO = false;
-	//	if (i_ShowcaseItem == 1)//Cubone
-	//	{
-	//		camera.target = Vector3(-65.295425f, 23.506683f, 5.0808f);
-	//		camera.position = Vector3(-64.389885f, 23.570976f, 4.6615f);
-
-	//	}
-	//	else if (i_ShowcaseItem == 2)//Beast ball
-	//	{
-	//		camera.target = Vector3(-67.434624f, 15.368983f, -4.589f);
-	//		camera.position = Vector3(-66.434624f, 15.468983f, -4.889f);
-	//	}
-	//	else if (i_ShowcaseItem == 3)//Pokeball
-	//	{
-	//		camera.target = Vector3(-68.513283f, 22.983822f, -19.27f);
-	//		camera.position = Vector3(-67.562569f, 23.133141f, -19.54f);
-	//	}
-	//}
-	//else
-	//{
-	//	camera.position = currentCamPos;
-	//	camera.target = currentCamTarget;
-	//	getCurrentCam = true;
-	//	b_BMO = true;
-	//}
 
 	if (Application::IsKeyPressed('Z'))
 	{
@@ -489,18 +723,21 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
 		{
+			//Doorint
 			if (AllObjs == 19)
 			{
 				doorint = true;
 				interaction = true;
 				break;
 			}
+			//Key1
 			if (AllObjs == 20)
 			{
-				keyint = true;
+				key1int = true;
 				interaction = true;
 				break;
 			}
+			//Secretwallint
 			if (AllObjs == 22)
 			{
 				
@@ -508,21 +745,80 @@ void PuzzleRoom::Update(double dt)
 				interaction = true;
 				break;
 			}
+			//paintings
 			if (AllObjs >= 23 && AllObjs <= 25)
 			{
 				paintingint = true;
 				interaction = true;
 				break;
 			}
+			//LightSwitchone
+			if(AllObjs ==27)
+			{
+				switchoneint = true;
+				interaction = true;
+				break;
+			}
+			//LightSwitchtwo
+			if (AllObjs == 28)
+			{
+				switchtwoint =true;
+				interaction = true;
+				break;
+			}
+			//Pillow
+			if (AllObjs == 29)
+			{
+				pillowint = true;
+				interaction = true;
+				break;
+			}
+			//Key2
+			if (AllObjs == 30)
+			{
+				key2int = true;
+				interaction = true;
+				break;
+			}
+			//TableDrawer
+			if (AllObjs == 31)
+			{
+				drawerint = true;
+				interaction = true;
+				break;
+			}
+			//Safe
+			if (AllObjs == 32)
+			{
+				safeint = true;
+				interaction = true;
+				break;
+			}
+			//PatientInteraction
+			if (AllObjs == 34)
+			{
+				patientint = true;
+				interaction = true;
+				break;
+			}
 			if (AllObjs == NUM_OBJ-1)
 			{
+				safeint = false;
+				patienthint = false;
+				patientint = false;
+				drawerint = false;
+				key2int = false;
+				pillowint = false;
+				switchoneint = false;
+				switchtwoint = false;
 				paintingint = false;
 				lockeddoortext = false;
 				doorint = false;
-				keyint = false;
+				key1int = false;
 				secretdoorint =false;
 				interaction = false;
 				interactioncomplete = false;
+				other = false;
 				break;
 			}
 			collide = true;
@@ -584,12 +880,12 @@ void PuzzleRoom::Render()
 	}
 	else
 	{
-		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
+		Position lightPosition_cameraspace = viewStack.Top() * light[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1,
 			&lightPosition_cameraspace.x);
 	}
-
-	/*if (light[1].type == Light::LIGHT_DIRECTIONAL)
+	//light 1
+	if (light[1].type == Light::LIGHT_DIRECTIONAL)
 	{
 		Vector3 lightDir(light[1].position.x, light[1].position.y, light[1].position.z);
 		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
@@ -611,7 +907,7 @@ void PuzzleRoom::Render()
 		Position lightPosition_cameraspace = viewStack.Top() * light[1].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1,
 			&lightPosition_cameraspace.x);
-	}*/
+	}
 
 	////<-----------Axes----------->
 	//modelStack.PushMatrix();
@@ -660,25 +956,20 @@ void PuzzleRoom::Render()
 	 if (interaction == true)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 1, 1), 3, 14, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 1, 1), 2, 14, 48);
 		 modelStack.PopMatrix();
 	 }
 	 if (interactioncomplete == true)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 0, 0), 3, 14, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 0, 0), 2, 14, 48);
 		 modelStack.PopMatrix();
 	 }
-	 if (havekey == true)
+	
+	 if (lockeddoortext == true )
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Key"), Color(1, 1, 1), 3, 14, 42);
-		 modelStack.PopMatrix();
-	 }
-	 if (lockeddoortext == true)
-	 {
-		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Door is locked"), Color(1, 1, 1), 3, 14, 42);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Door is locked"), Color(1, 1, 1), 2, 14, 42);
 		 modelStack.PopMatrix();
 	 }
 	 if (paintingint == true)
@@ -686,8 +977,78 @@ void PuzzleRoom::Render()
 		 if(Application::IsKeyPressed('E'))
 		 { 
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Nice Painting"), Color(1, 1, 1), 3, 14, 42);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Nice Painting"), Color(1, 1, 1), 2, 4, 42);
 		 modelStack.PopMatrix();}
+	 }
+	 if (havekey1 == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Unlocks a door perhaps"), Color(1, 1, 1), 1.5, 30, 16);
+		 modelStack.PopMatrix();
+		 rendertag();
+	 }
+	 if (havekey2 == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Key 2"), Color(1, 1, 1), 2, 0, 43);
+		 modelStack.PopMatrix();
+	 }
+	 if (havekey3 == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Final Key "), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (draweropen == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Found A Note with 8  6  1  2 "), Color(1, 1, 1), 2, 4, 46);
+		 modelStack.PopMatrix();
+	 }
+	 if (patienthint == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("3 Keys , 1 in a thousand words"), Color(1, 1, 1), 2, 4, 46.2);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("	     , 1 is a thousand pages"), Color(1, 1, 1), 2, 4, 45);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("	     , 1 under what u watch"), Color(1, 1, 1), 2, 4, 43.8);
+		 modelStack.PopMatrix();					      
+	 }
+
+	 if(other == true)
+	 { 
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Wrong Code Try Again "), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (eight == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("8"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (six == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], (" 6"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (one == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("  1"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (two == true)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("   2"), Color(1, 1, 1), 2, 4, 44);
+		 modelStack.PopMatrix();
+	 }
+	 if (safeint == true && eight == false  )
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
+		 modelStack.PopMatrix();
 	 }
 }
 
@@ -747,19 +1108,45 @@ void PuzzleRoom::CreepyHouse()
 	//Scale
 	modelStack.PushMatrix();
 	modelStack.Scale(10.f,10.f,10.f);
-	//TablePainting
-
-	//key
-	if (havekey == false)
+	modelStack.PushMatrix();
+	modelStack.Translate(5.5, 2.8, 5.5);
+	modelStack.Scale(0.7,0.7, 0.7);
+	//modelStack.Rotate(270, 0, 0, 1);
+	//modelStack.Rotate(270, 0, 1, 0);
+	modelStack.Rotate(270, 1, 0, 0);
+	RenderMesh(meshList[GEO_HAIR], true);
+	RenderMesh(meshList[GEO_FACE], true);
+	RenderMesh(meshList[GEO_BODY], true);
+	RenderMesh(meshList[GEO_RARM], true);
+	RenderMesh(meshList[GEO_LARM], true);
+	RenderMesh(meshList[GEO_RHAND],true);
+	RenderMesh(meshList[GEO_LHAND],true);
+	RenderMesh(meshList[GEO_RLEG], true);
+	RenderMesh(meshList[GEO_LLEG], true);
+	RenderMesh(meshList[GEO_CROTCH], true);
+	modelStack.PopMatrix();
+	//Key2
+	if (havekey2 == false)
 	{
-		RenderMesh(meshList[GEO_KEY], true);
+		RenderMesh(meshList[GEO_KEY2], true);
+	}
+	//Switches
+	RenderMesh(meshList[GEO_SWITCHONE], true);
+	RenderMesh(meshList[GEO_SWITCHTWO], true);
+
+	//TablePainting
+	RenderMesh(meshList[GEO_TABLEPAINTING], true);
+	//key
+	if (havekey1 == false)
+	{
+		RenderMesh(meshList[GEO_KEY1], true);
 	}
 	//Safe
 	RenderMesh(meshList[GEO_SAFE], true);
 	RenderMesh(meshList[GEO_SAFEDOOR], true);
 	//SecretWall
 	modelStack.PushMatrix();
-	modelStack.Translate(0,-30+openup,0);
+	modelStack.Translate(0,-30+secretdoortranslation,0);
 	RenderMesh(meshList[GEO_SECRETWALL], true);
 	modelStack.PopMatrix();
 
@@ -767,7 +1154,11 @@ void PuzzleRoom::CreepyHouse()
 	//BedSet
 	RenderMesh(meshList[GEO_MATTRESS], true);
 	RenderMesh(meshList[GEO_BEDFRAME], true);
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(0 + pillowtranslation,0,0);
 	RenderMesh(meshList[GEO_PILLOW], true);
+	modelStack.PopMatrix();
 
 	//Copied books
 	for (int i = 1; i < 18; i++)
@@ -775,7 +1166,7 @@ void PuzzleRoom::CreepyHouse()
 		modelStack.PushMatrix();
 		modelStack.Translate(0 - i*0.1  ,0,0);
 		//Book1
-		// RenderMesh(meshList[GEO_BOOK1], true);
+		 RenderMesh(meshList[GEO_BOOK1], true);
 		//Book2	
 		RenderMesh(meshList[GEO_BOOK2], true);
 		//Book3
@@ -799,7 +1190,10 @@ void PuzzleRoom::CreepyHouse()
 	//TV
 	RenderMesh(meshList[GEO_TV], true);
 	//TvTableDrawer
+	modelStack.PushMatrix();
+	modelStack.Translate(0-drawertranslation,0,0);
 	RenderMesh(meshList[GEO_TVTABLEDRAWER], true);
+	modelStack.PopMatrix();
 	//Tvtable
 	RenderMesh(meshList[GEO_TVTABLE], true);
 	//doorentrance
@@ -907,7 +1301,156 @@ void PuzzleRoom::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, f
 	modelStack.PopMatrix();
 	glEnable(GL_DEPTH_TEST);
 }
+void PuzzleRoom::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y)
+{
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Scale(size, size, size);
+	modelStack.Translate(x, y, 0);
 
+	Mtx44 MVP, modelView, modelView_inverse_transpose;
+	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	modelView = viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
+
+	if (enableLight)
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
+		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
+		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE,
+			&modelView_inverse_transpose.a[0]);
+		//load material
+		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
+		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
+		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
+		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	}
+	if (mesh->textureID > 0)
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+	}
+	mesh->Render();
+	if (mesh->textureID > 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+
+	glEnable(GL_DEPTH_TEST);
+}
+void PuzzleRoom::uploadItem(int newobject)
+{
+	forward = new Item(newobject);
+	if (first == NULL)
+	{
+		first = last = forward;
+		current = first;
+	}
+	else
+	{
+		last->next = forward;
+		forward->prev = last;
+		last = forward;
+	}
+}
+void PuzzleRoom::printNext()
+{
+	Item *check;
+	check = current->next;
+	if (check != NULL)
+	{
+		current = check;
+		rendertag();
+	}
+	else if (check == NULL && current == first)
+	{
+		current = last;
+		rendertag();
+	}
+	else if (check == NULL && current == last)
+	{
+		current = first;
+		rendertag();
+	}
+}
+void PuzzleRoom::printPrev()
+{
+	Item *check;
+	check = current->prev;
+	if (check != NULL)
+	{
+		current = check;
+		rendertag();
+	}
+	else if (check == NULL && current == first)
+	{
+		current = last;
+		rendertag();
+	}
+	else if (check == NULL && current == last)
+	{
+		current = first;
+		rendertag();
+	}
+}
+void PuzzleRoom::rendertag()
+{
+	for (int i = 0; i < 34; i++)
+	{
+		if (current->data == i)
+		{
+			DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 8, 2);
+		}
+		if (current->prev != NULL && current->next != NULL)
+		{
+			if (current->prev->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
+			}
+			if (current->next->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
+			}
+		}
+		else if (current->prev == NULL && current->next != NULL)
+		{
+			if (current->next->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
+			}
+		}
+		else if (current->prev != NULL && current->next == NULL)
+		{
+			if (current->prev->data == i)
+			{
+				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
+
+			}
+		}
+	}
+}
 void PuzzleRoom::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)

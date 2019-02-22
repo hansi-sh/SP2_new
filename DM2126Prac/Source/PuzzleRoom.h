@@ -1,6 +1,6 @@
 #ifndef PUZZLEROOM_H
 #define PUZZLEROOM_H
-
+#include <iostream>
 #include "Scene.h"
 #include "Camera2.h"
 #include "Mesh.h"
@@ -10,6 +10,7 @@
 #include "LoadTGA.h"
 #include <Windows.h>
 #include "ObjectBox.h"
+#include "item.h"
 
 class PuzzleRoom : public Scene
 {
@@ -34,18 +35,18 @@ class PuzzleRoom : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-		//U_LIGHT1_POSITION,
-		//U_LIGHT1_COLOR,
-		//U_LIGHT1_POWER,
-		//U_LIGHT1_KC,
-		//U_LIGHT1_KL,
-		//U_LIGHT1_KQ,
-		////U_LIGHT1NABLED,
-		//U_LIGHT1_TYPE,
-		//U_LIGHT1_SPOTDIRECTION,
-		//U_LIGHT1_COSCUTOFF,
-		//U_LIGHT1_COSINNER,
-		//U_LIGHT1_EXPONENT,
+		U_LIGHT1_POSITION,
+		U_LIGHT1_COLOR,
+		U_LIGHT1_POWER,
+		U_LIGHT1_KC,
+		U_LIGHT1_KL,
+		U_LIGHT1_KQ,
+		U_LIGHT1NABLED,
+		U_LIGHT1_TYPE,
+		U_LIGHT1_SPOTDIRECTION,
+		U_LIGHT1_COSCUTOFF,
+		U_LIGHT1_COSINNER,
+		U_LIGHT1_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -64,7 +65,13 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
-
+	//item
+	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
+	void uploadItem(int);
+	void printNext();
+	void printPrev();
+	void rendertag();
+	Item *first, *last, *forward, *current, *backward;
 private:
 	void RenderButton(int, int);
 	unsigned m_vertexArrayID;
@@ -84,28 +91,61 @@ private:
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
 	
-
+	//Light
+	bool switchoneint;
+	bool lightoneon;
+	bool switchtwoint;
+	bool lighttwoon;
 	//time
 	float elapsedtime = 0;
 	float bouncetime = 0;
 	//For Running Animation
 	bool checkmodelStack;
+	//TV Drawer
+	float drawertranslation = 0;
+	bool drawerint;
+	bool draweropen = false;
 	//secret door
-	float openup = 0;
+	float secretdoortranslation = 0;
 	bool secretdooropen;
 	bool secretdoorint ;
 	bool lockeddoortext;
+	//Pillow
+	float pillowtranslation = 0;
+	bool pillowint;
+	bool pillowmoved = false;
 	//door1
 	float RotateDoor1=0;
 	bool door1open;
 	bool doorint ;
-	//key
-	bool keyint;
-	bool havekey = false;
+	//key1
+	bool key1int;
+	bool havekey1 = false;
+	//key2
+	bool key2int;
+	bool havekey2 = false;
+	//Patient
+	bool patientint;
+	bool patienthint;
+	//safe
+	float rotatesafedoor;
+	bool safeint = false;
+	bool safeopen = false;
+	bool havekey3;
+	bool safecracking = false;
+	bool codecracked = false;
+	bool wrongcode;
+	std::string code;
 	//Promtp on screen
 	bool interaction;
-	bool interactioncomplete;
+	bool interactioncomplete = false;
 	bool paintingint;
+	//codepress
+	bool eight = false;
+	bool   six = false;
+	bool   one = false;
+	bool   two = false;
+	bool other = false;
 	//<--Music-->
 	/*void PlayMusic();
 	bool b_musicSelected;
@@ -144,8 +184,21 @@ private:
 		GEO_SECRETWALL,
 		GEO_SAFE,
 		GEO_SAFEDOOR,
-		GEO_KEY,
+		GEO_KEY1,
 		GEO_TABLEPAINTING,
+		GEO_SWITCHONE,
+		GEO_SWITCHTWO,
+		GEO_KEY2,
+		GEO_HAIR, // patient
+		GEO_FACE,
+		GEO_BODY,
+		GEO_RARM,
+		GEO_LARM,
+		GEO_RHAND,
+		GEO_LHAND,
+		GEO_RLEG,
+		GEO_LLEG,
+		GEO_CROTCH,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
@@ -170,13 +223,22 @@ private:
 		OBJ_SAFE,
 		OBJ_BED,
 		OBJ_DOORINT,
-		OBJ_KEY,
+		OBJ_KEY1,
 		OBJ_SECRETWALL,
 		OBJ_SECRETWALLINT,
 		OBJ_PAINTINGCASTLE,
 		OBJ_PAINTINGFOREST,
 		OBJ_PAINTINGFRUIT,
-		OBJ_ALL,
+		OBJ_TABLEPAINTING,
+		OBJ_SWITCHONE,
+		OBJ_SWITCHTWO,
+		OBJ_PILLOW,
+		OBJ_KEY2,
+		OBJ_TVTABLEDRAWERINT,
+		OBJ_SAFEINT,
+		OBJ_PATIENT,
+		OBJ_PATIENTINT,
+		OBJ_ALL,//when adding add directly above 
 		NUM_OBJ
 	};
 	MS modelStack, viewStack, projectionStack;
@@ -187,7 +249,7 @@ private:
 
 	static Camera2 camera;
 
-	Light light[1];
+	Light light[2];
 
 	void RenderMesh(Mesh *mesh, bool enableLight);
 

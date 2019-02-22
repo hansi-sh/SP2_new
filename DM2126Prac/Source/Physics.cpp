@@ -42,12 +42,10 @@ void Physics::v_UpdateCarSpeed(bool stepAccelerator, bool stepBrakes, bool steer
 
 }
 
-void Physics::v_UpdateCarDirection(float Degree, float previousDegree) //caculate rotation
+void Physics::v_UpdateCarDirection(float Degree) //caculate rotation
 {
-	Mtx44 rotateBy;
-	rotateBy.SetToRotation((Degree - previousDegree), 0, 1, 0);
-
-	V_Direction = (rotateBy * V_Direction).Normalize();
+	float rad = Math::DegreeToRadian(Degree);
+	V_Direction = Vector3(sin(rad), 0, cos(rad));
 }
 
 float Physics::f_GetSpeed()//get speed in AS scene
