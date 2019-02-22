@@ -74,10 +74,10 @@ void RaceScene::Init() //defines what shader to use
 
 	enemyX[0] = 15;
 	enemyY[0] = 64;
-	enemyZ[0] = -200;
+	enemyZ[0] = -1300.0f;
 	enemyX[1] = -15;
 	enemyY[1] = 64;
-	enemyZ[1] = -200;
+	enemyZ[1] = -1300.0f;
 	RotateEnemyBody = 0.0f;
 
 	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
@@ -323,13 +323,6 @@ void RaceScene::Update(double dt)
 	TranslateBodyX = V_UpdatedPlayerPos.x;
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
-
-	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody, 0);
-	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
-	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
-	enemyX[0] = enemyUpdatePos[0].x;
-	enemyY[0] = enemyUpdatePos[0].y;
-	enemyZ[0] = enemyUpdatePos[0].z;
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
