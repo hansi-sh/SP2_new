@@ -11,35 +11,35 @@
 
 float RaceScene::lastX = 0.0f;
 float RaceScene::lastY = 0.0f;
-Camera2 RaceScene::camera = Camera2();
+//Camera2 RaceScene::camera = Camera2();
 
 RaceScene::RaceScene()
 {
 }
 
-void RaceScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
-}
+//void RaceScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+//{
+//	float xoffset = (float)xpos - lastX;
+//	float yoffset = (float)ypos - lastY;
+//	float sensitivity = 0.05f;
+//
+//	lastX = (float)xpos;
+//	lastY = (float)ypos;
+//
+//	xoffset *= sensitivity;
+//	yoffset *= sensitivity;
+//
+//	Vector3 view = camera.target - camera.position;
+//	Mtx44 rotate;
+//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
+//	view = rotate * view;
+//
+//	Vector3 rightVector = view.Cross(camera.up);
+//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
+//	view = rotate * view;
+//
+//	camera.target = camera.position + view;
+//}
 
 RaceScene::~RaceScene()
 {
@@ -50,33 +50,49 @@ void RaceScene::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
-	checkmodelStack = false;
-	running = true;
-	bodyMovement = true;
-	b_BMO = true;
-	b_viewStats = false;
-
 	//<collison class>
 	collide = false;
-	rotationangle = 0;
-	updatedangle = 0;
-	TranslateAIX = 0;
-	TranslateAIZ = 50;
 
-	//<----for BMO body animation movement when running---->
-	LeftLegX = 90.0f;
-	RightLegX = 90.0f;
-	ArmRotation = 0.0f;
+	//<----For player car---->
 	TranslateBodyX = 0.0f;
-	TranslateBodyY = 0.0f;
-	TranslateBodyZ = 0.0f;
+	TranslateBodyY = 64.0f;
+	TranslateBodyZ = -200.0f;
 	RotateBody = 0.0f;
 
-	//<--Music-->
-	b_musicSelected = false;
-	b_inPM = false;
-	b_inPC = false;
-	
+	PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+
+	V_UpdatedPlayerPos = Vector3(0, 0, 0);
+	b_StepAccelerator = false;
+	b_StepBrakes = false;
+	b_Steer = false;
+	f_RotateAmt = 0.0f;
+	f_UpdatedAngle = 0.0f;
+
+	i_CollidedWith = 0;
+
+	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
+
+	enemyX[0] = 15;
+	enemyY[0] = 64;
+	enemyZ[0] = -200;
+	enemyX[1] = -15;
+	enemyY[1] = 64;
+	enemyZ[1] = -200;
+	RotateEnemyBody = 0.0f;
+
+	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
+	e[1].SetEnemyPosition(Vector3(enemyX[1], enemyY[1], enemyZ[1]));
+	enemyUpdatePos[0] = Vector3(0, 0, 0);
+	enemyUpdatePos[1] = Vector3(0, 0, 0);
+	b_StepENEMYAccelerator = true;
+	b_StepENEMYBrakes = false;
+	b_ENEMYSteer = false;
+	f_ENEMYRotateAmt = 0.0f;
+
+	f_TPCRotateBy = 0.0f;
+
+
+
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
@@ -87,29 +103,26 @@ void RaceScene::Init() //defines what shader to use
 
 	LSPEED = 30.0f;
 
-	camera.Init(Vector3(0, 700, -1200), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(0, 100, -180), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
 	getCurrentCam = true;
 
 	Mtx44 projection;
-	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 60000.f);
+	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
 
-	//m_programID = LoadShaders("Shader//Shading.vertexshader","Shader//LightSource.fragmentshader");
-	//m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Texture.fragmentshader");
-	//m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Blending.fragmentshader");
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
 
 	// Get a handle for our "MVP" uniform
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID, "MVP");
 	m_parameters[U_MODELVIEW] = glGetUniformLocation(m_programID, "MV");
 	m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE] = glGetUniformLocation(m_programID, "MV_inverse_transpose");
-	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID,"material.kAmbient");
-	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID,"material.kDiffuse");
-	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID,"material.kSpecular");
-	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID,"material.kShininess");
+	m_parameters[U_MATERIAL_AMBIENT] = glGetUniformLocation(m_programID, "material.kAmbient");
+	m_parameters[U_MATERIAL_DIFFUSE] = glGetUniformLocation(m_programID, "material.kDiffuse");
+	m_parameters[U_MATERIAL_SPECULAR] = glGetUniformLocation(m_programID, "material.kSpecular");
+	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
 
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
@@ -163,79 +176,32 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
 
 	//Guide lines - Turn on if need
-	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
-	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 3.0f, 3.0f, 3.0f);//For Player
+	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
+	//meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
-	////<--USB-->
-	//meshList[GEO_USB] = MeshBuilder::GenerateCube("USB", Color(0.01171875f, 0.19140625f, 0.23046875f), 2.0f, 0.4f, 3.0f);
-	//meshList[GEO_USB]->material.kAmbient.Set(0.7f, 0.7f, 0.7f);
-	//meshList[GEO_USB]->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_USB]->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
-	//meshList[GEO_USB]->material.kShininess = 1.0f;
+	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
+	Obj[OBJ_ENEMY1] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
 
-	////<--Blue button circle-->
-	//meshList[GEO_BLUEBUTTONCIRCLE] = MeshBuilder::GenerateCircle("Blue button circle", Color(0.0f, 0.0f, 0.74296875f), 360, 1.0f);
-	//meshList[GEO_BLUEBUTTONCIRCLE]->material.kAmbient.Set(0.80f, 0.80f, 0.80f);
-	//meshList[GEO_BLUEBUTTONCIRCLE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	//meshList[GEO_BLUEBUTTONCIRCLE]->material.kSpecular.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_BLUEBUTTONCIRCLE]->material.kShininess = 1.0f;
 
-	////<--Blue button cylinder-->
-	//meshList[GEO_BLUEBUTTONCYLINDER] = MeshBuilder::GenerateCylinder("Blue button cylinder", Color(0.0f, 0.0f, 0.4f), 360.0f, 1.0f, -3.0f);
-	//meshList[GEO_BLUEBUTTONCYLINDER]->material.kAmbient.Set(0.80f, 0.80f, 0.80f);
-	//meshList[GEO_BLUEBUTTONCYLINDER]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	//meshList[GEO_BLUEBUTTONCYLINDER]->material.kSpecular.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_BLUEBUTTONCYLINDER]->material.kShininess = 1.0f;
-
-	////<--Green button circle-->
-	//meshList[GEO_GREENBUTTONCIRCLE] = MeshBuilder::GenerateCircle("Green button circle", Color(0.0f, 0.64296875f, 0.0f), 360, 1.0f);
-	//meshList[GEO_GREENBUTTONCIRCLE]->material.kAmbient.Set(0.80f, 0.80f, 0.80f);
-	//meshList[GEO_GREENBUTTONCIRCLE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	//meshList[GEO_GREENBUTTONCIRCLE]->material.kSpecular.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_GREENBUTTONCIRCLE]->material.kShininess = 1.0f;
-
-	////<--Green button cylinder-->
-	//meshList[GEO_GREENBUTTONCYLINDER] = MeshBuilder::GenerateCylinder("Green button cylinder", Color(0.0f, 0.4f, 0.0f), 360.0f, 1.0f, -3.0f);
-	//meshList[GEO_GREENBUTTONCYLINDER]->material.kAmbient.Set(0.80f, 0.80f, 0.80f);
-	//meshList[GEO_GREENBUTTONCYLINDER]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	//meshList[GEO_GREENBUTTONCYLINDER]->material.kSpecular.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_GREENBUTTONCYLINDER]->material.kShininess = 1.0f;
-
-	////<--Red button circle-->
-	//meshList[GEO_REDBUTTONCIRCLE] = MeshBuilder::GenerateCircle("Red button circle", Color(0.64296875f, 0.0f, 0.0f), 360, 1.0f);
-	//meshList[GEO_REDBUTTONCIRCLE]->material.kAmbient.Set(0.80f, 0.80f, 0.80f);
-	//meshList[GEO_REDBUTTONCIRCLE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	//meshList[GEO_REDBUTTONCIRCLE]->material.kSpecular.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_REDBUTTONCIRCLE]->material.kShininess = 1.0f;
-
-	////<--Red button cylinder-->
-	//meshList[GEO_REDBUTTONCYLINDER] = MeshBuilder::GenerateCylinder("Red button cylinder", Color(0.4f, 0.0f, 0.0f), 360.0f, 1.0f, -3.0f);
-	//meshList[GEO_REDBUTTONCYLINDER]->material.kAmbient.Set(0.80f, 0.80f, 0.80f);
-	//meshList[GEO_REDBUTTONCYLINDER]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	//meshList[GEO_REDBUTTONCYLINDER]->material.kSpecular.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_REDBUTTONCYLINDER]->material.kShininess = 1.0f;
-
-	////<--Turquoise triangle button-->
-	//meshList[GEO_TRIPRISM] = MeshBuilder::GeneratePrism("Triangular button", Color(0.0f, 0.8f, 0.8f), 1.0f, 1.0f, 5.0f);
-	//meshList[GEO_TRIPRISM]->material.kAmbient.Set(0.80f, 0.80f, 0.80f); 
-	//meshList[GEO_TRIPRISM]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f); 
-	//meshList[GEO_TRIPRISM]->material.kSpecular.Set(0.5f, 0.5f, 0.5f); 
-	//meshList[GEO_TRIPRISM]->material.kShininess = 1.0f;
+	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
+	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 12);//For Player
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front1.tga");
+	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front3.tga");
 
 	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//back1.tga");
+	meshList[GEO_BACK]->textureID = LoadTGA("Image//back3.tga");
 
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//left1.tga");
+	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right3.tga");
 
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//right1.tga");
+	meshList[GEO_LEFT]->textureID = LoadTGA("Image//left3.tga");
 
 	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//top1.tga");
+	meshList[GEO_TOP]->textureID = LoadTGA("Image//top3.tga");
 
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom3.tga");
@@ -248,6 +214,7 @@ void RaceScene::Init() //defines what shader to use
 
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
+
 	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 1415.0f);
 	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, 636.0f, 20.0f), 20.0f, 40.0f, 2830.0f);
 	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);
@@ -295,7 +262,82 @@ void RaceScene::Update(double dt)
 	else
 		b_viewStats = false;
 
-	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
+
+
+	if (Application::IsKeyPressed('W'))//forward
+	{
+		b_StepAccelerator = true;
+		b_StepBrakes = false;
+	}
+	else if (Application::IsKeyPressed('S'))//backward
+	{
+		b_StepAccelerator = false;
+		b_StepBrakes = true;
+	}
+	else
+	{
+		b_StepAccelerator = false;
+		b_StepBrakes = false;
+	}
+	///////////////////////rotation
+	if (!collide)
+	{
+		if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
+		{
+			f_RotateAmt = 0.0f;
+		}
+		else if (fabs(PlayerCar.f_GetSpeed()) < 20.0f)
+		{
+			f_RotateAmt = 0.3f;
+		}
+		else if (fabs(PlayerCar.f_GetSpeed()) < 40.0f)
+		{
+			f_RotateAmt = 0.5f;
+		}
+		else if (fabs(PlayerCar.f_GetSpeed()) < 60.0f)
+		{
+			f_RotateAmt = 1.0f;
+		}
+
+		if (Application::IsKeyPressed('A'))//rotate left
+		{
+			b_Steer = true;
+			f_UpdatedAngle = (RotateBody + f_RotateAmt) - RotateBody;
+			RotateBody += f_RotateAmt;
+		}
+		else if (Application::IsKeyPressed('D'))//rotate left
+		{
+			b_Steer = true;
+			f_UpdatedAngle = (RotateBody - f_RotateAmt) - RotateBody;
+			RotateBody -= f_RotateAmt;
+		}
+		else
+		{
+			b_Steer = false;
+		}
+		PlayerCar.v_UpdateCarDirection(RotateBody);
+	}
+	PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
+	V_UpdatedPlayerPos = PlayerCar.V_UpdateCarPos(dt);
+
+	TranslateBodyX = V_UpdatedPlayerPos.x;
+	TranslateBodyY = V_UpdatedPlayerPos.y;
+	TranslateBodyZ = V_UpdatedPlayerPos.z;
+
+	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody, 0);
+	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
+	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
+	enemyX[0] = enemyUpdatePos[0].x;
+	enemyY[0] = enemyUpdatePos[0].y;
+	enemyZ[0] = enemyUpdatePos[0].z;
+
+	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
+	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+
+	for (int i = 0; i < 1; i++)
+	{
+		Obj[i + 1]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
+	}
 
 	//<collision>
 	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
@@ -303,40 +345,66 @@ void RaceScene::Update(double dt)
 		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
 		{
 			collide = true;
-			camera.position = currentCamPos;
-			camera.target = currentCamTarget;
-			//TranslateBodyX = prevBodyX;
-			//TranslateBodyZ = prevBodyZ;
-			//rotationangle = prevAngle;
+			i_CollidedWith = AllObjs;
 			break;
 		}
 		collide = false;
 	}
-	if (!collide)
+
+	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
-		//prevBodyX = TranslateBodyX;
-		//prevBodyZ = TranslateBodyZ;
-		//prevAngle = rotationangle;
+		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+
+		//if i_CollidedWith the numbers of Car AI
+		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
+
+		if (i_CollidedWith >= 1 /*&& i_CollidedWith <= last car AI*/) //num in object type
+		{
+			if (TranslateBodyZ > enemyZ[i_CollidedWith - 1])
+			{
+				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 1]) >= f_HeightAIP)	//if AI directly hits back of the car of player
+				{
+					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
+				}
+				else
+				{
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+				}
+			}
+			else
+			{
+				if ((enemyZ[i_CollidedWith - 1] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
+				{
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.5));
+				}
+				else
+				{
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+				}
+			}
+		}
+
+		/*TranslateBodyX = prevBodyX;
+		TranslateBodyZ = prevBodyZ;*/
+		RotateBody = prevAngle;
+
+		Obj[OBJ_PLAYER]->setRotatingAxis((-1 * f_UpdatedAngle), 0.0f, 1.0f, 0.0f);
+		Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+		PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	}
+	else	//if it does not collides, what ever happened in the previous frame will be saved
+	{
+		/*prevBodyX = TranslateBodyX;
+		prevBodyZ = TranslateBodyZ;*/
+		prevAngle = RotateBody;
 	}
 
-
-	fps = 1.0f / (float)dt;
-
-	// Light movement
-	if (Application::IsKeyPressed('I'))
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U'))
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		light[0].position.y += (float)(LSPEED * dt);
+	f_UpdatedAngle = 0.0f;
 
 	if (getCurrentCam)
 	{
@@ -344,16 +412,18 @@ void RaceScene::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 
-	if (Application::IsKeyPressed('Z'))
+	if (Application::IsKeyPressed('Q'))
 	{
-		light[0].type = Light::LIGHT_POINT;  // For a lamp post
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
+		f_TPCRotateBy = -1.0f;
+		//light[0].type = Light::LIGHT_POINT;  // For a lamp post
+		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to POINT and pass the information to shader
 	}
-	else if (Application::IsKeyPressed('X'))
+	else if (Application::IsKeyPressed('E'))
 	{
-		light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
+		f_TPCRotateBy = 1.0f;
+		//light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
+		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to DIRECTIONAL and pass the information to shader
 	}
 	else if (Application::IsKeyPressed('C'))
@@ -363,8 +433,10 @@ void RaceScene::Update(double dt)
 		//to do: switch light type to SPOT and pass the information to shader
 	}
 
-	
-	camera.Update(dt);
+
+	//camera.Update(dt);
+	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	f_TPCRotateBy = 0.0f;
 }
 
 void RaceScene::Render()
@@ -377,6 +449,38 @@ void RaceScene::Render()
 	modelStack.LoadIdentity();
 
 	RenderSkybox();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	//modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
+	//RenderMesh(meshList[GEO_CUBE], false);
+	//modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4);
+	modelStack.Translate(0, 0, 4);
+	modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
+	modelStack.Translate(0, 0, -4);
+	RenderMesh(meshList[GEO_AMBULANCE], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
+	RenderMesh(meshList[GEO_AICUBE], false);
+	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
+	////modelStack.Rotate(90, 0, 1, 0);
+	//RenderMesh(meshList[GEO_CAR], false);
+	//modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(enemyX[1], enemyY[1], enemyZ[1]);
+	//modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(meshList[GEO_CAR], false);
+	modelStack.PopMatrix();
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
@@ -402,36 +506,14 @@ void RaceScene::Render()
 			&lightPosition_cameraspace.x);
 	}
 
-	////<-----------Axes----------->
-	//modelStack.PushMatrix();
-	//RenderMesh(meshList[GEO_AXES], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Light ball Sphere lighting 1----------->
+	//<-----------Axes----------->
 	modelStack.PushMatrix();
-	modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	RenderMesh(meshList[GEO_LIGHTBALL], false);
+	RenderMesh(meshList[GEO_AXES], false);
 	modelStack.PopMatrix();
-
-	//	//<-----------USB----------->
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(-2.0f, -1.0f, 0.01f);
-	//	RenderMesh(meshList[GEO_USB], false);
-	//	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(40, 636, -340);
-	//RenderMesh(meshList[GEO_BOX1], false);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-40, 639, -340);
-	//RenderMesh(meshList[GEO_BOX2], false);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
-	modelStack.Translate(0, 77, 180);
+	modelStack.Translate(0, 30, 180);
 	modelStack.Rotate(180, 0, 1, 0);
 	RenderMesh(meshList[GEO_HOSPITAL], false);
 	modelStack.PopMatrix();
@@ -440,7 +522,7 @@ void RaceScene::Render()
 	{
 		modelStack.PushMatrix();
 		modelStack.Scale(8, 8, 8);
-		modelStack.Translate(0, 77, 170.5f - (i*14));
+		modelStack.Translate(0, 30, 170.5f - (i*14));
 		modelStack.Rotate(270, 0, 1, 0);
 		RenderMesh(meshList[GEO_RACETRACK], false);
 		modelStack.PopMatrix();
