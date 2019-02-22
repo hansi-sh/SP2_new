@@ -10,6 +10,7 @@
 #include "LoadTGA.h"
 #include "ObjectBox.h"
 #include "Enemy.h"
+#include "enemy2.h"
 #include <Windows.h>
 #include "Physics.h"
 
@@ -67,6 +68,11 @@ private:
 	bool getCurrentCam;
 
 	bool collide;
+	bool AIcollide;
+
+	int collider1;
+	int collider2;
+
 	float rotationangle;
 	float updatedangle;
 	float prevBodyX;
@@ -77,14 +83,16 @@ private:
 
 	bool b_viewStats;
 	//for enemy
-	float RotateEnemyBody;
+	int randomMove[2];
+	float RotateEnemyBody[2];
 	float enemyX[2], enemyY[2], enemyZ[2];
 	Enemy e[2];
 	Vector3 enemyUpdatePos[2];
 	bool b_StepENEMYAccelerator;
 	bool b_StepENEMYBrakes;
-	bool b_ENEMYSteer;
-	float f_ENEMYRotateAmt;
+	bool b_ENEMYSteer[2];
+	bool randcheck[2];
+	float f_ENEMYRotateAmt[2];
 
 	//For Car
 	float RotateBody;
@@ -99,6 +107,14 @@ private:
 	float f_RotateAmt;
 	float f_UpdatedAngle;
 	int i_CollidedWith;
+
+	//AI
+	enemy2 AIwalker[1];
+	bool checkmove[1];
+	float AIWalkX[1];
+	float AIWalkY[1];
+	float AIWalkZ[1];
+	Vector3 AIpos[1];
 
 	float f_HeightAIP;	//AI + players car height
 
@@ -142,9 +158,10 @@ private:
 	enum OBJECT_TYPE
 	{
 		OBJ_PLAYER,
-		OBJ_ENEMY1,
 		OBJ_BOX1,
 		OBJ_BOX2,
+		OBJ_ENEMY1,
+		OBJ_ENEMY2,
 
 		NUM_OBJ
 	};
