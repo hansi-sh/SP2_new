@@ -66,9 +66,12 @@ void Scene2::Init() //defines what shader to use
 	delay = 0;
 
 	// testing irrklan
-	music::player.init();
-	music::player.setSoundVol(0.5);
-	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
+	if (useSound)
+	{
+		music::player.init();
+		music::player.setSoundVol(0.5);
+		music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
+	}
 
 	//<collison class>
 	collide = false;
@@ -276,8 +279,6 @@ void Scene2::Init() //defines what shader to use
 	//meshList[GEO_TEST] = MeshBuilder::GenerateCube("Test", Color(0, 0, 1), 7.0f, 12.0f, 4.0f);
 	//Obj[OBJ_TEST] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
-
-
 	// Patient Obj
 	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
 	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");
@@ -319,7 +320,6 @@ void Scene2::Init() //defines what shader to use
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage2.tga");
-
 }
 
 //void Scene2::PlayMusic()
@@ -378,10 +378,15 @@ void Scene2::Update(double dt)
 		showIntro = false;
 	}
 
+	if (Application::IsKeyPressed(VK_BACK)) // testing for now
+	{
+		useSound = false;
+	}
+
 	if (Application::IsKeyPressed('1'))
 	{
 		Application app;
-		app.SetSceneNumber(1);
+		app.SetSceneNumber(3);
 		app.Run();
 		
 	}

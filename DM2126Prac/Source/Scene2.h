@@ -251,6 +251,7 @@ private:
 	bool nextStage = false;
 	double score = 1.0;
 	bool showIntro = true;
+	bool useSound = true;
 
 	void RenderMission();
 	void EndMission();

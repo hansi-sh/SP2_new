@@ -153,6 +153,10 @@ private:
 	bool b_checkinPM;
 	bool b_inPC;
 */
+
+	bool showIntro = true; // Raphael Added
+	double score = 1.0; // Raphael Added
+
 	enum GEOMETRY_TYPE
 	{
 		
@@ -199,6 +203,7 @@ private:
 		GEO_RLEG,
 		GEO_LLEG,
 		GEO_CROTCH,
+		GEO_START, // Raphael Added
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE

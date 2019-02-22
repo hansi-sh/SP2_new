@@ -13,6 +13,8 @@
 #include "Racing.h"
 #include "Scene2.h"
 
+#include "Sound.h"
+
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
@@ -112,6 +114,7 @@ int Application::SetSceneNumber(int number)
 
 void Application::Run()
 {
+
 	Scene *scene;
 	//Main Loop
 	if (GetSceneNumber()==2)
@@ -131,8 +134,9 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new AssignmentScene();
-		//glfwSetCursorPosCallback(m_window, AssignmentScene::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
+		scene = new PuzzleRoom();
+		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
+
 	}
 	
 
