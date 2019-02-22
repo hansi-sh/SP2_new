@@ -12,6 +12,10 @@
 #include <Windows.h>
 #include "ObjectBox.h"
 
+
+#include <fstream>
+using namespace std;
+
 class Scene2 : public Scene
 {
 	enum UNIFORM_TYPE
@@ -166,18 +170,16 @@ private:
 		// GEO_TEST5, // left
 		// GEO_TEST6, // right
 		GEO_TEXT,
-		GEO_INSTRUCTION1,
-		GEO_INSTRUCTION2,
-		GEO_NOTIFICATION1,
-		GEO_NOTIFICATION2,
-		GEO_FRAME,
+
+		GEO_HELP, // the top right panel
+		GEO_FRAME, // the frame to contain text
+		GEO_START, // ambulance
 
 		GEO_HAIR, // patient
 		GEO_FACE,
 		GEO_BODY,
 		GEO_RARM,
 		GEO_LARM,
-
 
 		GEO_RHAND,
 		GEO_LHAND,
@@ -197,7 +199,7 @@ private:
 		OBJ_CABINET, // - > done
 		OBJ_CHAIR, // - > done
 		// OBJ_DEFIBRILLATOR, // -> done
-		// OBJ_FIRSTAIDKIT, // -> done
+		// OBJ_FIRSTAIDKIT, // -> done (changed)
 		OBJ_CABINET2, // -> done
 		OBJ_TOPSHELVE1, // - > done
 		OBJ_TOPSHELVE2, // - > done
@@ -248,6 +250,7 @@ private:
 	bool useKit = false;
 	bool nextStage = false;
 	double score = 1.0;
+	bool showIntro = true;
 
 	void RenderMission();
 	void EndMission();
@@ -258,6 +261,9 @@ private:
 	void printPrev();
 	void rendertag();
 	Item *first, *last, *forward, *current, *backward;
+
+
+
 };
 
 #endif

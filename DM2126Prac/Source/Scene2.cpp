@@ -8,6 +8,7 @@
 #include "Scene2.h"
 #include "Utility.h"
 #include <string>
+#include "Sound.h"
 
 float Scene2::lastX = 0.0f;
 float Scene2::lastY = 0.0f;
@@ -63,6 +64,11 @@ void Scene2::Init() //defines what shader to use
 	speed = 0;
 
 	delay = 0;
+
+	// testing irrklan
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
 
 	//<collison class>
 	collide = false;
@@ -270,20 +276,7 @@ void Scene2::Init() //defines what shader to use
 	//meshList[GEO_TEST] = MeshBuilder::GenerateCube("Test", Color(0, 0, 1), 7.0f, 12.0f, 4.0f);
 	//Obj[OBJ_TEST] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
-	meshList[GEO_INSTRUCTION1] = MeshBuilder::GenerateQuad("UI", Color(0, 0, 1), 15.0, 15.0, 15.0);
-	meshList[GEO_INSTRUCTION1] ->textureID = LoadTGA("Image//Instruction1.tga");
 
-	meshList[GEO_INSTRUCTION2] = MeshBuilder::GenerateQuad("UI", Color(0, 0, 1), 15.0, 15.0, 15.0);
-	meshList[GEO_INSTRUCTION2]->textureID = LoadTGA("Image//Instruction2.tga");
-
-	meshList[GEO_NOTIFICATION1] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 15, 15, 15);
-	meshList[GEO_NOTIFICATION1]->textureID = LoadTGA("Image//Notification1.tga");
-
-	meshList[GEO_NOTIFICATION2] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 15, 15, 15);
-	meshList[GEO_NOTIFICATION2]->textureID = LoadTGA("Image//Notification2.tga");
-
-	meshList[GEO_FRAME] = MeshBuilder::GenerateQuad("frame", Color(0, 0, 1), 15, 15, 15);
-	meshList[GEO_FRAME]->textureID = LoadTGA("Image//Frame.tga");
 
 	// Patient Obj
 	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
@@ -315,6 +308,18 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_CROTCH] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Crotch.obj");
 	meshList[GEO_CROTCH]->textureID = LoadTGA("Image//Body.tga");
+
+	// User Interface
+	meshList[GEO_FRAME] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_FRAME]->textureID = LoadTGA("Image//FrameNew.tga");
+
+	meshList[GEO_HELP] = MeshBuilder::GenerateQuad("noti", Color(0, 0, 1), 14, 2, 0);
+	meshList[GEO_HELP]->textureID = LoadTGA("Image//FrameNew.tga");
+
+	// Switching Stage
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_START]->textureID = LoadTGA("Image//Stage2.tga");
+
 }
 
 //void Scene2::PlayMusic()
@@ -366,7 +371,12 @@ void Scene2::Update(double dt)
 {
 	delay += dt;
 
-	score++;
+	score = score + 0.2;
+
+	if (score > 20)
+	{
+		showIntro = false;
+	}
 
 	if (Application::IsKeyPressed('1'))
 	{
@@ -381,9 +391,13 @@ void Scene2::Update(double dt)
 	}
 	if (nextStage || Application::IsKeyPressed('3'))
 	{
-		Application app;
-		app.SetSceneNumber(4); // go to RaceScene when done here
-		app.Run();
+		// leaderboard thingy
+		ofstream saveToFile("loli.txt", fstream::app);
+		saveToFile << score << endl;
+		
+		//Application app;
+		//app.SetSceneNumber(4); // go to RaceScene when done here
+		//app.Run();
 	}
 	if (Application::IsKeyPressed('6'))
 	{
@@ -467,6 +481,11 @@ void Scene2::Update(double dt)
 			delay = 0;
 			collectDefi = true;
 			notification1 = true;
+
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene2//PickUp.wav");
+			
 		}
 		// not suppose to be in actual game
 		// cheat key for obj to reappear
@@ -488,6 +507,10 @@ void Scene2::Update(double dt)
 		{
 			collectKit = true;
 			notification2 = true;
+
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene2//PickUp.wav");
 		}
 		if (Application::IsKeyPressed('V'))
 		{
@@ -538,6 +561,13 @@ void Scene2::Update(double dt)
 	{
 		currentCamPos = camera.position;
 		currentCamTarget = camera.target;
+	}
+
+	if (collide)
+	{
+		//music::player.init();
+		//music::player.setSoundVol(0.5);
+		//music::player.playSound("Sound//Scene2//PickUp.wav");
 	}
 
 	// If collision is true, disable player movement,
@@ -756,30 +786,25 @@ void Scene2::Render()
 	RenderMesh(meshList[GEO_TOPSHELVE1], setTrueFalse); // same side as cabinet
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-10, 23, 15);
-	//modelStack.Rotate(180, 0, 1, 0);
-	//modelStack.Scale(2, 2, 2);
-	//RenderMesh(meshList[GEO_TOPSHELVE2], setTrueFalse); // diff side as cabinet
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(-10, 23, 15);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(2, 2, 2);
+	RenderMesh(meshList[GEO_TOPSHELVE2], setTrueFalse); // diff side as cabinet
+	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(10, 23, 15);
-	//modelStack.Rotate(180, 0, 1, 0);
-	//modelStack.Scale(2, 2, 2);
-	//RenderMesh(meshList[GEO_TOPSHELVE3], setTrueFalse); // diff side as cabinet
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(10, 23, 15);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(2, 2, 2);
+	RenderMesh(meshList[GEO_TOPSHELVE3], setTrueFalse); // diff side as cabinet
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
 	modelStack.Translate(10, 0, -3);
 	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(22, 5, -3);
-	//RenderMesh(meshList[GEO_BOX2], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	if (b_viewStats)
 	{
@@ -789,24 +814,24 @@ void Scene2::Render()
 	else
 	{
 		modelStack.PushMatrix();
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("Instructions:[P]"), Color(1, 1, 0), 2, 50, 58);
-		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(score), Color(1, 1, 0), 2, 50, 58);
+		DrawHUD(meshList[GEO_HELP], Color(0, 0, 1), false, 1, 65, 56);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("View Task:[P]"), Color(1, 1, 0), 2, 54, 56);
 		modelStack.PopMatrix();
 	}
 
-	if (collide)
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(1, 1, 0), 2, 66, 54);
-		modelStack.PopMatrix();
-	}
+	//if (collide)
+	//{
+	//	modelStack.PushMatrix();
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(1, 1, 0), 2, 66, 54);
+	//	modelStack.PopMatrix();
+	//}
 
-	else
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(1, 1, 0), 2, 60, 54);
-		modelStack.PopMatrix();
-	}
+	//else
+	//{
+	//	modelStack.PushMatrix();
+	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(1, 1, 0), 2, 60, 54);
+	//	modelStack.PopMatrix();
+	//}
 
 	int speedct = abs(speed); // no idea what this does
 
@@ -826,14 +851,27 @@ void Scene2::Render()
 	if (collectDefi && notification1)
 	{
 		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_NOTIFICATION1], Color(0, 0, 1), false, 1, 40, 30);
+		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Defibrillator added to"), Color(0, 0, 1), 2, 20, 35);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Inventory"), Color(0, 0, 1), 2, 33, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("[M] to close"), Color(0, 0, 1), 2, 29, 25);
 		modelStack.PopMatrix();
 	}
 
 	if (collectKit && notification2)
 	{
 		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_NOTIFICATION2], Color(0, 0, 1), false, 1, 40, 30);
+		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("First Aid Kit added to"), Color(0, 0, 1), 2, 20, 35);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Inventory"), Color(0, 0, 1), 2, 33, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("[M] to close"), Color(0, 0, 1), 2, 29, 25);
+		modelStack.PopMatrix();
+	}
+
+	if (showIntro)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
 
@@ -846,20 +884,21 @@ void Scene2::RenderMission() // has transparent box now
 	if (instruction == 0)
 	{
 		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_INSTRUCTION1], Color(1, 1, 0), false, 1, 40, 30);
+		DrawHUD(meshList[GEO_FRAME], Color(1, 1, 0), false, 1, 40, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("1. Find Defibrillator"), Color(0, 0, 1), 2, 19, 27);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("2. Collect it [C]"), Color(0, 0, 1), 2, 19, 23);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("3. Use it on Patient[U]"), Color(0, 0, 1), 2, 19, 18);
 		modelStack.PopMatrix();
 	}
 	else if (instruction == 1)
 	{
 		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_INSTRUCTION2], Color(1, 1, 0), false, 1, 40, 30);
+		DrawHUD(meshList[GEO_FRAME], Color(1, 1, 0), false, 1, 40, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("1. Find First Aid Kit"), Color(0, 0, 1), 2, 19, 28);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("2. Collect it [C]"), Color(0, 0, 1), 2, 19, 23);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("3. Use it on Patient[I]"), Color(0, 0, 1), 2, 19, 18);
 		modelStack.PopMatrix();
 	}
-
-	// If wanna use text instead of quad
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Instructions: "), Color(0, 1, 0), 2, 2, 9);
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("1. Find the Defibrillator "), Color(0, 1, 0), 2, 2, 7);
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("2. Collect it [C] "), Color(0, 1, 0), 2, 2, 5);
 }
 
 void Scene2::EndMission()
@@ -868,22 +907,22 @@ void Scene2::EndMission()
 	{
 		if (useDefi) // which is correct
 		{
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 0), 2, 34, 32);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 0), 2, 34, 28);
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
 			nextStage = true;
-		} // then some codes to switch scene
+		} 
 
 		if (useKit) // which is wrong
 		{
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 0), 2, 30, 30);
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
 			nextStage = true;
-		} // then some codes to switch scene
+		}
 		
 	}
 
@@ -891,21 +930,22 @@ void Scene2::EndMission()
 	{
 		if (useKit) // which is correct
 		{
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 0), 2, 34, 32);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 0), 2, 34, 28);			modelStack.PushMatrix();
+			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
 			nextStage = true;
-		} // then some codes to switch scene
+		}
 
 		if (useDefi) // which is wrong
 		{
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 0), 2, 30, 30);
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
 			nextStage = true;
-		} // then some codes to switch scene
+		}
 	}
 }
 
