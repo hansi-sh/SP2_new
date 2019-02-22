@@ -102,6 +102,7 @@ private:
 	float elapsedtime = 0;
 	float bouncetime = 0;
 	bool timerunout = false;
+	bool timeleft = false;
 	
 	//For Running Animation
 	bool checkmodelStack;
@@ -207,7 +208,7 @@ private:
 		GEO_RLEG,
 		GEO_LLEG,
 		GEO_CROTCH,
-		GEO_FRAMETEXT,
+		//GEO_FRAMETEXT,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE

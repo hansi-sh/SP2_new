@@ -4,8 +4,9 @@
 
 StopWatchTimer::StopWatchTimer()
 {
-	i_StartTime = 120;
-	remainingtimePR;
+	d_StartTime = 120;
+	d_ambulancetimer = 30;
+	d_TotalTimeAfterAmbulance = 0;
 }
 
 
@@ -14,17 +15,20 @@ StopWatchTimer::~StopWatchTimer()
 
 }
 
-int StopWatchTimer::i_GetTime()
+double StopWatchTimer::d_GetPuzzleSceneTime()
 {
-	return i_StartTime;
+	return d_StartTime;
 }
-
-void StopWatchTimer::v_SetTime(float time)
+double StopWatchTimer::d_GetTotalTimeAfterAmbulance()
 {
-	i_StartTime = time;
+	return d_ambulancetimer;
+}
+void StopWatchTimer::v_SetPuzzleSceneTime(float time)
+{
+	d_StartTime = time;
 }
 void StopWatchTimer::v_UpdateTime(double dt)
 {
-	i_StartTime -= 1*dt ;
+	d_StartTime -= 1*dt ;
 
 }
