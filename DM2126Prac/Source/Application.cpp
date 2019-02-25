@@ -147,7 +147,11 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new MainMenuScene();
+		// scene = new MainMenuScene();
+		scene = new Scene2();
+		glfwSetCursorPosCallback(m_window, Scene2::mouse_callback);
+
+
 	}
 	
 	//Main menu scene = 0 no cam

@@ -3,7 +3,7 @@
 #include "shader.hpp"
 #include "Application.h"
 #include "MeshBuilder.h"
-#include "Camera.h"
+#include "Camera2.h"
 #include "GLFW/glfw3.h"
 #include "Scene2.h"
 #include "Utility.h"
@@ -338,7 +338,7 @@ void Scene2::Update(double dt)
 
 	if (Application::IsKeyPressed('1'))
 	{
-		
+
 	}
 	if (Application::IsKeyPressed('2'))
 	{
@@ -350,9 +350,14 @@ void Scene2::Update(double dt)
 		ofstream saveToFile("loli.txt", fstream::app);
 		saveToFile << score << endl;
 		
+		music::player.stopSound(); // end all music at the des of scene
+
 		Application app;
-		app.SetSceneNumber(4); // go to RaceScene when done here -> double check isit 4
+		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
 		app.Run();
+
+		
+
 	}
 	if (Application::IsKeyPressed('6'))
 	{
@@ -1227,6 +1232,8 @@ void Scene2::Exit()
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
+
+	// music::player.stopSound(); // end all music at the des of scene
 
 	// Cleanup VBO here
 }
