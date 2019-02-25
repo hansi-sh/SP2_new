@@ -960,7 +960,7 @@ void Scene2::RenderSkybox()
 	modelStack.PopMatrix();
 
 	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 15.0f, 20.0f);
+	//modelStack.Translate(0.0f , 15.0f, 20.0f);
 	//RenderMesh(meshList[GEO_TEST1], setTrueFalse);
 	//modelStack.PopMatrix();
 
