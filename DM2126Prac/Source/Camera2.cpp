@@ -1,9 +1,9 @@
 #include "Camera2.h"
-#include "Application.h"
 #include "Mtx44.h"
 
 Camera2::Camera2()
 {
+	
 }
 
 Camera2::~Camera2()
@@ -26,6 +26,9 @@ void Camera2::Update(double dt)
 	horizontalView = (horizontalView).Normalized();
 	Vector3 right = view.Cross(up);
 	float cameraspeedchange = 1.0f;
+	
+	if (app.GetSceneNumber() >= 1 && app.GetSceneNumber() <= 2)
+	{
 	if (Application::IsKeyPressed('A'))
 	{
 		position = position - right * cameraspeedchange;
@@ -56,46 +59,6 @@ void Camera2::Update(double dt)
 		position -= horizontalView * cameraspeedchange;
 		target -= horizontalView * cameraspeedchange;
 	}
-	if (Application::IsKeyPressed(VK_LEFT))
-	{
-		Mtx44 rotation;
-		float yaw = (float)(CAMERA_SPEED * dt);
-		rotation.SetToRotation(yaw, up.x, up.y, up.z);
-
-		view = rotation * view;
-		target = position + view;
-	}
-	if (Application::IsKeyPressed(VK_RIGHT))
-	{
-		Mtx44 rotation;
-		float yaw = (float)(CAMERA_SPEED * dt);
-		rotation.SetToRotation(-yaw, up.x, up.y, up.z);
-
-		view = rotation * view;
-		target = position + view;
-	}
-	if (Application::IsKeyPressed(VK_UP))
-	{
-		Mtx44 rotation;
-		float pitch = (float)(CAMERA_SPEED * dt);
-		rotation.SetToRotation(pitch, right.x, right.y, right.z);
-
-		view = rotation * view;
-		target = position + view;
-
-	}
-	if (Application::IsKeyPressed(VK_DOWN))
-	{
-		Mtx44 rotation;
-		float pitch = (float)(CAMERA_SPEED * dt);
-		rotation.SetToRotation(-pitch, right.x, right.y, right.z);
-
-		view = rotation * view;
-		target = position + view;
-	}
-	if (Application::IsKeyPressed('R'))
-	{
-		Reset();
 	}
 }
 

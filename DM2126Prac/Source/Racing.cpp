@@ -289,15 +289,9 @@ void RaceScene::Update(double dt)
 	
 	if (Application::IsKeyPressed('1'))
 	{
-		Application app;
-		app.SetSceneNumber(1);
-		app.Run();
 	}
 	if (Application::IsKeyPressed('2'))
 	{
-		Application app;
-		app.SetSceneNumber(2);
-		app.Run();
 	}
 	if (Application::IsKeyPressed('3'))
 	{
