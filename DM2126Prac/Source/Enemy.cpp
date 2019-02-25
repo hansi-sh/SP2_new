@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include <stdlib.h> 
 
-
+///dasdas
 Enemy::Enemy()
 {
 	E_carSpeed = 0;
