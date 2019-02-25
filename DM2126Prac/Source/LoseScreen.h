@@ -55,30 +55,19 @@ public:
 	virtual void Exit();
 
 private:
-	void RenderButton(int, int);
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
-	bool getCurrentCam;
 
-	bool collide;
-	float rotationangle;
-	float updatedangle;
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
-
-	bool b_MMenu;
-	float f_bounceTime;
-	float f_quadY;
+	double d_BounceTime;
+	int i_Selector;
+	int i_SpeedUp;
+	float f_TRestart;
+	float f_TExit;
 
 	void RenderSkybox();
-
-	bool b_viewStats;
 
 	enum GEOMETRY_TYPE
 	{
@@ -92,7 +81,8 @@ private:
 		GEO_BACK,
 
 		GEO_LOSE,
-		//GEO_SELECTQUAD,
+		GEO_LOSET,
+		GEO_SELECTQUAD,
 
 		GEO_TEXT,
 
