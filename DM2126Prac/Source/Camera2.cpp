@@ -25,9 +25,9 @@ void Camera2::Update(double dt)
 	horizontalView.y = 0.0f;
 	horizontalView = (horizontalView).Normalized();
 	Vector3 right = view.Cross(up);
-	float cameraspeedchange = 1.0f;
+	float cameraspeedchange = 10.0f;
 	
-	if (app.GetSceneNumber() >= 1 && app.GetSceneNumber() <= 2)
+	//if (app.GetSceneNumber() >= 1 && app.GetSceneNumber() <= 2)
 	{
 	if (Application::IsKeyPressed('A'))
 	{
