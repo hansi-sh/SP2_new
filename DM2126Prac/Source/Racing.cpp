@@ -52,6 +52,9 @@ void RaceScene::Init() //defines what shader to use
 
 	//<collison class>
 	collide = false;
+	AIcollide = false;
+	collider1 = 0;
+	collider2 = 0;
 
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
@@ -72,22 +75,50 @@ void RaceScene::Init() //defines what shader to use
 
 	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
 
-	enemyX[0] = 15;
-	enemyY[0] = 64;
-	enemyZ[0] = -200;
-	enemyX[1] = -15;
-	enemyY[1] = 64;
-	enemyZ[1] = -200;
-	RotateEnemyBody = 0.0f;
+	for (int i = 0; i < 14; i++)
+	{
+		AIWalkX[i] = 30;
+		AIWalkY[i] = 64;
+		AIWalkZ[i] = ((rand() % 2750) - 1300);
+		checkmove[i] = false;
+		movechoice[i] = 0;
+		AIpos[i] = (Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
+	}
+	for (int i = 15; i < 30; i++)
+	{
+		AIWalkX[i] = -30;
+		AIWalkY[i] = 64;
+		AIWalkZ[i] = ((rand() % 2750) - 1300);
+		checkmove[i] = false;
+		movechoice[i] = 0;
+		AIpos[i] = (Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
+	}
+	
 
-	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
-	e[1].SetEnemyPosition(Vector3(enemyX[1], enemyY[1], enemyZ[1]));
-	enemyUpdatePos[0] = Vector3(0, 0, 0);
-	enemyUpdatePos[1] = Vector3(0, 0, 0);
-	b_StepENEMYAccelerator = true;
-	b_StepENEMYBrakes = false;
-	b_ENEMYSteer = false;
-	f_ENEMYRotateAmt = 0.0f;
+	for (int i = 0; i < 14; i++)
+	{
+		enemyX[i] = 15;
+		enemyY[i] = 64;
+		enemyZ[i] = ((rand() % 2750) - 1300);
+		RotateEnemyBody[i] = 0.0f;
+		randcheck[i] = false;
+		e[i].SetEnemyPosition(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
+		enemyUpdatePos[i] = Vector3(0, 0, 0);
+		b_ENEMYSteer[i] = false;
+		f_ENEMYRotateAmt[i] = 0.0f;
+	}
+	for (int i = 15; i < 30; i++)
+	{
+		enemyX[i] = -15;
+		enemyY[i] = 64;
+		enemyZ[i] = ((rand() % 2750) - 1300);
+		RotateEnemyBody[i] = 0.0f;
+		randcheck[i] = false;
+		e[i].SetEnemyPosition(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
+		enemyUpdatePos[i] = Vector3(0, 0, 0);
+		b_ENEMYSteer[i] = false;
+		f_ENEMYRotateAmt[i] = 0.0f;
+	}
 
 	f_TPCRotateBy = 0.0f;
 
@@ -181,9 +212,17 @@ void RaceScene::Init() //defines what shader to use
 
 	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
-	Obj[OBJ_ENEMY1] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
+	for (int i = 3; i < NUM_OBJ; i++)
+	{
+		Obj[i] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
+	}
+	meshList[GEO_Pedestrains1] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//Pedestrains2.obj");
+	meshList[GEO_Pedestrains1]->textureID = LoadTGA("Image//powerful_kinoko.tga");
 
-
+	meshList[GEO_Pedestrains2] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//Pedestrains1.obj");
+	meshList[GEO_Pedestrains2]->textureID = LoadTGA("Image//betamush.tga");
+	meshList[GEO_Pedestrains3] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//Pedestrains1.obj");
+	meshList[GEO_Pedestrains3]->textureID = LoadTGA("Image//oneup.tga");
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 12);//For Player
@@ -223,6 +262,31 @@ void RaceScene::Init() //defines what shader to use
 
 void RaceScene::Update(double dt)
 {
+	for (int i = 0; i < 10; i++)
+	{
+		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 10);
+		AIWalkX[i] = AIpos[i].x;
+		AIWalkY[i] = AIpos[i].y;
+		AIWalkZ[i] = AIpos[i].z;
+	}
+	for (int i = 11; i < 20; i++)
+	{
+		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 20);
+		AIWalkX[i] = AIpos[i].x;
+		AIWalkY[i] = AIpos[i].y;
+		AIWalkZ[i] = AIpos[i].z;
+	}
+	for (int i = 21; i < 30; i++)
+	{
+		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 23);
+		AIWalkX[i] = AIpos[i].x;
+		AIWalkY[i] = AIpos[i].y;
+		AIWalkZ[i] = AIpos[i].z;
+	}
+	
 	if (Application::IsKeyPressed('1'))
 	{
 		Application app;
@@ -324,19 +388,47 @@ void RaceScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 
-	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody, 0);
-	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
-	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
-	enemyX[0] = enemyUpdatePos[0].x;
-	enemyY[0] = enemyUpdatePos[0].y;
-	enemyZ[0] = enemyUpdatePos[0].z;
+	for (int i = 0; i < 30; i++)
+	{
+		randomMove[i] = e[i].randchecker(randcheck[i], randomMove[i]);
+		enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[i], randomMove[i], randcheck[i]);
+		RotateEnemyBody[i] = e[i].getenemyrotate();
+		for (int i = 0; i < 14; i++)
+		{
+			if (enemyUpdatePos[i].z > 1400)
+			{
+				e[i].SetEnemyPosition(Vector3(15, 64, -1300));
+				enemyX[i] = enemyUpdatePos[i].x;
+				enemyY[i] = enemyUpdatePos[i].y;
+				enemyZ[i] = enemyUpdatePos[i].z;
+			}
+		}
+		for (int i = 15; i < 30; i++)
+		{
+			if (enemyUpdatePos[i].z > 1400)
+			{
+				e[i].SetEnemyPosition(Vector3(-15, 64, -1300));
+				enemyX[i] = enemyUpdatePos[i].x;
+				enemyY[i] = enemyUpdatePos[i].y;
+				enemyZ[i] = enemyUpdatePos[i].z;
+			}
+		}
+		enemyX[i] = enemyUpdatePos[i].x;
+		enemyY[i] = enemyUpdatePos[i].y;
+		enemyZ[i] = enemyUpdatePos[i].z;
+	}
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 30; i++)
 	{
-		Obj[i + 1]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
+		Obj[i + 3]->setOBB(Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
+	}
+
+	for (int i = 0; i < 30; i++)
+	{
+		Obj[i + 33]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
 	}
 
 	//<collision>
@@ -351,6 +443,42 @@ void RaceScene::Update(double dt)
 		collide = false;
 	}
 
+	for (int AllObjs2 = 33; AllObjs2 < NUM_OBJ; ++AllObjs2)
+	{
+		for (int i = 33; i < NUM_OBJ; ++i)
+		{
+			if (AllObjs2 == i)
+				break;
+			else if (ObjectBox::checkCollision(*Obj[AllObjs2], *Obj[i]))
+			{
+				AIcollide = true;
+				collider1 = AllObjs2;
+				collider2 = i;
+
+				if (AIcollide == true)
+				{
+					if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
+					{
+						e[collider1 - 33].v_SetEnemySpeed((e[collider1 - 33].f_GetEnemySpeed()*1.1));
+						e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*0.5));
+					}
+					else
+					{
+						e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*0.5));
+						e[collider2 - 33].v_SetEnemySpeed((e[collider2 - 33].f_GetEnemySpeed()*1.1));
+					}
+
+					Obj[collider1]->setOBB(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
+					e[collider1 - 33].SetEnemyPosition(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
+					AIcollide = false;
+
+				}
+				break;
+			}
+			AIcollide = false;
+		}
+	}
+	
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
 		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
@@ -478,22 +606,39 @@ void RaceScene::Render()
 	RenderMesh(meshList[GEO_AMBULANCE], false);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
-	RenderMesh(meshList[GEO_AICUBE], false);
-	modelStack.PopMatrix();
+	for (int i = 0; i < 10; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		modelStack.Scale(3.5, 3.5, 3.5);
+		RenderMesh(meshList[GEO_Pedestrains1], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 11; i < 20; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		modelStack.Scale(3, 3, 3);
+		RenderMesh(meshList[GEO_Pedestrains2], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 21; i < 30; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		modelStack.Scale(2, 2, 2);
+		RenderMesh(meshList[GEO_Pedestrains3], false);
+		modelStack.PopMatrix();
+	}
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(enemyX[0], enemyY[0], enemyZ[0]);
-	////modelStack.Rotate(90, 0, 1, 0);
-	//RenderMesh(meshList[GEO_CAR], false);
-	//modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(enemyX[1], enemyY[1], enemyZ[1]);
-	//modelStack.Rotate(90, 0, 1, 0);
-	RenderMesh(meshList[GEO_CAR], false);
-	modelStack.PopMatrix();
+	for (int i = 0; i < 30; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
+		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR], false);
+		modelStack.PopMatrix();
+	}
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
