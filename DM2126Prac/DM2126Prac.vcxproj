@@ -171,6 +171,7 @@
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\StopWatchTimer.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
+    <ClCompile Include="Source\TutorialScene2.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\WinScreen.cpp" />
   </ItemGroup>
@@ -200,6 +201,7 @@
     <ClInclude Include="Source\shader.hpp" />
     <ClInclude Include="Source\StopWatchTimer.h" />
     <ClInclude Include="Source\Sound.h" />
+    <ClInclude Include="Source\TutorialScene2.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\WinScreen.h" />
