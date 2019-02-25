@@ -263,7 +263,7 @@ private:
 	Item *first, *last, *forward, *current, *backward;
 	//Timer
 	StopWatchTimer* AmbulanceTimer;
-
+	bool timerunout = false;
 
 };
 

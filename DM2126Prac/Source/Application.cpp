@@ -16,7 +16,7 @@
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
-
+double Application::timerh = 0;
 //Define an error callback
 static void error_callback(int error, const char* description)
 {
@@ -130,8 +130,8 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new RaceScene();
-		//glfwSetCursorPosCallback(m_window,PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
+		scene = new PuzzleRoom();
+		glfwSetCursorPosCallback(m_window,PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
 	}
 	
 

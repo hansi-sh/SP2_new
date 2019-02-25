@@ -388,7 +388,7 @@ void PuzzleRoom::Update(double dt)
 	elapsedtime += dt;
 	//Timer
 	//If timer reach 0
-	if (PuzzleTimer->d_GetPuzzleSceneTime() == 0)
+	if (PuzzleTimer->d_GetPuzzleSceneTime() <= 0)
 	{
 		timerunout = true;
 	}
@@ -399,7 +399,7 @@ void PuzzleRoom::Update(double dt)
 	}
 	if (timeleft == true)
 	{
-		PuzzleTimer->d_GetPuzzleSceneTime();
+		//Application::timerh = PuzzleTimer->d_GetTimeLeftAfterPuzzle();
 	}
 	//Inventory
 	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
@@ -707,12 +707,12 @@ void PuzzleRoom::Update(double dt)
 	//}
 
 
-	/*if (Application::IsKeyPressed('5'))
+	if (Application::IsKeyPressed('5'))
 	{
 		Application app;
 		app.SetSceneNumber(2);
 		app.Run();
-	}*/
+	}
 	if (Application::IsKeyPressed('3'))
 	{
 		Application app;
