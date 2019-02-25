@@ -8,6 +8,7 @@
 #include "Racing.h"
 #include "Utility.h"
 #include <string>
+#include "Sound.h"
 
 float RaceScene::lastX = 0.0f;
 float RaceScene::lastY = 0.0f;
@@ -55,6 +56,11 @@ void RaceScene::Init() //defines what shader to use
 	AIcollide = false;
 	collider1 = 0;
 	collider2 = 0;
+
+	// sound
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	//<----For player car---->
 	TranslateBodyX = 0.0f;

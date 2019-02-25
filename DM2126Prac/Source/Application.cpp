@@ -12,6 +12,9 @@
 #include "AssignmentScene.h"
 #include "Racing.h"
 #include "Scene2.h"
+#include "Leaderboard.h"
+
+#include "Sound.h"
 #include "MainMenu.h"
 #include "WinScreen.h"
 #include "LoseScreen.h"
@@ -116,6 +119,7 @@ int Application::SetSceneNumber(int number)
 
 void Application::Run()
 {
+
 	Scene *scene;
 	//Main Loop
 	if (GetSceneNumber()==1)
@@ -134,6 +138,13 @@ void Application::Run()
 	}
 	else if (GetSceneNumber() == 4)	//Win screen
 	{
+		scene = new RaceScene();
+		//glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
+	}
+	else // change back to PuzzleRoom when pushing 
+	{
+		scene = new PuzzleRoom();
+		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
 		scene = new WinScene();	
 	}
 	else if (GetSceneNumber() == 7)	//Win screen
