@@ -326,12 +326,14 @@ void Scene2::Update(double dt)
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
 		timerunout = true;
+		Application app;
+		app.SetSceneNumber(8);
+		app.Run();
 	}
 	if (timerunout == false)
 	{
 		AmbulanceTimer->v_UpdateTime(dt);
 	}
-	
 
 	score = score + 0.2;
 
@@ -585,7 +587,7 @@ void Scene2::Update(double dt)
 	}
 
 	// PlayMusic();
-	camera.Update(dt);
+	camera.Update(dt, false);
 }
 
 void Scene2::Render()

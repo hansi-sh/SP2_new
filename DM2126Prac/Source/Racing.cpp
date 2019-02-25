@@ -260,10 +260,19 @@ void RaceScene::Update(double dt)
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{
 		timerunout = true;
+		Application app;
+		app.SetSceneNumber(8);
+		app.Run();
 	}
 	if (timerunout == false)
 	{
 		RaceTimer.v_UpdateTime(dt);
+	}
+	if (TranslateBodyZ >= 1350)
+	{
+		Application app;
+		app.SetSceneNumber(7);
+		app.Run();
 	}
 	for (int i = 0; i < 10; i++)	//golden
 	{

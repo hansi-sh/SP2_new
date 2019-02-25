@@ -305,7 +305,7 @@ void MainMenuScene::Update(double dt)
 	if (Application::IsKeyPressed('O'))
 		light[0].position.y += (float)(LSPEED * dt);
 
-	camera.Update(dt);
+	camera.Update(dt, false);
 }
 
 void MainMenuScene::Render()

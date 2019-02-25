@@ -17,7 +17,7 @@ void Camera2::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	this->up = defaultUp = up;
 }
 
-void Camera2::Update(double dt)
+void Camera2::Update(double dt, bool move)
 {
 	static const float CAMERA_SPEED = 50.f;
 	Vector3 view = (target - position).Normalized();
@@ -27,7 +27,7 @@ void Camera2::Update(double dt)
 	Vector3 right = view.Cross(up);
 	float cameraspeedchange = 1.0f; // was 10
 	
-	//if (app.GetSceneNumber() >= 1 && app.GetSceneNumber() <= 2)
+	if (move)
 	{
 	if (Application::IsKeyPressed('A'))
 	{
