@@ -10,37 +10,9 @@
 #include <string>
 #include "Sound.h"
 
-float RaceScene::lastX = 0.0f;
-float RaceScene::lastY = 0.0f;
-//Camera2 RaceScene::camera = Camera2();
-
 RaceScene::RaceScene()
 {
 }
-
-//void RaceScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-//{
-//	float xoffset = (float)xpos - lastX;
-//	float yoffset = (float)ypos - lastY;
-//	float sensitivity = 0.05f;
-//
-//	lastX = (float)xpos;
-//	lastY = (float)ypos;
-//
-//	xoffset *= sensitivity;
-//	yoffset *= sensitivity;
-//
-//	Vector3 view = camera.target - camera.position;
-//	Mtx44 rotate;
-//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-//	view = rotate * view;
-//
-//	Vector3 rightVector = view.Cross(camera.up);
-//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-//	view = rotate * view;
-//
-//	camera.target = camera.position + view;
-//}
 
 RaceScene::~RaceScene()
 {

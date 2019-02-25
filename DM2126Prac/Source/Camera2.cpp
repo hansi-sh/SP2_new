@@ -39,16 +39,6 @@ void Camera2::Update(double dt)
 		position = position + right * cameraspeedchange;
 		target = position + view * cameraspeedchange;
 	}
-	//if (Application::IsKeyPressed('Q'))
-	//{
-	//	position = position + up * cameraspeedchange;
-	//	target = position + view * cameraspeedchange;
-	//}
-	//if (Application::IsKeyPressed('E'))
-	//{
-	//	position = position - up * cameraspeedchange;
-	//	target = position + view * cameraspeedchange;
-	//}
 	if (Application::IsKeyPressed('W'))
 	{
 		position += horizontalView * cameraspeedchange;
