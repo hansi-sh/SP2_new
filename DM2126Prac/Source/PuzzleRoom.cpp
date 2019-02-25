@@ -387,11 +387,19 @@ void PuzzleRoom::Update(double dt)
 {
 	elapsedtime += dt;
 	//Timer
-
-	PuzzleTimer->v_UpdateTime(dt);
-	if (PuzzleTimer->i_GetTime() <= 0)
+	//If timer reach 0
+	if (PuzzleTimer->d_GetPuzzleSceneTime() == 0)
 	{
-
+		timerunout = true;
+	}
+	//Prevent time from going negative
+	if (timerunout == false)
+	{
+		PuzzleTimer->v_UpdateTime(dt);
+	}
+	if (timeleft == true)
+	{
+		PuzzleTimer->d_GetPuzzleSceneTime();
 	}
 	//Inventory
 	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
@@ -623,6 +631,7 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
+			timeleft = true;
 			interactioncomplete = true;
 			Application app;
 			app.SetSceneNumber(2);
@@ -843,6 +852,7 @@ void PuzzleRoom::Update(double dt)
 				interaction = true;
 				break;
 			}
+			//FinalDoor
 			if (AllObjs == 35)
 			{
 				finaldoorint = true;
@@ -997,7 +1007,7 @@ void PuzzleRoom::Render()
 	//float time = 120;
 	//<--Get cameras position-->
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT],("Time"+ std::to_string(PuzzleTimer->i_GetTime())),Color(0, 1, 0), 2, 25, 25);
+	RenderTextOnScreen(meshList[GEO_TEXT],("Time"+ std::to_string(PuzzleTimer->d_GetPuzzleSceneTime())),Color(0, 1, 0), 2, 25, 25);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -1097,7 +1107,7 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("   2"), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (safeint == true && eight == false  )
+	 if (safeint == true && eight == false && havekey3== false )
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
