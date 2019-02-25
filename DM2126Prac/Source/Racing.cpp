@@ -262,26 +262,26 @@ void RaceScene::Init() //defines what shader to use
 
 void RaceScene::Update(double dt)
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)	//golden
 	{
 		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 10);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 5);
 		AIWalkX[i] = AIpos[i].x;
 		AIWalkY[i] = AIpos[i].y;
 		AIWalkZ[i] = AIpos[i].z;
 	}
-	for (int i = 11; i < 20; i++)
+	for (int i = 11; i < 20; i++)	//red
+	{
+		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 15);
+		AIWalkX[i] = AIpos[i].x;
+		AIWalkY[i] = AIpos[i].y;
+		AIWalkZ[i] = AIpos[i].z;
+	}
+	for (int i = 21; i < 30; i++)	//green
 	{
 		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
 		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 20);
-		AIWalkX[i] = AIpos[i].x;
-		AIWalkY[i] = AIpos[i].y;
-		AIWalkZ[i] = AIpos[i].z;
-	}
-	for (int i = 21; i < 30; i++)
-	{
-		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 23);
 		AIWalkX[i] = AIpos[i].x;
 		AIWalkY[i] = AIpos[i].y;
 		AIWalkZ[i] = AIpos[i].z;
@@ -487,7 +487,19 @@ void RaceScene::Update(double dt)
 		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
 		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
 
-		if (i_CollidedWith >= 33 && i_CollidedWith < 48) /*i_CollidedWith <= last car AI*/ //num in object type
+
+		if (i_CollidedWith>= 3 && i_CollidedWith <= 32)
+		{
+			if (i_CollidedWith >= 3 && i_CollidedWith <= 12)
+			{
+				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 0.5));
+			}
+			else
+			{
+				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * (1/4)));
+			}
+		}
+		else if (i_CollidedWith >= 33 && i_CollidedWith <= 48) /*i_CollidedWith <= last car AI*/ //num in object type
 		{
 			if (TranslateBodyZ > enemyZ[i_CollidedWith - 33])
 			{
