@@ -148,13 +148,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
-    <ClCompile Include="Source\AssignmentScene.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\Leaderboard.cpp" />
     <ClCompile Include="Source\enemy2.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
-    <ClCompile Include="Source\PauseScreen.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Racing.cpp" />
@@ -167,6 +166,7 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\ObjectBox.cpp" />
     <ClCompile Include="Source\PuzzleRoom.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Scene2.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\StopWatchTimer.cpp" />
@@ -176,13 +176,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\AssignmentScene.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\Leaderboard.h" />
     <ClInclude Include="Source\enemy2.h" />
     <ClInclude Include="Source\LoseScreen.h" />
     <ClInclude Include="Source\MainMenu.h" />
-    <ClInclude Include="Source\PauseScreen.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Racing.h" />

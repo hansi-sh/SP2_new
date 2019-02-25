@@ -19,10 +19,6 @@ Scene2::Scene2()
 	first = last = forward = current = backward = NULL;
 }
 
-// Errors:
-// Got slight issue when i try to use UDLR key to move to extreme top/ bot
-// If i use mouse, program will crash
-
 void Scene2::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	float xoffset = (float)xpos - lastX;
@@ -67,9 +63,12 @@ void Scene2::Init() //defines what shader to use
 	delay = 0;
 
 	// testing irrklan
-	music::player.init();
-	music::player.setSoundVol(0.5);
-	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
+	if (useSound)
+	{
+		music::player.init();
+		music::player.setSoundVol(0.5);
+		music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
+	}
 
 	//<collison class>
 	collide = false;
@@ -277,8 +276,6 @@ void Scene2::Init() //defines what shader to use
 	//meshList[GEO_TEST] = MeshBuilder::GenerateCube("Test", Color(0, 0, 1), 7.0f, 12.0f, 4.0f);
 	//Obj[OBJ_TEST] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
-
-
 	// Patient Obj
 	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
 	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");
@@ -320,53 +317,8 @@ void Scene2::Init() //defines what shader to use
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage2.tga");
-
 }
 
-//void Scene2::PlayMusic()
-//{
-//	if ((TranslateBodyX > 30 && (TranslateBodyZ > 0 && TranslateBodyZ < 90)))
-//		b_checkinPM = true;
-//	else
-//	{
-//		b_checkinPM = false;
-//		b_inPM = false;
-//	}
-//
-//	if (b_checkinPM && !b_inPM)
-//	{
-//		if (!b_inPM)
-//		{
-//			b_musicSelected = false;
-//			b_inPM = true;
-//		}
-//		b_inPC = false;
-//	}
-//	else if (!b_inPC && !b_inPM)
-//	{
-//		if (!b_inPC)
-//		{
-//			b_musicSelected = false;
-//			b_inPC = true;
-//		}
-//		b_musicSelected = false;
-//		b_inPM = false;
-//	}
-//
-//	if (!b_musicSelected)
-//	{
-//		if (b_inPM)
-//		{
-//			PlaySound(TEXT("Audio//PokeMart.wav"), NULL, SND_ASYNC | SND_LOOP);
-//			b_musicSelected = true;
-//		}
-//		else
-//		{
-//			PlaySound(TEXT("Audio//PokeCenter.wav"), NULL, SND_ASYNC | SND_LOOP);
-//			b_musicSelected = true;
-//		}
-//	}
-//}
 
 void Scene2::Update(double dt)
 {
@@ -379,11 +331,13 @@ void Scene2::Update(double dt)
 		showIntro = false;
 	}
 
+	if (Application::IsKeyPressed(VK_BACK)) // testing for now
+	{
+		useSound = false;
+	}
+
 	if (Application::IsKeyPressed('1'))
 	{
-		Application app;
-		app.SetSceneNumber(1);
-		app.Run();
 		
 	}
 	if (Application::IsKeyPressed('2'))
@@ -504,8 +458,9 @@ void Scene2::Update(double dt)
 	if (camera.position.x > -3 && camera.position.x < 3 && 
 		camera.position.z > -8 && camera.position.z < -5)
 	{ 
-		if (Application::IsKeyPressed('C'))
+		if (Application::IsKeyPressed('C') && (delay > 0.3))
 		{
+			delay = 0;
 			collectKit = true;
 			notification2 = true;
 
@@ -599,36 +554,6 @@ void Scene2::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 
-	//<For switching camera position and target temporary example>
-	//if (Application::IsKeyPressed('V') && b_NearShowcase == true && i_ShowcaseItem > 0 )//must be near enough, do range check
-	//{
-	//	getCurrentCam = false;
-	//	b_BMO = false;
-	//	if (i_ShowcaseItem == 1)//Cubone
-	//	{
-	//		camera.target = Vector3(-65.295425f, 23.506683f, 5.0808f);
-	//		camera.position = Vector3(-64.389885f, 23.570976f, 4.6615f);
-
-	//	}
-	//	else if (i_ShowcaseItem == 2)//Beast ball
-	//	{
-	//		camera.target = Vector3(-67.434624f, 15.368983f, -4.589f);
-	//		camera.position = Vector3(-66.434624f, 15.468983f, -4.889f);
-	//	}
-	//	else if (i_ShowcaseItem == 3)//Pokeball
-	//	{
-	//		camera.target = Vector3(-68.513283f, 22.983822f, -19.27f);
-	//		camera.position = Vector3(-67.562569f, 23.133141f, -19.54f);
-	//	}
-	//}
-	//else
-	//{
-	//	camera.position = currentCamPos;
-	//	camera.target = currentCamTarget;
-	//	getCurrentCam = true;
-	//	b_BMO = true;
-	//}
-
 	if (Application::IsKeyPressed('Z'))
 	{
 		light[0].type = Light::LIGHT_POINT;  // For a lamp post
@@ -691,10 +616,6 @@ void Scene2::Render()
 	//modelStack.PushMatrix();
 	//RenderMesh(meshList[GEO_AXES], false);
 	//modelStack.PopMatrix();
-
-	//<--BMO--> removed
-
-
 
 	//<-----------Light ball Sphere lighting 1----------->
 	//modelStack.PushMatrix();
