@@ -430,11 +430,11 @@ void PuzzleRoom::Update(double dt)
 
 				door1open = !door1open;
 				bouncetime = elapsedtime + 0.4f;
-			}
 
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
+				music::player.init();
+				music::player.setSoundVol(0.5);
+				music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
+			}
 
 		}
 	}
@@ -443,11 +443,11 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
-		}
 
-		music::player.init();
-		music::player.setSoundVol(0.5);
-		music::player.playSound("Sound//Scene1//MouseClick.wav");
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene1//MouseClick.wav");
+		}
 	}
 	
 	if (door1open && RotateDoor1< 85)
@@ -470,12 +470,13 @@ void PuzzleRoom::Update(double dt)
 			{
 				secretdooropen = !secretdooropen;
 				bouncetime = elapsedtime + 0.4f;
+
+				music::player.init();
+				music::player.setSoundVol(0.5);
+				music::player.playSound("Sound//Scene1//MouseClick.wav");
 			}
 		}
 
-		music::player.init();
-		music::player.setSoundVol(0.5);
-		music::player.playSound("Sound//Scene1//MouseClick.wav");
 	}
 	if (secretdooropen && secretdoortranslation < 30)
 	{

@@ -12,7 +12,6 @@
 #include <Windows.h>
 #include "ObjectBox.h"
 
-
 #include <fstream>
 using namespace std;
 
