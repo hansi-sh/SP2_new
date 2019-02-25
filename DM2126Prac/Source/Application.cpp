@@ -148,7 +148,7 @@ void Application::Run()
 		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
 		scene = new WinScene();	
 	}
-	else if (GetSceneNumber() == 7)	//Win screen
+	/*else*/ if (GetSceneNumber() == 7)	//Win screen
 	{
 		scene = new WinScene();	
 	}
