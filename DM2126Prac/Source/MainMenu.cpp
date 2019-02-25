@@ -167,17 +167,17 @@ void MainMenuScene::Update(double dt)
 {
 	d_BounceTime -= dt;
 
-	if (Application::IsKeyPressed('1'))
+	if (Application::IsKeyPressed('2') && Application::IsKeyPressed(VK_CONTROL))
 	{
-
+		Application app;
+		app.SetSceneNumber(2);
+		app.Run();
 	}
-	if (Application::IsKeyPressed('2'))
+	if (Application::IsKeyPressed('3') && Application::IsKeyPressed(VK_CONTROL))
 	{
-		
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-
+		Application app;
+		app.SetSceneNumber(3);
+		app.Run();
 	}
 
 	if (Application::IsKeyPressed('6'))
