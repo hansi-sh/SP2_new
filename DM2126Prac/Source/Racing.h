@@ -13,7 +13,7 @@
 #include "enemy2.h"
 #include <Windows.h>
 #include "Physics.h"
-
+#include "StopWatchTimer.h"
 class RaceScene : public Scene
 {
 	enum UNIFORM_TYPE
@@ -152,7 +152,9 @@ private:
 		GEO_RACETRACK,
 		GEO_AMBULANCE,
 
-		GEO_CAR,
+		GEO_CAR1,
+		GEO_CAR2,
+		GEO_CAR3,
 
 		//GEO_BOX1,
 		//GEO_BOX2,
@@ -233,6 +235,8 @@ private:
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
+	StopWatchTimer RaceTimer;
+	bool timerunout = false;
 };
 
 #endif

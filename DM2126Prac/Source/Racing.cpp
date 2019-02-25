@@ -20,6 +20,7 @@ RaceScene::~RaceScene()
 
 void RaceScene::Init() //defines what shader to use
 {
+	
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
@@ -191,7 +192,12 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	//meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
-	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR1]->textureID = LoadTGA("Image//cartexture.tga");
+	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR2]->textureID = LoadTGA("Image//cartexture2.tga");
+	meshList[GEO_CAR3] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR3]->textureID = LoadTGA("Image//cartexture3.tga");
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
 	for (int i = 3; i < NUM_OBJ; i++)
 	{
@@ -239,10 +245,26 @@ void RaceScene::Init() //defines what shader to use
 	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, /*636.0f*/77, 20.0f), 20.0f, 40.0f, 2830.0f);
 	/*meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);*/
 	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, /*639.0f*/77, 20.0f), 20.0f, 50.0f, 2830.0f);
+	if (Application::timerh == 0)
+	{
+		RaceTimer.v_SetRaceSceneTime(40);
+	}
+	else
+	{
+		RaceTimer.v_SetRaceSceneTime(Application::timerh);
+	}
 }
 
 void RaceScene::Update(double dt)
 {
+	if (RaceTimer.d_GetRaceSceneTime() <= 0)
+	{
+		timerunout = true;
+	}
+	if (timerunout == false)
+	{
+		RaceTimer.v_UpdateTime(dt);
+	}
 	for (int i = 0; i < 10; i++)	//golden
 	{
 		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
@@ -495,7 +517,6 @@ void RaceScene::Update(double dt)
 			{
 				dead = true;
 				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) *0.75));
-				std::cout << PlayerCar.f_GetSpeed() << std::endl;
 				
 			}
 
@@ -666,12 +687,28 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i <= 15; i++)
+	for (int i = 0; i <=4; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
 		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
-		RenderMesh(meshList[GEO_CAR], false);
+		RenderMesh(meshList[GEO_CAR1], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 5; i <= 9; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
+		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR2], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 10; i <= 15; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
+		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR3], false);
 		modelStack.PopMatrix();
 	}
 
@@ -759,6 +796,9 @@ void RaceScene::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
 		modelStack.PopMatrix();
 	}
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
+	modelStack.PopMatrix();
 }
 
 void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
