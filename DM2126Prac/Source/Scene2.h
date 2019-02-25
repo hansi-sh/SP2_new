@@ -11,6 +11,7 @@
 #include "item.h"
 #include <Windows.h>
 #include "ObjectBox.h"
+#include "StopWatchTimer.h"
 
 #include <fstream>
 using namespace std;
@@ -261,7 +262,8 @@ private:
 	void printPrev();
 	void rendertag();
 	Item *first, *last, *forward, *current, *backward;
-
+	//Timer
+	StopWatchTimer* AmbulanceTimer;
 
 
 };

@@ -152,6 +152,7 @@
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\Leaderboard.cpp" />
+    <ClCompile Include="Source\enemy2.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
     <ClCompile Include="Source\PauseScreen.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Source\PuzzleRoom.cpp" />
     <ClCompile Include="Source\Scene2.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\StopWatchTimer.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\WinScreen.cpp" />
@@ -179,6 +181,7 @@
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\Leaderboard.h" />
+    <ClInclude Include="Source\enemy2.h" />
     <ClInclude Include="Source\LoseScreen.h" />
     <ClInclude Include="Source\MainMenu.h" />
     <ClInclude Include="Source\PauseScreen.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\Scene2.h" />
     <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\StopWatchTimer.h" />
     <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />

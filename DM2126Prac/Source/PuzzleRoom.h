@@ -11,6 +11,7 @@
 #include <Windows.h>
 #include "ObjectBox.h"
 #include "item.h"
+#include "StopWatchTimer.h"
 
 class PuzzleRoom : public Scene
 {
@@ -53,6 +54,7 @@ class PuzzleRoom : public Scene
 		U_TEXT_ENABLED,
 		U_TEXT_COLOR,
 		U_TOTAL,
+		
 	};
 public:
 	PuzzleRoom();
@@ -99,6 +101,9 @@ private:
 	//time
 	float elapsedtime = 0;
 	float bouncetime = 0;
+	bool timerunout = false;
+	bool timeleft = false;
+	
 	//For Running Animation
 	bool checkmodelStack;
 	//TV Drawer
@@ -124,18 +129,19 @@ private:
 	//key2
 	bool key2int;
 	bool havekey2 = false;
+	//key3
+	bool havekey3;
 	//Patient
 	bool patientint;
 	bool patienthint;
+	bool havepatient = false;
 	//safe
 	float rotatesafedoor;
 	bool safeint = false;
 	bool safeopen = false;
-	bool havekey3;
 	bool safecracking = false;
 	bool codecracked = false;
 	bool wrongcode;
-	std::string code;
 	//Promtp on screen
 	bool interaction;
 	bool interactioncomplete = false;
@@ -146,6 +152,9 @@ private:
 	bool   one = false;
 	bool   two = false;
 	bool other = false;
+	//final door
+	bool finaldoorint;
+	bool doorunlocked = false;
 	//<--Music-->
 	/*void PlayMusic();
 	bool b_musicSelected;
@@ -243,6 +252,7 @@ private:
 		OBJ_SAFEINT,
 		OBJ_PATIENT,
 		OBJ_PATIENTINT,
+		OBJ_LASTDOOR,
 		OBJ_ALL,//when adding add directly above 
 		NUM_OBJ
 	};
@@ -261,5 +271,7 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+	//TimerClass
+	StopWatchTimer* PuzzleTimer;
 };
 #endif

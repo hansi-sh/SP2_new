@@ -45,13 +45,14 @@ void Scene2::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 Scene2::~Scene2()
 {
+	delete AmbulanceTimer;
 }
 
 void Scene2::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
-
+	AmbulanceTimer = new StopWatchTimer;
 	checkmodelStack = false;
 	running = true;
 	bodyMovement = true;

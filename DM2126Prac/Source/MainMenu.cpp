@@ -50,13 +50,16 @@ void MainMenuScene::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
-	//<collison class>
-	collide = false;
-	rotationangle = 0;
-	updatedangle = 0;
-
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
+
+	i_Selector = 0;
+	i_SpeedUp = 60;
+	f_TStart = 22.0f;
+	f_TInstruction = 22.0f;
+	f_TLeaderBoard = 22.0f;
+	f_TExit = 22.0f;
+	d_BounceTime = 0.25f;
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -65,11 +68,7 @@ void MainMenuScene::Init() //defines what shader to use
 
 	LSPEED = 30.0f;
 
-	camera.Init(Vector3(0, 20, 71), Vector3(0, 20, 0), Vector3(0, 1, 0));
-
-	currentCamPos = camera.position;
-	currentCamTarget = camera.target;
-	getCurrentCam = true;
+	camera.Init(Vector3(0, 20, 72.5f), Vector3(0, 20, 0), Vector3(0, 1, 0));
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 60000.f);
@@ -135,19 +134,6 @@ void MainMenuScene::Init() //defines what shader to use
 
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);//if you add lights, add number here
 
-	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
-
-	//Guide lines - Turn on if need
-	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
-	//Obj[OBJ_PLAYER] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 3.0f, 3.0f, 3.0f);//For Player
-
-	////<--USB-->
-	//meshList[GEO_USB] = MeshBuilder::GenerateCube("USB", Color(0.01171875f, 0.19140625f, 0.23046875f), 2.0f, 0.4f, 3.0f);
-	//meshList[GEO_USB]->material.kAmbient.Set(0.7f, 0.7f, 0.7f);
-	//meshList[GEO_USB]->material.kDiffuse.Set(0.5f, 0.5f, 0.5f);
-	//meshList[GEO_USB]->material.kSpecular.Set(0.2f, 0.2f, 0.2f);
-	//meshList[GEO_USB]->material.kShininess = 1.0f;
-
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front1.tga");
 
@@ -169,44 +155,18 @@ void MainMenuScene::Init() //defines what shader to use
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
-	//meshList[GEO_HOSPITAL] = MeshBuilder::GenerateOBJ("hospital", "OBJ//building.obj");
-	//meshList[GEO_HOSPITAL]->textureID = LoadTGA("Image//hospital.tga");
-
-	//meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
-	//meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
-	//meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 1415.f);
-	/*Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, 636.0f, 20.0f), 20.0f, 40.0f, 2830.0f);*/
-	//meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 1415.f);
-	/*Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, 640.0f, 20.0f), 20.0f, 50.0f, 2830.0f);*/
-
 	meshList[GEO_MAINMENU] = MeshBuilder::GenerateQuad("mainmenu", Color(0, 0, 1), 40.0f, 30.0f, 0.0f);
 	meshList[GEO_MAINMENU]->textureID = LoadTGA("Image//mainmenu.tga");
 
-	//meshList[GEO_SELECTQUAD] = MeshBuilder::GenerateQuad("selectquad", Color(0, 0, 1), 40.0f, 30.0f, 0.0f);
-	//meshList[GEO_SELECTQUAD]->textureID = LoadTGA("Image//selectingquad.tga");
+	meshList[GEO_MAINMENUT] = MeshBuilder::GenerateQuad("mainmenus", Color(0, 0, 1), 40.0f, 30.0f, 0.0f);
+	meshList[GEO_MAINMENUT]->textureID = LoadTGA("Image//mainmenutransparent.tga");
 
-	//meshList[GEO_SELECTQUAD] = MeshBuilder::GenerateOBJ("selectquad", "OBJ//selectquad.obj");
-	//meshList[GEO_SELECTQUAD]->textureID = LoadTGA("Image//selectingquad.tga");
+	meshList[GEO_SELECTION] = MeshBuilder::GenerateQuad("Selection", Color(0.8, 0, 0), 11.0f, 2.0f, 0.0f);
 }
 
 void MainMenuScene::Update(double dt)
 {
-	if (Application::IsKeyPressed('1'))
-	{
-		Application app;
-		app.SetSceneNumber(1);
-		app.Run();
-	}
-	if (Application::IsKeyPressed('2'))
-	{
-		Application app;
-		app.SetSceneNumber(2);
-		app.Run();
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-
-	}
+	d_BounceTime -= dt;
 
 	if (Application::IsKeyPressed('6'))
 	{
@@ -225,86 +185,96 @@ void MainMenuScene::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	if (Application::IsKeyPressed('P'))
-		b_viewStats = true;
+	if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
+	{
+		if (i_Selector == 0)
+			i_Selector = 3;
+		else
+		--i_Selector;
+
+		d_BounceTime = 0.25f;
+	}
+	else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
+	{
+		if (i_Selector == 3)
+			i_Selector = 0;
+		else
+			++i_Selector;
+
+		d_BounceTime = 0.25f;
+	}
+
+	if (i_Selector == 0)	//Start
+	{
+		if (f_TStart > 0.0f)
+			f_TStart -= dt * i_SpeedUp;
+	}
 	else
-		b_viewStats = false;
+	{
+		if (f_TStart < 22.0f)
+			f_TStart += dt * i_SpeedUp;
+	}
+	
+	if (i_Selector == 1)	//Instrusction
+	{
+		if (f_TInstruction > 0.0f)
+			f_TInstruction -= dt * i_SpeedUp;
+	}
+	else
+	{
+		if (f_TInstruction < 22.0f)
+			f_TInstruction += dt * i_SpeedUp;
+	}
+	
+	if (i_Selector == 2)	//LeaderBoard
+	{
+		if (f_TLeaderBoard > 0.0f)
+			f_TLeaderBoard -= dt * i_SpeedUp;
+	}
+	else
+	{
+		if (f_TLeaderBoard < 22.0f)
+			f_TLeaderBoard += dt * i_SpeedUp;
+	}
+	
+	if (i_Selector == 3)	//Exit
+	{
+		if (f_TExit > 0.0f)
+			f_TExit -= dt * i_SpeedUp;
+	}
+	else
+	{
+		if (f_TExit < 22.0f)
+			f_TExit += dt * i_SpeedUp;
+	}
 
-	//if (Application::IsKeyPressed(VK_UP))
-	//{
-	//	if (b_MMenu == true)
-	//	{
-	//		if (f_bounceTime <= 0)
-	//		{
-	//			f_bounceTime = 0.1f;
-	//			f_quadY += 0.1;
-	//			if (f_quadY > 0.3)
-	//			{
-	//				f_quadY = -0.2;
-	//			}
-	//		}
-	//	}
-	//	else if (b_MMenu == false)
-	//	{
-	//		if (f_bounceTime <= 0)
-	//		{
-	//			f_bounceTime = 0.1f;
-	//			f_quadY += 0.1;
-	//			if (f_quadY > 0.1)
-	//			{
-	//				f_quadY = -0.1;
-	//			}
-	//		}
-	//	}
-	//}
+	if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
+	{
+		if (i_Selector == 0)	//Start
+		{
+			Application app;
+			app.SetSceneNumber(8);
+			app.Run();
+		}
+		else if (i_Selector == 1)	//Instrusction
+		{
+			//Application app;
+			//app.SetSceneNumber(instruction scene number);
+			//app.Run();
+		}
+		else if (i_Selector == 2)	//LeaderBoard
+		{
+			//Application app;
+			//app.SetSceneNumber(1);
+			//app.Run();
+		}
+		else if (i_Selector == 3)	//Exit
+		{
+			ToEndGame = true;
+		}
+	}
+	
 
-	//if (Application::IsKeyPressed(VK_DOWN))
-	//{
-	//	b_MMenu = true;
-	//}
-	//if (b_MMenu == true)
-	//{
-	//	if (f_bounceTime <= 0)
-	//	{
-	//		f_bounceTime = 0.1f;
-	//		f_quadY -= 10.f;
-	//		if (f_quadY > 10.f)
-	//		{
-	//			f_quadY = 10.f;
-	//		}
-	//	}
-	//	f_quadY -= (float)(20);
-	//	if (f_quadY > 5)
-	//	{
-	//		f_quadY = 5;
-	//	}
-	//}
-
-	/*Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));*/
-
-	//<collision>
-	//for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
-	//{
-	//	if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
-	//	{
-	//		collide = true;
-	//		camera.position = currentCamPos;
-	//		camera.target = currentCamTarget;
-	//		//TranslateBodyX = prevBodyX;
-	//		//TranslateBodyZ = prevBodyZ;
-	//		//rotationangle = prevAngle;
-	//		break;
-	//	}
-	//	collide = false;
-	//}
-	//if (!collide)
-	//{
-	//	currentCamPos = camera.position;
-	//	currentCamTarget = camera.target;
-	//	//prevBodyX = TranslateBodyX;
-	//	//prevBodyZ = TranslateBodyZ;
-	//	//prevAngle = rotationangle;
-	//}
 
 
 	fps = 1.0f / (float)dt;
@@ -322,32 +292,6 @@ void MainMenuScene::Update(double dt)
 		light[0].position.y -= (float)(LSPEED * dt);
 	if (Application::IsKeyPressed('O'))
 		light[0].position.y += (float)(LSPEED * dt);
-
-	if (getCurrentCam)
-	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
-	}
-
-	if (Application::IsKeyPressed('Z'))
-	{
-		light[0].type = Light::LIGHT_POINT;  // For a lamp post
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to POINT and pass the information to shader
-	}
-	else if (Application::IsKeyPressed('X'))
-	{
-		light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to DIRECTIONAL and pass the information to shader
-	}
-	else if (Application::IsKeyPressed('C'))
-	{
-		light[0].type = Light::LIGHT_SPOT; // For a torch light
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to SPOT and pass the information to shader
-	}
-
 
 	camera.Update(dt);
 }
@@ -388,67 +332,6 @@ void MainMenuScene::Render()
 			&lightPosition_cameraspace.x);
 	}
 
-	////<-----------Axes----------->
-	//modelStack.PushMatrix();
-	//RenderMesh(meshList[GEO_AXES], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Light ball Sphere lighting 1----------->
-	modelStack.PushMatrix();
-	modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	RenderMesh(meshList[GEO_LIGHTBALL], false);
-	modelStack.PopMatrix();
-
-	//	//<-----------USB----------->
-	//	modelStack.PushMatrix();
-	//	modelStack.Translate(-2.0f, -1.0f, 0.01f);
-	//	RenderMesh(meshList[GEO_USB], false);
-	//	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-0.2f, 18, 0);
-	//modelStack.Translate(0, f_quadY, 0);
-	//modelStack.Scale(5.4f, 4, 3);
-	//RenderMesh(meshList[GEO_SELECTQUAD], false);
-	//modelStack.PopMatrix();
-
-	if (b_viewStats)
-	{
-		//<--FPS-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
-		modelStack.PopMatrix();
-
-	}
-	else
-	{
-		//<--View stats for nerds-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("View stats:[P]"), Color(0, 0, 0), 2, 54, 58);
-		modelStack.PopMatrix();
-	}
-
-	////<--Get cameras position-->
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x) + ", Y:" + std::to_string(camera.position.y) + " , Z:" + std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x) + ", Y:" + std::to_string(camera.target.y) + " , Z:" + std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	//modelStack.PopMatrix();
-
-	//if (collide)
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
-	//	modelStack.PopMatrix();
-	//}
-	//else
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
-	//	modelStack.PopMatrix();
-	//}
 }
 
 void MainMenuScene::RenderMainMenu()
@@ -458,23 +341,41 @@ void MainMenuScene::RenderMainMenu()
 	RenderMesh(meshList[GEO_MAINMENU], false);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Scale(4, 4, 4);
-	//modelStack.Translate(0, f_quadY, 0); 
-	//DrawMainMenu(meshList[GEO_SELECTQUAD], Color(0, 0, 1), false, 1, 31.5f, 30);
-	//RenderMesh(meshList[GEO_SELECTQUAD], false);
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();	//Start
+	modelStack.Translate(f_TStart, 20, 1);
+	RenderMesh(meshList[GEO_SELECTION], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();	//Instruction
+	modelStack.Translate(f_TInstruction, 11.7, 1);
+	RenderMesh(meshList[GEO_SELECTION], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();	//LeaderBoard
+	modelStack.Translate(f_TLeaderBoard, 3.7, 1);
+	RenderMesh(meshList[GEO_SELECTION], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();	//Exit
+	modelStack.Translate(f_TExit, -4.5, 1);
+	RenderMesh(meshList[GEO_SELECTION], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 20, 2);
+	RenderMesh(meshList[GEO_MAINMENUT], false);
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], "Start Game", Color(0, 0, 0), 2, 31.5f, 30);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], "Arcade", Color(0, 0, 0), 2, 35, 21.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Instructions", Color(0, 0, 0), 1.75f, 30.7f, 21.7);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], "Instructions", Color(0, 0, 0), 1.75f, 30.8f, 13.5);
+	RenderTextOnScreen(meshList[GEO_TEXT], "LeaderBoard", Color(0, 0, 0), 1.75f, 31.8f, 13.5);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -576,17 +477,6 @@ void MainMenuScene::RenderSkybox()
 	modelStack.PopMatrix();
 }
 
-void MainMenuScene::RenderButton(int geo_circle, int geo_cylinder)
-{
-	//<----Button circle---->
-	RenderMesh(meshList[geo_circle], false);
-
-	//<----Button cylinder---->
-	modelStack.PushMatrix();
-	RenderMesh(meshList[geo_cylinder], false);
-	modelStack.PopMatrix();
-}
-
 void MainMenuScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0)
@@ -652,67 +542,6 @@ void MainMenuScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color
 	projectionStack.PopMatrix();
 	viewStack.PopMatrix();
 	modelStack.PopMatrix();
-	glEnable(GL_DEPTH_TEST);
-}
-
-void MainMenuScene::DrawMainMenu(Mesh* mesh, bool enableLight, float size, float x, float y)
-{
-	glDisable(GL_DEPTH_TEST);
-	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
-	projectionStack.PushMatrix();
-	projectionStack.LoadMatrix(ortho);
-	viewStack.PushMatrix();
-	viewStack.LoadIdentity(); //No need camera for ortho mode
-	modelStack.PushMatrix();
-	modelStack.LoadIdentity(); //Reset modelStack
-	modelStack.Scale(size, size, size);
-	modelStack.Translate(x, y, 0);
-
-	Mtx44 MVP, modelView, modelView_inverse_transpose;
-	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
-	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-	modelView = viewStack.Top() * modelStack.Top();
-	glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
-
-	if (enableLight)
-	{
-		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
-		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
-		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE,
-			&modelView_inverse_transpose.a[0]);
-		//load material
-		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
-		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
-		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
-		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
-	}
-	else
-	{
-		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
-	}
-
-	if (mesh->textureID > 0)
-	{
-		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
-		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
-	}
-	else
-	{
-		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
-	}
-	mesh->Render();
-	if (mesh->textureID > 0)
-	{
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-
-	projectionStack.PopMatrix();
-	viewStack.PopMatrix();
-	modelStack.PopMatrix();
-
 	glEnable(GL_DEPTH_TEST);
 }
 

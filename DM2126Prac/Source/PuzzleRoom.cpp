@@ -45,12 +45,13 @@ void PuzzleRoom::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 PuzzleRoom::~PuzzleRoom()
 {
+	delete PuzzleTimer;
 }
 void PuzzleRoom::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
-
+	PuzzleTimer = new StopWatchTimer;
 	checkmodelStack = false;
 	
 	b_BMO = true;
@@ -364,6 +365,9 @@ void PuzzleRoom::Init() //defines what shader to use
 	Obj[OBJ_PATIENT] = new ObjectBox(Vector3(57, 36.50, 45),17, 20, 27);
 	Obj[OBJ_PATIENTINT] = new ObjectBox(Vector3(57, 46.50, 45), 27, 20, 37);
 
+	//Final Door
+	Obj[OBJ_LASTDOOR] = new ObjectBox(Vector3(-59.5, 46.50, -11.48), 25, 20, 5);
+
 
 	//InteractCheck
 	Obj[OBJ_ALL] = new ObjectBox(Vector3(0,0,0), 1000, 1000, 1000);
@@ -407,6 +411,21 @@ void PuzzleRoom::Update(double dt)
 
 
 	elapsedtime += dt;
+	//Timer
+	//If timer reach 0
+	if (PuzzleTimer->d_GetPuzzleSceneTime() == 0)
+	{
+		timerunout = true;
+	}
+	//Prevent time from going negative
+	if (timerunout == false)
+	{
+		PuzzleTimer->v_UpdateTime(dt);
+	}
+	if (timeleft == true)
+	{
+		PuzzleTimer->d_GetPuzzleSceneTime();
+	}
 	//Inventory
 	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
 	{
@@ -559,18 +578,18 @@ void PuzzleRoom::Update(double dt)
 			one = false;
 			two = false;
 		}
-		else if (Application::IsKeyPressed('6'))
+		else if (Application::IsKeyPressed('6') && eight == true)
 		{
 			six = true;
 			one = false;
 			two = false;
 		}
-		else if (Application::IsKeyPressed('1'))
+		else if (Application::IsKeyPressed('1') && six == true)
 		{
 			one = true;
 			two = false;
 		}
-		else if (Application::IsKeyPressed('2'))
+		else if (Application::IsKeyPressed('2') && one == true)
 		{
 			two = true;
 		}
@@ -607,6 +626,7 @@ void PuzzleRoom::Update(double dt)
 		six = false;
 		one = false;
 		two = false;
+
 	}
 	//key2
 	if (key2int == true && pillowmoved == true)
@@ -650,72 +670,103 @@ void PuzzleRoom::Update(double dt)
 			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
-	//switchone
-	if(switchoneint == true)
+	if (havekey3 == true && patientint == true)
 	{
-		if (light[0].power >= 1.0f)
+		if (Application::IsKeyPressed('E'))
 		{
-			lightoneon = true;
-		}
-		else
-		{
-			lightoneon = false;
-		}
-		if (Application::IsKeyPressed('E') && elapsedtime > bouncetime)
-		{
-			bouncetime = elapsedtime += 0.4f;
-			interactioncomplete = true;
-			if (lightoneon == false)
-			{
-				light[0].power = 10.0f;
-				glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
-
-			}
-			else
-			{
-				light[0].power = 0.f;
-				glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
-
-			}
-
+			havepatient = true;
 		}
 	}
-	//switchtwo
-	if (switchtwoint == true)
+	if (havepatient == true)
 	{
-		if (light[1].power >= 1.0f)
+		doorunlocked = true;
+	}
+	if (doorunlocked == true && finaldoorint == true)
+	{
+		if (Application::IsKeyPressed('E'))
 		{
-			lighttwoon = true;
+			timeleft = true;
+			interactioncomplete = true;
+			Application app;
+			app.SetSceneNumber(2);
+			app.Run();
 		}
-		else
-		{
-			lighttwoon = false;
-		}
+	}
+	if (doorunlocked == false && finaldoorint == true)
+	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			if (lighttwoon == false)
-			{
-				light[1].power = 10.0f;
-				glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
-
-			}
-			else
-			{
-				light[1].power = 0.f;
-				glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
-
-			}
+			lockeddoortext = true;	
 		}
 	}
+	
+	////switchone
+	//if(switchoneint == true)
+	//{
+	//	if (light[0].power >= 1.0f)
+	//	{
+	//		lightoneon = true;
+	//	}
+	//	else
+	//	{
+	//		lightoneon = false;
+	//	}
+	//	if (Application::IsKeyPressed('E') && elapsedtime > bouncetime)
+	//	{
+	//		bouncetime = elapsedtime += 0.4f;
+	//		interactioncomplete = true;
+	//		if (lightoneon == false)
+	//		{
+	//			light[0].power = 10.0f;
+	//			glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
+
+	//		}
+	//		else
+	//		{
+	//			light[0].power = 0.f;
+	//			glUniform1f(m_parameters[U_LIGHT0_POWER], light[0].power);
+
+	//		}
+
+	//	}
+	//}
+	////switchtwo
+	//if (switchtwoint == true)
+	//{
+	//	if (light[1].power >= 1.0f)
+	//	{
+	//		lighttwoon = true;
+	//	}
+	//	else
+	//	{
+	//		lighttwoon = false;
+	//	}
+	//	if (Application::IsKeyPressed('E'))
+	//	{
+	//		interactioncomplete = true;
+	//		if (lighttwoon == false)
+	//		{
+	//			light[1].power = 10.0f;
+	//			glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
+
+	//		}
+	//		else
+	//		{
+	//			light[1].power = 0.f;
+	//			glUniform1f(m_parameters[U_LIGHT1_POWER], light[1].power);
+
+	//		}
+	//	}
+	//}
 
 
-	if (Application::IsKeyPressed('5'))
+	/*if (Application::IsKeyPressed('5'))
 	{
 		Application app;
 		app.SetSceneNumber(2);
 		app.Run();
-	}
+	}*/
 	if (Application::IsKeyPressed('3'))
 	{
 		Application app;
@@ -855,8 +906,16 @@ void PuzzleRoom::Update(double dt)
 				interaction = true;
 				break;
 			}
+			//FinalDoor
+			if (AllObjs == 35)
+			{
+				finaldoorint = true;
+				interaction = true;
+				break;
+			}
 			if (AllObjs == NUM_OBJ-1)
 			{
+				finaldoorint = false;
 				safeint = false;
 				patienthint = false;
 				patientint = false;
@@ -998,8 +1057,13 @@ void PuzzleRoom::Render()
 	{
 		
 	}
-
+	
+	//float time = 120;
 	//<--Get cameras position-->
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT],("Time"+ std::to_string(PuzzleTimer->d_GetPuzzleSceneTime())),Color(0, 1, 0), 2, 25, 25);
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
 	modelStack.PopMatrix();
@@ -1067,7 +1131,6 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("	     , 1 under what u watch"), Color(1, 1, 1), 2, 4, 43.8);
 		 modelStack.PopMatrix();					      
 	 }
-
 	 if(other == true)
 	 { 
 		 modelStack.PushMatrix();
@@ -1098,7 +1161,7 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("   2"), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (safeint == true && eight == false  )
+	 if (safeint == true && eight == false && havekey3== false )
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
@@ -1170,22 +1233,25 @@ void PuzzleRoom::CreepyHouse()
 	modelStack.PushMatrix();
 	modelStack.Scale(10.f,10.f,10.f);
 	modelStack.PushMatrix();
-	modelStack.Translate(5.5, 2.8, 5.5);
-	modelStack.Scale(0.7,0.7, 0.7);
-	//modelStack.Rotate(270, 0, 0, 1);
-	//modelStack.Rotate(270, 0, 1, 0);
-	modelStack.Rotate(270, 1, 0, 0);
-	RenderMesh(meshList[GEO_HAIR], true);
-	RenderMesh(meshList[GEO_FACE], true);
-	RenderMesh(meshList[GEO_BODY], true);
-	RenderMesh(meshList[GEO_RARM], true);
-	RenderMesh(meshList[GEO_LARM], true);
-	RenderMesh(meshList[GEO_RHAND],true);
-	RenderMesh(meshList[GEO_LHAND],true);
-	RenderMesh(meshList[GEO_RLEG], true);
-	RenderMesh(meshList[GEO_LLEG], true);
-	RenderMesh(meshList[GEO_CROTCH], true);
-	modelStack.PopMatrix();
+	if (havepatient == false)
+	{
+		modelStack.Translate(5.5, 2.8, 5.5);
+		modelStack.Scale(0.7, 0.7, 0.7);
+		//modelStack.Rotate(270, 0, 0, 1);
+		//modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Rotate(270, 1, 0, 0);
+		RenderMesh(meshList[GEO_HAIR], true);
+		RenderMesh(meshList[GEO_FACE], true);
+		RenderMesh(meshList[GEO_BODY], true);
+		RenderMesh(meshList[GEO_RARM], true);
+		RenderMesh(meshList[GEO_LARM], true);
+		RenderMesh(meshList[GEO_RHAND], true);
+		RenderMesh(meshList[GEO_LHAND], true);
+		RenderMesh(meshList[GEO_RLEG], true);
+		RenderMesh(meshList[GEO_LLEG], true);
+		RenderMesh(meshList[GEO_CROTCH], true);
+		modelStack.PopMatrix();
+	}
 	//Key2
 	if (havekey2 == false)
 	{
