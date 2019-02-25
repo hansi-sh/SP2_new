@@ -83,16 +83,16 @@ private:
 
 	bool b_viewStats;
 	//for enemy
-	int randomMove[2];
-	float RotateEnemyBody[2];
-	float enemyX[2], enemyY[2], enemyZ[2];
-	Enemy e[2];
-	Vector3 enemyUpdatePos[2];
+	int randomMove[30];
+	float RotateEnemyBody[30];
+	float enemyX[30], enemyY[30], enemyZ[30];
+	Enemy e[30];
+	Vector3 enemyUpdatePos[30];
 	bool b_StepENEMYAccelerator;
 	bool b_StepENEMYBrakes;
-	bool b_ENEMYSteer[2];
-	bool randcheck[2];
-	float f_ENEMYRotateAmt[2];
+	bool b_ENEMYSteer[30];
+	bool randcheck[30];
+	float f_ENEMYRotateAmt[30];
 
 	//For Car
 	float RotateBody;
@@ -109,12 +109,13 @@ private:
 	int i_CollidedWith;
 
 	//AI
-	enemy2 AIwalker[1];
-	bool checkmove[1];
-	float AIWalkX[1];
-	float AIWalkY[1];
-	float AIWalkZ[1];
-	Vector3 AIpos[1];
+	enemy2 AIwalker[30];
+	bool checkmove[30];
+	float AIWalkX[30];
+	float AIWalkY[30];
+	float AIWalkZ[30];
+	Vector3 AIpos[30];
+	int movechoice[30];
 
 	float f_HeightAIP;	//AI + players car height
 
@@ -123,7 +124,9 @@ private:
 		GEO_LIGHTBALL,
 		//GEO_CUBE,
 		GEO_AICUBE,
-
+		GEO_Pedestrains1,
+		GEO_Pedestrains2,
+		GEO_Pedestrains3,
 		/*GEO_USB,
 		GEO_YELLOWBUTTONCUBOID,
 		GEO_BLUEBUTTONCIRCLE,
@@ -160,8 +163,66 @@ private:
 		OBJ_PLAYER,
 		OBJ_BOX1,
 		OBJ_BOX2,
+		OBJ_walker1,
+		OBJ_walker2,
+		OBJ_walker3,
+		OBJ_walker4,
+		OBJ_walker5,
+		OBJ_walker6,
+		OBJ_walker7,
+		OBJ_walker8,
+		OBJ_walker9,
+		OBJ_walker10,
+		OBJ_walker11,
+		OBJ_walker12,
+		OBJ_walker13,
+		OBJ_walker14,
+		OBJ_walker15,
+		OBJ_walker16,
+		OBJ_walker17,
+		OBJ_walker18,
+		OBJ_walker19,
+		OBJ_walker20,
+		OBJ_walker21,
+		OBJ_walker22,
+		OBJ_walker23,
+		OBJ_walker24,
+		OBJ_walker25,
+		OBJ_walker26,
+		OBJ_walker27,
+		OBJ_walker28,
+		OBJ_walker29,
+		OBJ_walker30,
 		OBJ_ENEMY1,
 		OBJ_ENEMY2,
+		OBJ_ENEMY3,
+		OBJ_ENEMY4,
+		OBJ_ENEMY5,
+		OBJ_ENEMY6,
+		OBJ_ENEMY7,
+		OBJ_ENEMY8,
+		OBJ_ENEMY9,
+		OBJ_ENEMY10,
+		OBJ_ENEMY11,
+		OBJ_ENEMY12,
+		OBJ_ENEMY13,
+		OBJ_ENEMY14,
+		OBJ_ENEMY15,
+		OBJ_ENEMY16,
+		OBJ_ENEMY17,
+		OBJ_ENEMY18,
+		OBJ_ENEMY19,
+		OBJ_ENEMY20,
+		OBJ_ENEMY21,
+		OBJ_ENEMY22,
+		OBJ_ENEMY23,
+		OBJ_ENEMY24,
+		OBJ_ENEMY25,
+		OBJ_ENEMY26,
+		OBJ_ENEMY27,
+		OBJ_ENEMY28,
+		OBJ_ENEMY29,
+		OBJ_ENEMY30,
 
 		NUM_OBJ
 	};

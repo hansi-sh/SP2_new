@@ -99,7 +99,7 @@ int Enemy::randchecker(bool randomise, int random)
 	}
 	else
 	{
-		random = rand() % 4 + 2;
+		random = rand() % 3 + 2;
 		randomise = true;
 		return random;
 	}
