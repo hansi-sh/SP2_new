@@ -5,48 +5,24 @@
 #include "MeshBuilder.h"
 #include "Camera2.h"
 #include "GLFW/glfw3.h"
-#include "Racing.h"
+#include "TutorialRacing.h"
 #include "Utility.h"
 #include <string>
 #include "Sound.h"
 
-float RaceScene::lastX = 0.0f;
-float RaceScene::lastY = 0.0f;
+float TutorialRaceScene::lastX = 0.0f;
+float TutorialRaceScene::lastY = 0.0f;
 //Camera2 RaceScene::camera = Camera2();
 
-RaceScene::RaceScene()
+TutorialRaceScene::TutorialRaceScene()
 {
 }
 
-//void RaceScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-//{
-//	float xoffset = (float)xpos - lastX;
-//	float yoffset = (float)ypos - lastY;
-//	float sensitivity = 0.05f;
-//
-//	lastX = (float)xpos;
-//	lastY = (float)ypos;
-//
-//	xoffset *= sensitivity;
-//	yoffset *= sensitivity;
-//
-//	Vector3 view = camera.target - camera.position;
-//	Mtx44 rotate;
-//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-//	view = rotate * view;
-//
-//	Vector3 rightVector = view.Cross(camera.up);
-//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-//	view = rotate * view;
-//
-//	camera.target = camera.position + view;
-//}
-
-RaceScene::~RaceScene()
+TutorialRaceScene::~TutorialRaceScene()
 {
 }
 
-void RaceScene::Init() //defines what shader to use
+void TutorialRaceScene::Init() //defines what shader to use
 {
 	
 	//Background color
@@ -57,11 +33,6 @@ void RaceScene::Init() //defines what shader to use
 	AIcollide = false;
 	collider1 = 0;
 	collider2 = 0;
-
-	//<---Sound--->
-	music::player.init();
-	music::player.setSoundVol(0.5);
-	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
@@ -278,7 +249,7 @@ void RaceScene::Init() //defines what shader to use
 	}
 }
 
-void RaceScene::Update(double dt)
+void TutorialRaceScene::Update(double dt)
 {
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{
@@ -658,7 +629,7 @@ void RaceScene::Update(double dt)
 	f_TPCRotateBy = 0.0f;
 }
 
-void RaceScene::Render()
+void TutorialRaceScene::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -816,7 +787,7 @@ void RaceScene::Render()
 	modelStack.PopMatrix();
 }
 
-void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
+void TutorialRaceScene::RenderMesh(Mesh *mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -861,7 +832,7 @@ void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
 
 static const float SKYBOXSIZE = 1500.f;
 
-void RaceScene::RenderSkybox()
+void TutorialRaceScene::RenderSkybox()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
@@ -910,7 +881,7 @@ void RaceScene::RenderSkybox()
 	modelStack.PopMatrix();
 }
 
-void RaceScene::RenderButton(int geo_circle, int geo_cylinder)
+void TutorialRaceScene::RenderButton(int geo_circle, int geo_cylinder)
 {
 	//<----Button circle---->
 	RenderMesh(meshList[geo_circle], false);
@@ -921,7 +892,7 @@ void RaceScene::RenderButton(int geo_circle, int geo_cylinder)
 	modelStack.PopMatrix();
 }
 
-void RaceScene::RenderText(Mesh* mesh, std::string text, Color color)
+void TutorialRaceScene::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0)
 		return;
@@ -950,7 +921,7 @@ void RaceScene::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void RaceScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void TutorialRaceScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -989,7 +960,7 @@ void RaceScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	glEnable(GL_DEPTH_TEST);
 }
 
-void RaceScene::Exit()
+void TutorialRaceScene::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{

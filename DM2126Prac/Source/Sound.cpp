@@ -9,7 +9,6 @@ Sound::Sound()
 		throw std::exception("Sound-> can only create 1 player");
 	}
 	++count;
-
 }
 
 Sound::~Sound()

@@ -53,45 +53,25 @@ void Scene2::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	AmbulanceTimer = new StopWatchTimer;
-	checkmodelStack = false;
-	running = true;
-	bodyMovement = true;
-	b_BMO = true;
-	b_viewStats = false;
+
 	speed = 0;
 
 	delay = 0;
 
 	// testing irrklan
-	if (useSound)
-	{
-		music::player.init();
-		music::player.setSoundVol(0.5);
-		music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
-	}
+
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
 
 	//<collison class>
 	collide = false;
 	rotationangle = 0;
 	updatedangle = 0;
 
-	//<----for BMO body animation movement when running---->
-	LeftLegX = 90.0f;
-	RightLegX = 90.0f;
-	ArmRotation = 0.0f;
-	TranslateBodyX = 0.0f;
-	TranslateBodyY = 0.0f;
-	TranslateBodyZ = 0.0f;
-	RotateBody = 0.0f;
-
 	//<----for randomizing the instructions for player--->
 	srand(time(NULL));
 	instruction = rand() % 2;
-
-	//<--Music-->
-	b_musicSelected = false;
-	b_inPM = false;
-	b_inPC = false;
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -179,50 +159,29 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
 
-	//Guide lines - Turn on if need
-	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
-
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//WallWindow.tga");
 	Obj[OBJ_FRONT] = new ObjectBox(Vector3(0, 15, 20), 30, 15, 0);
-
-	// meshList[GEO_TEST1] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30.0f, 15.0f, 0.0f);
-	// Obj[OBJ_TEST1] = new ObjectBox(Vector3(0, 15, 20), 30, 15, 0);  
 
 	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//WallWindow.tga");
 	Obj[OBJ_BACK] = new ObjectBox(Vector3(0, 15, -21), 30, 15, 0);
 
-	// meshList[GEO_TEST2] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30.0f, 15.0f, 0.0f);
-    // Obj[OBJ_TEST2] = new ObjectBox(Vector3(0, 15, -21), 30, 15, 0); 
-
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//WallExit.tga");
 	Obj[OBJ_LEFT] = new ObjectBox(Vector3(-30, 15, 0), 0.5, 15, 20);
-
-	//meshList[GEO_TEST5] = MeshBuilder::GenerateCube("test", Color(0, 1, 0), 0.5, 15, 20);
-	//Obj[OBJ_TEST5] = new ObjectBox(Vector3(-30, 15, 0), 0.5, 15, 20);
 
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//Wall.tga");
 	Obj[OBJ_RIGHT] = new ObjectBox(Vector3(30, 15, 0), 0.5, 15, 20);
 
-	//meshList[GEO_TEST6] = MeshBuilder::GenerateCube("test", Color(0, 1, 0), 0.5, 15, 20);
-	//Obj[OBJ_TEST6] = new ObjectBox(Vector3(30, 15, 0), 0.5, 15, 20);
-
 	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//Wall.tga");
 	Obj[OBJ_TOP] = new ObjectBox(Vector3(0, 30, 0), 30, 0, 20);
 
-	// meshList[GEO_TEST3] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30, 0, 20);
-	// Obj[OBJ_TEST3] = new ObjectBox(Vector3(0, 30, 0), 30, 0, 20);
-
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//Wall.tga");
 	Obj[OBJ_BOTTOM] = new ObjectBox(Vector3(0, 0, 0), 30, 0, 20);
-	
-	//meshList[GEO_TEST4] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30, 0, 20);
-	//Obj[OBJ_TEST4] = new ObjectBox(Vector3(0, 0, 0), 30, 0, 20);
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -234,7 +193,6 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateOBJ("Defibrillator", "OBJ//Defibrillator2.obj");
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
-	// Obj[OBJ_DEFIBRILLATOR] = new ObjectBox(Vector3(20, 21, 0), 2, 2, 2);
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
 	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
@@ -271,10 +229,6 @@ void Scene2::Init() //defines what shader to use
 	// Collision Box for Camera/Player -> brot from A2 Scene
 	meshList[GEO_PLAYER] = MeshBuilder::GenerateCube("Box", Color(0, 0, 1), 3.0f, 3.0f, 3.0f); // 10, 15, 15
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
-
-	// Random stuff to test collision box of individual obj
-	//meshList[GEO_TEST] = MeshBuilder::GenerateCube("Test", Color(0, 0, 1), 7.0f, 12.0f, 4.0f);
-	//Obj[OBJ_TEST] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
 	// Patient Obj
 	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
@@ -340,11 +294,6 @@ void Scene2::Update(double dt)
 		showIntro = false;
 	}
 
-	if (Application::IsKeyPressed(VK_BACK)) // testing for now
-	{
-		useSound = false;
-	}
-
 	if (Application::IsKeyPressed('1'))
 	{
 	}
@@ -354,18 +303,14 @@ void Scene2::Update(double dt)
 	}
 	if (nextStage || Application::IsKeyPressed('3'))
 	{
+		music::player.stopSound(); // end all music
 		// leaderboard thingy
 		ofstream saveToFile("loli.txt", fstream::app);
 		saveToFile << score << endl;
-		
-		music::player.stopSound(); // end all music at the des of scene
 
 		Application app;
 		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
 		app.Run();
-
-		
-
 	}
 	if (Application::IsKeyPressed('6'))
 	{
@@ -382,59 +327,6 @@ void Scene2::Update(double dt)
 	if (Application::IsKeyPressed('9'))
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	if (Application::IsKeyPressed('0'))
-	{
-		TranslateBodyY = 0.0f;
-		TranslateBodyY = 15.0f;
-		TranslateBodyZ = 0.0f;
-	}
-	if (Application::IsKeyPressed('T'))
-	{
-		RotateBody = 180.0f;
-		if (TranslateBodyZ > -90.0f)
-		{
-			TranslateBodyZ -= (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else if (Application::IsKeyPressed('F'))
-	{
-		RotateBody = 270.0f;
-		if (TranslateBodyX > -90.0f)
-		{
-			TranslateBodyX -= (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else if (Application::IsKeyPressed('G'))
-	{
-		RotateBody = 0.0f;
-		if (TranslateBodyZ < 90.0f)
-		{
-			TranslateBodyZ += (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else if (Application::IsKeyPressed('H'))
-	{
-		RotateBody = 90.0f;
-		if (TranslateBodyX < 90.0f)
-		{
-			TranslateBodyX += (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else
-	{
-		checkmodelStack = false;
-		running = true;
-		bodyMovement = true;
-		LeftLegX = 90.0f;
-		RightLegX = 90.0f;
-		ArmRotation = 0.0f;
-		TranslateBodyY = 15.0f;
-
 	}
 
 	if (Application::IsKeyPressed('P'))
@@ -455,8 +347,7 @@ void Scene2::Update(double dt)
 			music::player.playSound("Sound//Scene2//PickUp.wav");
 			
 		}
-		// not suppose to be in actual game
-		// cheat key for obj to reappear
+
 		if (Application::IsKeyPressed('V') && (delay>0.3)) 
 		{
 			delay = 0;
@@ -543,22 +434,6 @@ void Scene2::Update(double dt)
 
 	fps = 1.0f / (float)dt;
 
-	// Light movement
-	if (Application::IsKeyPressed('I')) // backward
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K')) // forward
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J')) // left
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L')) // right
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U')) // down
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O')) // up
-		light[0].position.y += (float)(LSPEED * dt);
-
-	//<--Walking animation--> removed
-
 	if (getCurrentCam)
 	{
 		currentCamPos = camera.position;
@@ -623,25 +498,6 @@ void Scene2::Render()
 			&lightPosition_cameraspace.x);
 	}
 
-	////<-----------Axes----------->
-	//modelStack.PushMatrix();
-	//RenderMesh(meshList[GEO_AXES], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Light ball Sphere lighting 1----------->
-	//modelStack.PushMatrix();
-	//modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	//RenderMesh(meshList[GEO_LIGHTBALL], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Collision Box-------------->
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	//modelStack.Rotate(rotationangle, 0, 1, 0);
-	//RenderMesh(meshList[GEO_PLAYER], false);
-	//modelStack.PopMatrix();
-
 	//<--Lego Model-->
 
 	modelStack.PushMatrix();
@@ -700,11 +556,6 @@ void Scene2::Render()
 	modelStack.Scale(1.5, 1.5, 1.5);
 	RenderMesh(meshList[GEO_CABINET2], setTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-23, 10, 12);
-	//RenderMesh(meshList[GEO_TEST], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 0, 13);
@@ -947,11 +798,6 @@ void Scene2::RenderSkybox()
 	RenderMesh(meshList[GEO_BACK], setTrueFalse);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 15.0f, -21.0f);
-	//RenderMesh(meshList[GEO_TEST2], setTrueFalse);
-	//modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.0f, 1.0f, 1.0f);
@@ -959,11 +805,6 @@ void Scene2::RenderSkybox()
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_FRONT], setTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 15.0f, 20.0f);
-	//RenderMesh(meshList[GEO_TEST1], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, 20.0f);
@@ -973,22 +814,12 @@ void Scene2::RenderSkybox()
 	RenderMesh(meshList[GEO_TOP], setTrueFalse);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 30.0f, 0.0f); 
-	//RenderMesh(meshList[GEO_TEST3], setTrueFalse);
-	//modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, 20.0f);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
 	modelStack.Translate(0.0f, -0.00f, 0.0f);
 	RenderMesh(meshList[GEO_BOTTOM], setTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 0.0f, 0.0f); 
-	//RenderMesh(meshList[GEO_TEST4], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
@@ -998,11 +829,6 @@ void Scene2::RenderSkybox()
 	RenderMesh(meshList[GEO_LEFT], setTrueFalse);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-30.0f, 15.0f, 0.0f);
-	//RenderMesh(meshList[GEO_TEST5], setTrueFalse);
-	//modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.98f, 0.96f, 0.0f);
@@ -1011,10 +837,6 @@ void Scene2::RenderSkybox()
 	RenderMesh(meshList[GEO_RIGHT], setTrueFalse);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(30.0f, 15.0f, 0.0f);
-	//RenderMesh(meshList[GEO_TEST6], setTrueFalse);
-	//modelStack.PopMatrix();
 }
 
 void Scene2::RenderText(Mesh* mesh, std::string text, Color color)
@@ -1249,8 +1071,5 @@ void Scene2::Exit()
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
-
-	// music::player.stopSound(); // end all music at the des of scene
-
 	// Cleanup VBO here
 }

@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
-    <ClCompile Include="Source\AssignmentScene.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
@@ -30,10 +29,15 @@
     <ClCompile Include="Source\Leaderboard.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\TutorialRacing.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\TutorialPuzzleRoom.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
-    <ClInclude Include="Source\AssignmentScene.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\LoseScreen.h" />
@@ -140,6 +144,12 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Leaderboard.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TutorialRacing.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\TutorialPuzzleRoom.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

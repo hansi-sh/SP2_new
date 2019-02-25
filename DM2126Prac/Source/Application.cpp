@@ -12,7 +12,10 @@
 #include "Racing.h"
 #include "Scene2.h"
 #include "Leaderboard.h"
+
+#include "TutorialPuzzleRoom.h"
 #include "TutorialScene2.h"
+#include "TutorialRacing.h"
 
 #include "Sound.h"
 #include "MainMenu.h"
@@ -148,10 +151,8 @@ void Application::Run()
 	else // change back to PuzzleRoom when pushing 
 	{
 		// scene = new MainMenuScene();
-		scene = new Scene2();
-		glfwSetCursorPosCallback(m_window, Scene2::mouse_callback);
-
-
+		scene = new TutorialPuzzleRoom();
+		glfwSetCursorPosCallback(m_window, TutorialPuzzleRoom::mouse_callback);
 	}
 	
 	//Main menu scene = 0 no cam
