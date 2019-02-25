@@ -457,15 +457,32 @@ void RaceScene::Update(double dt)
 
 				if (AIcollide == true)
 				{
-					if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
+					if (enemyZ[collider1 - 33] > enemyZ[collider2 - 33])
 					{
-						e[collider1 - 33].v_SetEnemySpeed((e[collider1 - 33].f_GetEnemySpeed()*1.5));
-						e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*1.0));
+
+						if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
+						{
+							e[collider1 - 33].v_SetEnemySpeed((e[collider1 - 33].f_GetEnemySpeed()*1.0));
+							e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*0.5));
+						}
+						else
+						{
+							e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*1.0));
+							e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*1.0));
+						}
 					}
 					else
 					{
-						e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*1.0));
-						e[collider2 - 33].v_SetEnemySpeed((e[collider2 - 33].f_GetEnemySpeed()*1.5));
+						if (enemyZ[collider2 - 33] -enemyZ[collider1 - 33] >= 6)
+						{
+							e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*0.5));
+							e[collider2 - 33].v_SetEnemySpeed((e[collider2 - 33].f_GetEnemySpeed()*1.0));
+						}
+						else
+						{
+							e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*1.0));
+							e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*1.0));
+						}
 					}
 
 					Obj[collider1]->setOBB(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
