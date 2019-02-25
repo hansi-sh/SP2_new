@@ -3,7 +3,7 @@
 #include "shader.hpp"
 #include "Application.h"
 #include "MeshBuilder.h"
-#include "Camera.h"
+#include "Camera2.h"
 #include "GLFW/glfw3.h"
 #include "Scene2.h"
 #include "Utility.h"
@@ -323,6 +323,15 @@ void Scene2::Init() //defines what shader to use
 void Scene2::Update(double dt)
 {
 	delay += dt;
+	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
+	{
+		timerunout = true;
+	}
+	if (timerunout == false)
+	{
+		AmbulanceTimer->v_UpdateTime(dt);
+	}
+	
 
 	score = score + 0.2;
 
@@ -338,7 +347,6 @@ void Scene2::Update(double dt)
 
 	if (Application::IsKeyPressed('1'))
 	{
-		
 	}
 	if (Application::IsKeyPressed('2'))
 	{
@@ -350,9 +358,14 @@ void Scene2::Update(double dt)
 		ofstream saveToFile("loli.txt", fstream::app);
 		saveToFile << score << endl;
 		
+		music::player.stopSound(); // end all music at the des of scene
+
 		Application app;
-		app.SetSceneNumber(4); // go to RaceScene when done here -> double check isit 4
+		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
 		app.Run();
+
+		
+
 	}
 	if (Application::IsKeyPressed('6'))
 	{
@@ -490,14 +503,12 @@ void Scene2::Update(double dt)
 		{
 			useDefi = true;
 		}
-
 		if (Application::IsKeyPressed('I') && collectKit)
-
 		{
 			useKit = true;
 		}
 	}
-
+	
 	// Collision Box
 	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
 
@@ -797,6 +808,11 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(AmbulanceTimer
+	->d_GetAmbulanceTimer())), Color(0, 1, 0), 2, 1, 25);
+	modelStack.PopMatrix();
+
 	EndMission();
 
 }
@@ -834,7 +850,9 @@ void Scene2::EndMission()
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
+			Application::timerh = 40;
 			nextStage = true;
+
 		} 
 
 		if (useKit) // which is wrong
@@ -843,6 +861,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
+			Application::timerh = 30;
 			nextStage = true;
 		}
 		
@@ -857,7 +876,9 @@ void Scene2::EndMission()
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
+			Application::timerh = 40;
 			nextStage = true;
+
 		}
 
 		if (useDefi) // which is wrong
@@ -866,6 +887,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
+			Application::timerh = 30;
 			nextStage = true;
 		}
 	}
@@ -1227,6 +1249,8 @@ void Scene2::Exit()
 	}
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 	glDeleteProgram(m_programID);
+
+	// music::player.stopSound(); // end all music at the des of scene
 
 	// Cleanup VBO here
 }

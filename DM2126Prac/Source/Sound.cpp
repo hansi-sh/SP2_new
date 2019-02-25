@@ -40,3 +40,8 @@ void Sound::setSoundVol(const float volume)
 {
 	engine->setSoundVolume(volume);
 }
+
+void Sound::stopSound()
+{
+	engine->stopAllSounds();
+}
