@@ -48,6 +48,7 @@ RaceScene::~RaceScene()
 
 void RaceScene::Init() //defines what shader to use
 {
+	
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
@@ -267,10 +268,26 @@ void RaceScene::Init() //defines what shader to use
 	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, /*636.0f*/77, 20.0f), 20.0f, 40.0f, 2830.0f);
 	/*meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);*/
 	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, /*639.0f*/77, 20.0f), 20.0f, 50.0f, 2830.0f);
+	if (Application::timerh == 0)
+	{
+		RaceTimer.v_SetRaceSceneTime(40);
+	}
+	else
+	{
+		RaceTimer.v_SetRaceSceneTime(Application::timerh);
+	}
 }
 
 void RaceScene::Update(double dt)
 {
+	if (RaceTimer.d_GetRaceSceneTime() <= 0)
+	{
+		timerunout = true;
+	}
+	if (timerunout == false)
+	{
+		RaceTimer.v_UpdateTime(dt);
+	}
 	for (int i = 0; i < 10; i++)	//golden
 	{
 		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
@@ -787,6 +804,9 @@ void RaceScene::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
 		modelStack.PopMatrix();
 	}
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
+	modelStack.PopMatrix();
 }
 
 void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
