@@ -107,8 +107,11 @@ private:
 	float f_RotateAmt;
 	float f_UpdatedAngle;
 	int i_CollidedWith;
+	int i_CollidedWith2;
 
 	//AI
+	bool dead;
+	bool collideAI;
 	enemy2 AIwalker[30];
 	bool checkmove[30];
 	float AIWalkX[30];

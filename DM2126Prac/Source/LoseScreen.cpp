@@ -327,11 +327,11 @@ void LoseScene::RenderLose()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(1, 1, 1), 3.3f, 31, 21);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(1, 1, 1), 3.3f, 31, 22);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(1, 1, 1), 2.8f, 31, 9);
+	RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(1, 1, 1), 2.8f, 31, 10);
 	modelStack.PopMatrix();
 }
 

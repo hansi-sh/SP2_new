@@ -244,7 +244,7 @@ void WinScene::Update(double dt)
 		if (i_Selector == 0)	//Restart from puzzle one
 		{
 			Application app;
-			app.SetSceneNumber(1);
+			app.SetSceneNumber(8);
 			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction

@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "Application.h"
 #include "PuzzleRoom.h"
-// #include "AssignmentScene.h"
 #include "Racing.h"
 #include "Scene2.h"
 #include "Leaderboard.h"
@@ -148,9 +147,7 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		// 	scene = new LoseScene();	
-		scene = new Leaderboard();
-		glfwSetCursorPosCallback(m_window, Leaderboard::mouse_callback);// when ever the cursor moves, this function will be called
+		scene = new MainMenuScene();
 	}
 	
 	//Main menu scene = 0 no cam
