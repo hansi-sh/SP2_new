@@ -149,7 +149,7 @@ void Application::Run()
 	{
 		//scene = new MainMenuScene();
 		// scene = new MainMenuScene();
-		scene = new LoseScene();
+		scene = new RaceScene();
 
 	}
 	
