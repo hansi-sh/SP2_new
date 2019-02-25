@@ -155,7 +155,6 @@
     <ClCompile Include="Source\enemy2.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
-    <ClCompile Include="Source\PauseScreen.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Racing.cpp" />
@@ -168,6 +167,7 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\ObjectBox.cpp" />
     <ClCompile Include="Source\PuzzleRoom.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
     <ClCompile Include="Source\Scene2.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\StopWatchTimer.cpp" />
@@ -184,7 +184,6 @@
     <ClInclude Include="Source\enemy2.h" />
     <ClInclude Include="Source\LoseScreen.h" />
     <ClInclude Include="Source\MainMenu.h" />
-    <ClInclude Include="Source\PauseScreen.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Racing.h" />

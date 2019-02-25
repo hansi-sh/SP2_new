@@ -18,7 +18,6 @@
 #include "MainMenu.h"
 #include "WinScreen.h"
 #include "LoseScreen.h"
-#include "PauseScreen.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game

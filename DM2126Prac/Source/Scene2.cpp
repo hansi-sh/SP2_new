@@ -338,9 +338,6 @@ void Scene2::Update(double dt)
 
 	if (Application::IsKeyPressed('1'))
 	{
-		Application app;
-		app.SetSceneNumber(3);
-		app.Run();
 		
 	}
 	if (Application::IsKeyPressed('2'))

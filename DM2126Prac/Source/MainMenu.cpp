@@ -252,9 +252,9 @@ void MainMenuScene::Update(double dt)
 	{
 		if (i_Selector == 0)	//Start
 		{
-			Application app;
-			app.SetSceneNumber(8);
-			app.Run();
+			//Application app;
+			//app.SetSceneNumber(8);
+			//app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
 		{
