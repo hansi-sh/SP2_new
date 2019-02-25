@@ -12,6 +12,7 @@
 #include "Racing.h"
 #include "Scene2.h"
 #include "Leaderboard.h"
+#include "TutorialScene2.h"
 
 #include "Sound.h"
 #include "MainMenu.h"

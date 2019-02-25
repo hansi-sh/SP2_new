@@ -152,9 +152,6 @@ void Leaderboard::Init() //defines what shader to use
 		counter++;
 	}
 
-	int first = 0;
-	int second = 0;
-	int third = 0;
 
 	if (leaderboard[0] > leaderboard[1] &&
 		leaderboard[0] > leaderboard[2])
@@ -225,8 +222,6 @@ void Leaderboard::Init() //defines what shader to use
 			third = leaderboard[i];
 		}
 	}
-
-	
 }
 
 
@@ -321,23 +316,30 @@ void Leaderboard::Render()
 			&lightPosition_cameraspace.x);
 	}
 
-	int speedct = abs(speed); // no idea what this does
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(speedct), Color(1, 1, 1), 3, 2, 55);
-	modelStack.PopMatrix();
-
 	//<--Get cameras position-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
+	//modelStack.PopMatrix();
 	
+	//modelStack.PushMatrix();
+	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	//modelStack.PopMatrix();
+
+	//<---Print Leaderboard--->
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("First: " + std::to_string(first)), Color(1, 0, 0), 2, 2, 40);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Second: " + std::to_string(second)), Color(1, 0, 0), 2, 2, 38);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Third: " + std::to_string(third)), Color(1, 0, 0), 2, 2, 36);
+	modelStack.PopMatrix();
+
 
 }
-
 
 void Leaderboard::RenderMesh(Mesh *mesh, bool enableLight)
 {
@@ -380,11 +382,6 @@ void Leaderboard::RenderMesh(Mesh *mesh, bool enableLight)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-}
-
-void Leaderboard::RenderSkybox()
-{
-
 }
 
 void Leaderboard::RenderText(Mesh* mesh, std::string text, Color color)

@@ -24,7 +24,12 @@
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\WinScreen.cpp" />
-    <ClCompile Include="Source\Leaderboard.cpp" />
+    <ClCompile Include="Source\TutorialScene2.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Leaderboard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -53,7 +58,6 @@
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\WinScreen.h" />
-    <ClInclude Include="Source\Leaderboard.h" />
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -132,6 +136,12 @@
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClInclude Include="Source\TutorialScene2.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Leaderboard.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
