@@ -136,6 +136,10 @@ void Application::Run()
 	{
 		scene = new RaceScene();
 	}
+	else if (GetSceneNumber() == 4)
+	{
+		scene = new TutorialScene2();
+	}
 	else if (GetSceneNumber() == 7)	//Win screen
 	{
 		scene = new WinScene();

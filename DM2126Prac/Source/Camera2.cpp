@@ -25,7 +25,7 @@ void Camera2::Update(double dt)
 	horizontalView.y = 0.0f;
 	horizontalView = (horizontalView).Normalized();
 	Vector3 right = view.Cross(up);
-	float cameraspeedchange = 10.0f;
+	float cameraspeedchange = 1.0f;
 	
 	//if (app.GetSceneNumber() >= 1 && app.GetSceneNumber() <= 2)
 	{
@@ -39,16 +39,6 @@ void Camera2::Update(double dt)
 		position = position + right * cameraspeedchange;
 		target = position + view * cameraspeedchange;
 	}
-	//if (Application::IsKeyPressed('Q'))
-	//{
-	//	position = position + up * cameraspeedchange;
-	//	target = position + view * cameraspeedchange;
-	//}
-	//if (Application::IsKeyPressed('E'))
-	//{
-	//	position = position - up * cameraspeedchange;
-	//	target = position + view * cameraspeedchange;
-	//}
 	if (Application::IsKeyPressed('W'))
 	{
 		position += horizontalView * cameraspeedchange;

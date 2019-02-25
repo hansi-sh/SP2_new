@@ -2,7 +2,7 @@
 #define TUTORIALSCENE2_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -10,8 +10,6 @@
 #include "LoadTGA.h"
 #include "item.h"
 #include <Windows.h>
-#include "ObjectBox.h"
-#include "StopWatchTimer.h"
 
 #include <fstream>
 using namespace std;
@@ -39,42 +37,6 @@ class TutorialScene2 : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-		//U_LIGHT1_POSITION,
-		//U_LIGHT1_COLOR,
-		//U_LIGHT1_POWER,
-		//U_LIGHT1_KC,
-		//U_LIGHT1_KL,
-		//U_LIGHT1_KQ,
-		//U_LIGHT1NABLED,
-		//U_LIGHT1_TYPE,
-		//U_LIGHT1_SPOTDIRECTION,
-		//U_LIGHT1_COSCUTOFF,
-		//U_LIGHT1_COSINNER,
-		//U_LIGHT1_EXPONENT,
-		//U_LIGHT2_POSITION,
-		//U_LIGHT2_COLOR,
-		//U_LIGHT2_POWER,
-		//U_LIGHT2_KC,
-		//U_LIGHT2_KL,
-		//U_LIGHT2_KQ,
-		//U_LIGHT2NABLED,
-		//U_LIGHT2_TYPE,
-		//U_LIGHT2_SPOTDIRECTION,
-		//U_LIGHT2_COSCUTOFF,
-		//U_LIGHT2_COSINNER,
-		//U_LIGHT2_EXPONENT,
-		//U_LIGHT3_POSITION,
-		//U_LIGHT3_COLOR,
-		//U_LIGHT3_POWER,
-		//U_LIGHT3_KC,
-		//U_LIGHT3_KL,
-		//U_LIGHT3_KQ,
-		//U_LIGHT3NABLED,
-		//U_LIGHT3_TYPE,
-		//U_LIGHT3_SPOTDIRECTION,
-		//U_LIGHT3_COSCUTOFF,
-		//U_LIGHT3_COSINNER,
-		//U_LIGHT3_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -85,9 +47,6 @@ class TutorialScene2 : public Scene
 public:
 	TutorialScene2();
 	~TutorialScene2();
-
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	static float lastX, lastY;
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -100,44 +59,8 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	bool getCurrentCam;
-	float speed;
-	double delay;
 
 	void RenderSkybox();
-
-	bool b_BMO;
-	bool b_viewStats;
-
-	// For Box collision
-	bool collide;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
-
-	float rotationangle; // not needed but jus leave here
-	float updatedangle; // not needed but jus leave here
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
-
-	//For Running Animation
-	bool checkmodelStack;
-	float RotateBody;
-	bool running;
-	bool bodyMovement;
-	float LeftLegX;
-	float RightLegX;
-	float ArmRotation;
-	float TranslateBodyX;
-	float TranslateBodyY;
-	float TranslateBodyZ;
-
-	//<--Music-->
-	// void PlayMusic();
-	bool b_musicSelected;
-	bool b_inPM;
-	bool b_checkinPM;
-	bool b_inPC;
 
 	enum GEOMETRY_TYPE
 	{
@@ -151,7 +74,7 @@ private:
 		GEO_BACK,
 
 		GEO_STRETCHER,
-		GEO_DEFIBRILLATOR, // jus a cube
+		GEO_DEFIBRILLATOR, 
 		GEO_FIRSTAIDKIT,
 		GEO_CABINET,
 		GEO_CABINET2,
@@ -162,19 +85,12 @@ private:
 		GEO_METALSHELVE, 
 
 		GEO_PLAYER,
-		//GEO_TEST, // Cabinet2
-		// GEO_TEST1, // Front
-		// GEO_TEST2, // back
-		// GEO_TEST3, // top
-		// GEO_TEST4, // bottom
-		// GEO_TEST5, // left
-		// GEO_TEST6, // right
 		GEO_TEXT,
 
 		GEO_HELP, // the top right panel
 		GEO_FRAME, // the frame to contain text
 		GEO_START, // ambulance
-
+		GEO_START2,
 		GEO_HAIR, // patient
 		GEO_FACE,
 		GEO_BODY,
@@ -190,46 +106,14 @@ private:
 		NUM_GEOMETRY,
 	};
 
-	enum OBJECT_TYPE
-	{
-		OBJ_PLAYER,	//player 0
-
-		OBJ_METALSHELVE, // -> done
-		OBJ_STRETCHER, // - > done
-		OBJ_CABINET, // - > done
-		OBJ_CHAIR, // - > done
-		// OBJ_DEFIBRILLATOR, // -> done
-		// OBJ_FIRSTAIDKIT, // -> done (changed)
-		OBJ_CABINET2, // -> done
-		OBJ_TOPSHELVE1, // - > done
-		OBJ_TOPSHELVE2, // - > done
-		OBJ_TOPSHELVE3, // - > done
-
-		OBJ_FRONT, // - > done
-		OBJ_BACK, 
-		OBJ_TOP, 
-		OBJ_BOTTOM,
-		OBJ_LEFT,
-		OBJ_RIGHT,
-
-		// OBJ_TEST, // Cabinet2
-		// OBJ_TEST1, // Front
-		// OBJ_TEST2, // Back
-		// OBJ_TEST3, // top
-		// OBJ_TEST4, // bottom
-		// OBJ_TEST5, // left
-		// OBJ_TEST6, // right
-
-		NUM_OBJ
-	};
-
 	MS modelStack, viewStack, projectionStack;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
-	ObjectBox* Obj[NUM_OBJ]; // for box collision
-
-	static Camera2 camera;
+	Camera3 camera;
+	float f_TPCRotateBy;
+	bool b_Switch;
+	double d_BounceTime;
 
 	Light light[1];
 
@@ -239,27 +123,9 @@ private:
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
-	// Stuff Added
-	bool setTrueFalse = false;
-	int instruction;
-	bool useDefi = false; 
-	bool useKit = false;
-	bool nextStage = false;
-	double score = 1.0;
-	bool showIntro = true;
-	bool useSound = true;
-
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
-	void uploadItem(int);
-	void printNext();
-	void printPrev();
-	void rendertag();
-	Item *first, *last, *forward, *current, *backward;
-	//Timer
-	StopWatchTimer* AmbulanceTimer;
-
-
+	bool setTrueFalse;
 };
 
 #endif
