@@ -1,174 +1,236 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="Source\Application.cpp" />
+    <ClCompile Include="Source\AssignmentScene.cpp" />
+    <ClCompile Include="Source\Camera3.cpp" />
+    <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\LoseScreen.cpp" />
+    <ClCompile Include="Source\MainMenu.cpp" />
+    <ClCompile Include="Source\Physics.cpp" />
+    <ClCompile Include="Source\Item.cpp" />
+    <ClCompile Include="Source\Racing.cpp" />
+    <ClCompile Include="Source\Camera.cpp" />
+    <ClCompile Include="Source\Camera2.cpp" />
+    <ClCompile Include="Source\LoadOBJ.cpp" />
+    <ClCompile Include="Source\LoadTGA.cpp" />
+    <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Mesh.cpp" />
+    <ClCompile Include="Source\MeshBuilder.cpp" />
+    <ClCompile Include="Source\ObjectBox.cpp" />
+    <ClCompile Include="Source\PuzzleRoom.cpp" />
+    <ClCompile Include="Source\Scene2.cpp" />
+    <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\Sound.cpp" />
+    <ClCompile Include="Source\Utility.cpp" />
+    <ClCompile Include="Source\WinScreen.cpp" />
+    <ClCompile Include="Source\TutorialScene2.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Leaderboard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Application.h" />
+    <ClInclude Include="Source\AssignmentScene.h" />
+    <ClInclude Include="Source\Camera3.h" />
+    <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\LoseScreen.h" />
+    <ClInclude Include="Source\MainMenu.h" />
+    <ClInclude Include="Source\Physics.h" />
+    <ClInclude Include="Source\Item.h" />
+    <ClInclude Include="Source\Racing.h" />
+    <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Camera2.h" />
+    <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\LoadOBJ.h" />
+    <ClInclude Include="Source\LoadTGA.h" />
+    <ClInclude Include="Source\Material.h" />
+    <ClInclude Include="Source\Mesh.h" />
+    <ClInclude Include="Source\MeshBuilder.h" />
+    <ClInclude Include="Source\ObjectBox.h" />
+    <ClInclude Include="Source\PuzzleRoom.h" />
+    <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\Scene2.h" />
+    <ClInclude Include="Source\shader.hpp" />
+    <ClInclude Include="Source\Sound.h" />
+    <ClInclude Include="Source\Utility.h" />
+    <ClInclude Include="Source\Vertex.h" />
+    <ClInclude Include="Source\WinScreen.h" />
     <ClCompile Include="Source\Application.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\AssignmentScene.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Utility.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Item.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LoadOBJ.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\LoadTGA.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\MeshBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\ObjectBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\PuzzleRoom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Racing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\shader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Enemy.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Sound.cpp">
-    <ClCompile Include="Source\MainMenu.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\enemy2.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\WinScreen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\Item.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\PauseScreen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Source\LoadOBJ.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LoadTGA.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\LoseScreen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainMenu.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mesh.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MeshBuilder.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ObjectBox.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Physics.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\PuzzleRoom.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Racing.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\shader.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\StopWatchTimer.cpp">
-    <ClCompile Include="Source\enemy2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Utility.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WinScreen.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClInclude Include="Source\TutorialScene2.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Leaderboard.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\shader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Racing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\PuzzleRoom.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\ObjectBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\MeshBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Material.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LoadTGA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\LoadOBJ.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Light.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Item.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Camera.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\AssignmentScene.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera2.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera3.h">
+      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Enemy.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Sound.h">
-    <ClInclude Include="Source\MainMenu.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\enemy2.h">
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\WinScreen.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\Item.h">
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\PauseScreen.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Source\Light.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadOBJ.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LoadTGA.h">
+      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\LoseScreen.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainMenu.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Material.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mesh.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MeshBuilder.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ObjectBox.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Physics.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PuzzleRoom.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Racing.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Vertex.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WinScreen.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\StopWatchTimer.h">
-    <ClInclude Include="Source\enemy2.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\shader.hpp">
+      <Filter>Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Blending.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\LightSource.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\TransformVertexShader.vertexshader">
+    <None Include="Shader\SimpleVertexShader.vertexshader">
       <Filter>Shader</Filter>
     </None>
     <None Include="Shader\Shading.fragmentshader">
@@ -180,28 +242,34 @@
     <None Include="Shader\SimpleFragmentShader.fragmentshader">
       <Filter>Shader</Filter>
     </None>
-    <None Include="Shader\SimpleVertexShader.vertexshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Text.fragmentshader">
-      <Filter>Shader</Filter>
-    </None>
-    <None Include="Shader\Texture.fragmentshader">
+    <None Include="Shader\TransformVertexShader.vertexshader">
       <Filter>Shader</Filter>
     </None>
     <None Include="Shader\Texture.vertexshader">
       <Filter>Shader</Filter>
     </None>
+    <None Include="Shader\Texture.fragmentshader">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\Text.fragmentshader">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\LightSource.fragmentshader">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Shader\Blending.fragmentshader">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{f6bbd2cf-e9f1-4b9e-8368-23f7925499e0}</UniqueIdentifier>
+    <Filter Include="Header">
+      <UniqueIdentifier>{da3a6bd5-3d88-4ec4-acef-c5550476b1ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{34969f3b-ae5c-49de-b408-7ba7c6fc32b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shader">
-      <UniqueIdentifier>{9e574785-3285-4620-8092-dc97a4389d10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{eac6dc98-0d8f-447d-a5d0-5b29e8dd0076}</UniqueIdentifier>
+      <UniqueIdentifier>{e6646009-8c87-4887-a427-ec5b05c469cc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

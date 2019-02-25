@@ -55,34 +55,18 @@ public:
 	virtual void Exit();
 
 private:
-	void RenderButton(int, int);
+	//void RenderButton(int, int);
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
-	bool getCurrentCam;
-
-	bool collide;
-	float rotationangle;
-	float updatedangle;
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
-
-	bool b_MMenu;
-	float f_bounceTime;
-	float f_quadY;
 
 	void RenderSkybox();
 
-	bool b_viewStats;
-
 	enum GEOMETRY_TYPE
 	{
-		GEO_LIGHTBALL,
+		//GEO_LIGHTBALL,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -91,8 +75,10 @@ private:
 		GEO_FRONT,
 		GEO_BACK,
 
+		GEO_SELECTION,
+
 		GEO_MAINMENU,
-		//GEO_SELECTQUAD,
+		GEO_MAINMENUT,
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
@@ -108,11 +94,17 @@ private:
 
 	void RenderMesh(Mesh *mesh, bool enableLight);
 
+	double d_BounceTime;
+	int i_Selector;
+	int i_SpeedUp;
+	float f_TStart;
+	float f_TInstruction;
+	float f_TLeaderBoard;
+	float f_TExit;
+
 	void RenderText(Mesh* mesh, std::string text, Color color);
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-
-	void DrawMainMenu(Mesh* mesh, bool enableLight, float size, float x, float y);
 
 	void RenderMainMenu();
 };

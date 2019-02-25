@@ -2,11 +2,12 @@
 #define CAMERA_2_H
 
 #include "Camera.h"
+#include "Application.h"
 
 class Camera2 : public Camera
 {
 public:
-
+	Application app;
 	Vector3 defaultPosition;
 	Vector3 defaultTarget;
 	Vector3 defaultUp;

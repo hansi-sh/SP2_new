@@ -8,6 +8,7 @@
 #include "Racing.h"
 #include "Utility.h"
 #include <string>
+#include "Sound.h"
 
 float RaceScene::lastX = 0.0f;
 float RaceScene::lastY = 0.0f;
@@ -57,6 +58,11 @@ void RaceScene::Init() //defines what shader to use
 	collider1 = 0;
 	collider2 = 0;
 
+	//<---Sound--->
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
+
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
 	TranslateBodyY = 64.0f;
@@ -73,6 +79,7 @@ void RaceScene::Init() //defines what shader to use
 	f_UpdatedAngle = 0.0f;
 
 	i_CollidedWith = 0;
+	i_CollidedWith2 = 0;
 
 	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
 
@@ -95,7 +102,9 @@ void RaceScene::Init() //defines what shader to use
 		AIpos[i] = (Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
 	}
 	
-
+	//AIWALK
+	bool dead = false;
+	bool collideAI = true;
 	for (int i = 0; i < 7; i++)
 	{
 		enemyX[i] = 15;
@@ -279,16 +288,23 @@ void RaceScene::Update(double dt)
 	{
 		RaceTimer.v_UpdateTime(dt);
 	}
-	
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)	//golden
 	{
 		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 10);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 5);
 		AIWalkX[i] = AIpos[i].x;
 		AIWalkY[i] = AIpos[i].y;
 		AIWalkZ[i] = AIpos[i].z;
 	}
-	for (int i = 11; i < 20; i++)
+	for (int i = 11; i < 20; i++)	//red
+	{
+		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 15);
+		AIWalkX[i] = AIpos[i].x;
+		AIWalkY[i] = AIpos[i].y;
+		AIWalkZ[i] = AIpos[i].z;
+	}
+	for (int i = 21; i < 30; i++)	//green
 	{
 		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
 		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 20);
@@ -296,26 +312,12 @@ void RaceScene::Update(double dt)
 		AIWalkY[i] = AIpos[i].y;
 		AIWalkZ[i] = AIpos[i].z;
 	}
-	for (int i = 21; i < 30; i++)
-	{
-		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 23);
-		AIWalkX[i] = AIpos[i].x;
-		AIWalkY[i] = AIpos[i].y;
-		AIWalkZ[i] = AIpos[i].z;
-	}
 	
 	if (Application::IsKeyPressed('1'))
 	{
-		Application app;
-		app.SetSceneNumber(1);
-		app.Run();
 	}
 	if (Application::IsKeyPressed('2'))
 	{
-		Application app;
-		app.SetSceneNumber(2);
-		app.Run();
 	}
 	if (Application::IsKeyPressed('3'))
 	{
@@ -350,6 +352,11 @@ void RaceScene::Update(double dt)
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
+
+		// Cancer af
+		//music::player.init();
+		//music::player.setSoundVol(0.5);
+		//music::player.playSound("Sound//Scene3//Accelerate2.wav");
 	}
 	else if (Application::IsKeyPressed('S'))//backward
 	{
@@ -454,13 +461,19 @@ void RaceScene::Update(double dt)
 	{
 		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
 		{
+			if (AllObjs<=32)
+			{
+				collideAI = true;
+				i_CollidedWith2 = AllObjs;
+			}
 			collide = true;
 			i_CollidedWith = AllObjs;
 			break;
 		}
 		collide = false;
+		collideAI = false;
 	}
-
+	//ISSUE:AI MOVING BACK,IF HIT AI WILL FLY ,SOLUTION:FIX AI DECELERATION 
 	for (int AllObjs2 = 33; AllObjs2 < NUM_OBJ; ++AllObjs2)
 	{
 		for (int i = 33; i < NUM_OBJ; ++i)
@@ -475,15 +488,32 @@ void RaceScene::Update(double dt)
 
 				if (AIcollide == true)
 				{
-					if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
+					if (enemyZ[collider1 - 33] > enemyZ[collider2 - 33])
 					{
-						e[collider1 - 33].v_SetEnemySpeed((e[collider1 - 33].f_GetEnemySpeed()*1.5));
-						e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*1.0));
+
+						if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
+						{
+							e[collider1 - 33].v_SetEnemySpeed(fabs((e[collider1 - 33].f_GetEnemySpeed()*1.1)));
+							e[collider2 - 33].v_SetEnemySpeed(-(fabs(e[collider2 - 33].f_GetEnemySpeed()*1.0)));
+						}
+						else
+						{
+							e[collider1 - 33].v_SetEnemySpeed(-(fabs(e[collider1 - 33].f_GetEnemySpeed()*1.0)));
+							e[collider2 - 33].v_SetEnemySpeed(-(fabs(e[collider2 - 33].f_GetEnemySpeed()*1.0)));
+						}
 					}
 					else
 					{
-						e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*1.0));
-						e[collider2 - 33].v_SetEnemySpeed((e[collider2 - 33].f_GetEnemySpeed()*1.5));
+						if (enemyZ[collider2 - 33] -enemyZ[collider1 - 33] >= 6)
+						{
+							e[collider1 - 33].v_SetEnemySpeed(-(fabs(e[collider1 - 33].f_GetEnemySpeed()*1.0)));
+							e[collider2 - 33].v_SetEnemySpeed((fabs(e[collider2 - 33].f_GetEnemySpeed()*1.1)));
+						}
+						else
+						{
+							e[collider1 - 33].v_SetEnemySpeed(-(fabs(e[collider1 - 33].f_GetEnemySpeed()*1.0)));
+							e[collider2 - 33].v_SetEnemySpeed(-(fabs(e[collider2 - 33].f_GetEnemySpeed()*1.0)));
+						}
 					}
 
 					Obj[collider1]->setOBB(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
@@ -496,7 +526,26 @@ void RaceScene::Update(double dt)
 			AIcollide = false;
 		}
 	}
-	
+	if (collideAI)
+	{
+		if (i_CollidedWith2 >= 3 && i_CollidedWith2 <= 32)
+		{
+			if (i_CollidedWith2 >= 3 && i_CollidedWith2 <= 12)//gold
+			{
+				dead = true;
+				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 0.5));
+				
+			}
+			else//rest
+			{
+				dead = true;
+				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) *0.75));
+				std::cout << PlayerCar.f_GetSpeed() << std::endl;
+				
+			}
+
+		}
+	}
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
 		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
@@ -504,39 +553,38 @@ void RaceScene::Update(double dt)
 		//if i_CollidedWith the numbers of Car AI
 		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
 		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
-
-		if (i_CollidedWith >= 33 && i_CollidedWith < 48) /*i_CollidedWith <= last car AI*/ //num in object type
+		if (i_CollidedWith >= 33 && i_CollidedWith <= 48) //i_CollidedWith <= last car AI //num in object type
 		{
 			if (TranslateBodyZ > enemyZ[i_CollidedWith - 33])
 			{
 				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 33]) >= f_HeightAIP)	//if AI directly hits back of the car of player
 				{
 					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
-					e[i_CollidedWith - 33].v_SetEnemySpeed(-(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0));
+					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 33].v_SetEnemySpeed(-(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0));
+					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
+					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 				}
 			}
 			else
 			{
 				if ((enemyZ[i_CollidedWith - 33] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 33].v_SetEnemySpeed((e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5));
+					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
+					e[i_CollidedWith - 33].v_SetEnemySpeed((fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5)));
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 33].v_SetEnemySpeed(-(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0));
+					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
+					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 				}
 			}
 		}
-		else
+		else if(i_CollidedWith >= 1 && i_CollidedWith <= 2)
 		{
-			PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+			PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 0.5)));
 		}
 
 		/*TranslateBodyX = prevBodyX;
@@ -555,7 +603,21 @@ void RaceScene::Update(double dt)
 	}
 
 	f_UpdatedAngle = 0.0f;
-
+	if (dead == true)
+	{
+		if ((AIpos[i_CollidedWith2 - 3].z - TranslateBodyZ) >= 6)	//if player directly hits back of the car of AI
+		{
+			AIpos[i_CollidedWith2 - 3].z += float(100 * dt);
+			AIpos[i_CollidedWith2 - 3].y += float(100 * dt);
+			AIWalkY[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].y;
+			AIWalkZ[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].z;
+		}
+		else
+		{
+			AIpos[i_CollidedWith2 - 3].y += float(100 * dt);
+			AIWalkY[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].y;
+		}
+	}
 	if (getCurrentCam)
 	{
 		currentCamPos = camera.position;
@@ -624,7 +686,7 @@ void RaceScene::Render()
 	RenderMesh(meshList[GEO_AMBULANCE], false);
 	modelStack.PopMatrix();
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i <= 10; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
@@ -632,7 +694,7 @@ void RaceScene::Render()
 		RenderMesh(meshList[GEO_Pedestrains1], false);
 		modelStack.PopMatrix();
 	}
-	for (int i = 11; i < 20; i++)
+	for (int i = 11; i <= 20; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
@@ -640,7 +702,7 @@ void RaceScene::Render()
 		RenderMesh(meshList[GEO_Pedestrains2], false);
 		modelStack.PopMatrix();
 	}
-	for (int i = 21; i < 30; i++)
+	for (int i = 21; i <= 30; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
@@ -649,7 +711,7 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i <= 15; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);

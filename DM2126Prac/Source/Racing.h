@@ -107,8 +107,11 @@ private:
 	float f_RotateAmt;
 	float f_UpdatedAngle;
 	int i_CollidedWith;
+	int i_CollidedWith2;
 
 	//AI
+	bool dead;
+	bool collideAI;
 	enemy2 AIwalker[30];
 	bool checkmove[30];
 	float AIWalkX[30];
@@ -163,36 +166,36 @@ private:
 		OBJ_PLAYER,
 		OBJ_BOX1,
 		OBJ_BOX2,
-		OBJ_walker1,
-		OBJ_walker2,
-		OBJ_walker3,
-		OBJ_walker4,
-		OBJ_walker5,
-		OBJ_walker6,
-		OBJ_walker7,
-		OBJ_walker8,
-		OBJ_walker9,
-		OBJ_walker10,
-		OBJ_walker11,
-		OBJ_walker12,
-		OBJ_walker13,
-		OBJ_walker14,
-		OBJ_walker15,
-		OBJ_walker16,
-		OBJ_walker17,
-		OBJ_walker18,
-		OBJ_walker19,
-		OBJ_walker20,
-		OBJ_walker21,
-		OBJ_walker22,
-		OBJ_walker23,
-		OBJ_walker24,
-		OBJ_walker25,
-		OBJ_walker26,
-		OBJ_walker27,
-		OBJ_walker28,
-		OBJ_walker29,
-		OBJ_walker30,
+		OBJ_walker1,   //Golden mushroom
+		OBJ_walker2,   //Golden mushroom
+		OBJ_walker3,   //Golden mushroom
+		OBJ_walker4,   //Golden mushroom
+		OBJ_walker5,   //Golden mushroom
+		OBJ_walker6,   //Golden mushroom
+		OBJ_walker7,   //Golden mushroom
+		OBJ_walker8,   //Golden mushroom
+		OBJ_walker9,   //Golden mushroom
+		OBJ_walker10,  //Golden mushroom
+		OBJ_walker11,  //Normal mushroom
+		OBJ_walker12,  //Normal mushroom
+		OBJ_walker13,  //Normal mushroom
+		OBJ_walker14,  //Normal mushroom
+		OBJ_walker15,  //Normal mushroom
+		OBJ_walker16,  //Normal mushroom
+		OBJ_walker17,  //Normal mushroom
+		OBJ_walker18,  //Normal mushroom
+		OBJ_walker19,  //Normal mushroom
+		OBJ_walker20,  //Normal mushroom
+		OBJ_walker21,  //Normal mushroom
+		OBJ_walker22,  //Normal mushroom
+		OBJ_walker23,  //Normal mushroom
+		OBJ_walker24,  //Normal mushroom
+		OBJ_walker25,  //Normal mushroom
+		OBJ_walker26,  //Normal mushroom
+		OBJ_walker27,  //Normal mushroom
+		OBJ_walker28,  //Normal mushroom
+		OBJ_walker29,  //Normal mushroom
+		OBJ_walker30,  //Normal mushroom
 		OBJ_ENEMY1,
 		OBJ_ENEMY2,
 		OBJ_ENEMY3,

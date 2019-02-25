@@ -19,7 +19,7 @@ public:
 private:
 
 	//Declare a window object
- 	StopWatch m_timer;
+	StopWatch m_timer;
 	int SceneNumber;
 
 };

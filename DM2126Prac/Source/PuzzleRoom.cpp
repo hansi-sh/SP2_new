@@ -8,12 +8,11 @@
 #include "PuzzleRoom.h"
 #include "Utility.h"
 #include <string>
-
+#include "Sound.h"
 
 float PuzzleRoom::lastX = 0.0f;
 float PuzzleRoom::lastY = 0.0f;
 Camera2 PuzzleRoom::camera = Camera2();
-
 
 PuzzleRoom::PuzzleRoom()
 {
@@ -57,6 +56,12 @@ void PuzzleRoom::Init() //defines what shader to use
 	
 	b_BMO = true;
 	b_viewStats = false;
+
+	// testing irrklan
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	// music::player.playSound("Sound//Scene1//PuzzleBGM1.wav", true);
+	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
 
 	//<----for BMO body animation movement when running---->
 	//LeftLegX = 90.0f;
@@ -205,12 +210,10 @@ void PuzzleRoom::Init() //defines what shader to use
 	Obj[OBJ_HOUSEWALL9] = new ObjectBox(Vector3(30.1, 58.50, 116.25), 1, 65,57.49);
 	Obj[OBJ_HOUSEWALL10] = new ObjectBox(Vector3(68, 58.50, 147), 76, 65, 1);
 
-
 	meshList[GEO_ROOM1WALL] = MeshBuilder::GenerateOBJ("Room1Wall", "OBJ//room1walls.obj");
 	meshList[GEO_ROOM1WALL]->textureID = LoadTGA("Image//woodwall.tga");
 	Obj[OBJ_ROOMWALL1] = new ObjectBox(Vector3(26.56f, 58.50f, -20.8f), 21.85f, 84.9f, 10.66);
 	Obj[OBJ_ROOMWALL2] = new ObjectBox(Vector3(96.56f, 58.50f, -20.8f), 50.52f, 84.9f, 10.66);
-
 
 	meshList[GEO_DOORTOROOM1] = MeshBuilder::GenerateOBJ("Room1Wall", "OBJ//doortoroom12.obj");
 	meshList[GEO_DOORTOROOM1]->textureID = LoadTGA("Image//DoorTextures.tga");
@@ -219,7 +222,6 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_SOFA] = MeshBuilder::GenerateOBJ("Sofa", "OBJ//sofa2.obj");
 	meshList[GEO_SOFA]->textureID = LoadTGA("Image//sofatxt.tga");
 	Obj[OBJ_SOFA] = new ObjectBox(Vector3(39, 58.50, 37), 19.5, 65, 40);
-
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -376,6 +378,11 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_KEY]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
  */ 
 	meshList[GEO_KEY1]->material.kShininess = 1.0f;
+
+	// User Interface -> Raphael Added
+
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_START]->textureID = LoadTGA("Image//Stage1.tga");
 }
 
 //void PuzzleRoom::PlayMusic()
@@ -385,6 +392,24 @@ void PuzzleRoom::Init() //defines what shader to use
 
 void PuzzleRoom::Update(double dt)
 {
+	
+	// Raphael Added
+	score = score + 0.2;
+	if (score > 20)
+	{
+		showIntro = false;
+	}
+
+	// Raphael Added -> not working 
+	if (camera.position.x > 80 && camera.position.x < 90 
+		&& camera.position.z > 25 && camera.position.z < 45)
+	{ 
+		music::player.init();
+		music::player.setSoundVol(0.3);
+		music::player.playSound("Sound//Scene1//Static2.wav");
+	}
+
+
 	elapsedtime += dt;
 	//Timer
 	//If timer reach 0
@@ -424,7 +449,12 @@ void PuzzleRoom::Update(double dt)
 
 				door1open = !door1open;
 				bouncetime = elapsedtime + 0.4f;
+
+				music::player.init();
+				music::player.setSoundVol(0.5);
+				music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
 			}
+
 		}
 	}
 	if(doorint == true && havekey1 == false || drawerint == true && havekey2 == false)
@@ -432,6 +462,10 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
+
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	
@@ -455,8 +489,13 @@ void PuzzleRoom::Update(double dt)
 			{
 				secretdooropen = !secretdooropen;
 				bouncetime = elapsedtime + 0.4f;
+
+				music::player.init();
+				music::player.setSoundVol(0.5);
+				music::player.playSound("Sound//Scene1//MouseClick.wav");
 			}
 		}
+
 	}
 	if (secretdooropen && secretdoortranslation < 30)
 	{
@@ -522,7 +561,10 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			safecracking = true;	
+			safecracking = true;
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (safecracking == true)
@@ -593,6 +635,10 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete = true;
 			havekey2 = true;
+
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene1//PickUp.wav");
 		}
 	}
 	//key1
@@ -605,6 +651,10 @@ void PuzzleRoom::Update(double dt)
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY1]->textureID = LoadTGA("Image//Black.tga");
 			uploadItem(27);
+
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene1//PickUp.wav");
 		}
 	}
 	//Patient
@@ -614,6 +664,10 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete =true;
 			patienthint = true;
+
+			music::player.init();
+			music::player.setSoundVol(0.5);
+			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (havekey3 == true && patientint == true)
@@ -715,15 +769,11 @@ void PuzzleRoom::Update(double dt)
 	}
 	if (Application::IsKeyPressed('3'))
 	{
-		Application app;
-		app.SetSceneNumber(3);
-		app.Run();
+
 	}
 	if (Application::IsKeyPressed('4'))
 	{
-		Application app;
-		app.SetSceneNumber(4);
-		app.Run();
+
 	}
 	/*if (Application::IsKeyPressed('6'))
 	{
@@ -1113,7 +1163,13 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
 		 modelStack.PopMatrix();
 	 }
-	
+
+	 if (showIntro) // Raphael Added
+	 {
+		 modelStack.PushMatrix();
+		 DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
+		 modelStack.PopMatrix();
+	 }
 }
 
 void PuzzleRoom::RenderMesh(Mesh *mesh, bool enableLight)
