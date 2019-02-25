@@ -409,13 +409,15 @@ void PuzzleRoom::Update(double dt)
 		music::player.playSound("Sound//Scene1//Static2.wav");
 	}
 
-
 	elapsedtime += dt;
 	//Timer
 	//If timer reach 0
 	if (PuzzleTimer->d_GetPuzzleSceneTime() <= 0)
 	{
 		timerunout = true;
+		Application app;
+		app.SetSceneNumber(8);
+		app.Run();
 	}
 	//Prevent time from going negative
 	if (timerunout == false)
@@ -955,7 +957,7 @@ void PuzzleRoom::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 	//PlayMusic();
-	camera.Update(dt);
+	camera.Update(dt, true);
 }
 
 void PuzzleRoom::Render()

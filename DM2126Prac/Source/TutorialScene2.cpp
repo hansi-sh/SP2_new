@@ -10,79 +10,23 @@
 #include <string>
 #include "Sound.h"
 
-float TutorialScene2::lastX = 0.0f;
-float TutorialScene2::lastY = 0.0f;
-Camera2 TutorialScene2::camera = Camera2();
-
 TutorialScene2::TutorialScene2()
 {
-	first = last = forward = current = backward = NULL;
-}
-
-void TutorialScene2::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
+	
 }
 
 TutorialScene2::~TutorialScene2()
 {
-	delete AmbulanceTimer;
+
 }
 
 void TutorialScene2::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
-	AmbulanceTimer = new StopWatchTimer;
-
-	speed = 0;
-
-	delay = 0;
-
-	// testing irrklan
-	if (useSound)
-	{
-		music::player.init();
-		music::player.setSoundVol(0.5);
-		music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
-	}
-
-	//<collison class>
-	collide = false;
-	rotationangle = 0;
-	updatedangle = 0;
-
-	//<----for BMO body animation movement when running---->
-	LeftLegX = 90.0f;
-	RightLegX = 90.0f;
-	ArmRotation = 0.0f;
-	TranslateBodyX = 0.0f;
-	TranslateBodyY = 0.0f;
-	TranslateBodyZ = 0.0f;
-	RotateBody = 0.0f;
-
-	//<----for randomizing the instructions for player--->
-	srand(time(NULL));
-	instruction = rand() % 2;
+	setTrueFalse = false;
+	b_Switch = false;
+	d_BounceTime = 0.25f;
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -96,11 +40,7 @@ void TutorialScene2::Init() //defines what shader to use
 	LSPEED = 30.0f;
 
 	// Change here for camera initial position
-	camera.Init(Vector3(0, 20, 6), Vector3(0, 0, 0), Vector3(0, 1, 0));
-
-	currentCamPos = camera.position;
-	currentCamTarget = camera.target;
-	getCurrentCam = true;
+	camera.Init(Vector3(0, 20, 6), Vector3(-10, 0, 0), Vector3(0, 1, 0));
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -175,45 +115,21 @@ void TutorialScene2::Init() //defines what shader to use
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//WallWindow.tga");
-	Obj[OBJ_FRONT] = new ObjectBox(Vector3(0, 15, 20), 30, 15, 0);
-
-	// meshList[GEO_TEST1] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30.0f, 15.0f, 0.0f);
-	// Obj[OBJ_TEST1] = new ObjectBox(Vector3(0, 15, 20), 30, 15, 0);  
 
 	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_BACK]->textureID = LoadTGA("Image//WallWindow.tga");
-	Obj[OBJ_BACK] = new ObjectBox(Vector3(0, 15, -21), 30, 15, 0);
-
-	// meshList[GEO_TEST2] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30.0f, 15.0f, 0.0f);
-    // Obj[OBJ_TEST2] = new ObjectBox(Vector3(0, 15, -21), 30, 15, 0); 
 
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_LEFT]->textureID = LoadTGA("Image//WallExit.tga");
-	Obj[OBJ_LEFT] = new ObjectBox(Vector3(-30, 15, 0), 0.5, 15, 20);
-
-	//meshList[GEO_TEST5] = MeshBuilder::GenerateCube("test", Color(0, 1, 0), 0.5, 15, 20);
-	//Obj[OBJ_TEST5] = new ObjectBox(Vector3(-30, 15, 0), 0.5, 15, 20);
 
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//Wall.tga");
-	Obj[OBJ_RIGHT] = new ObjectBox(Vector3(30, 15, 0), 0.5, 15, 20);
-
-	//meshList[GEO_TEST6] = MeshBuilder::GenerateCube("test", Color(0, 1, 0), 0.5, 15, 20);
-	//Obj[OBJ_TEST6] = new ObjectBox(Vector3(30, 15, 0), 0.5, 15, 20);
 
 	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_TOP]->textureID = LoadTGA("Image//Wall.tga");
-	Obj[OBJ_TOP] = new ObjectBox(Vector3(0, 30, 0), 30, 0, 20);
-
-	// meshList[GEO_TEST3] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30, 0, 20);
-	// Obj[OBJ_TEST3] = new ObjectBox(Vector3(0, 30, 0), 30, 0, 20);
 
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//Wall.tga");
-	Obj[OBJ_BOTTOM] = new ObjectBox(Vector3(0, 0, 0), 30, 0, 20);
-	
-	//meshList[GEO_TEST4] = MeshBuilder::GenerateQuad("test", Color(0, 0, 1), 30, 0, 20);
-	//Obj[OBJ_TEST4] = new ObjectBox(Vector3(0, 0, 0), 30, 0, 20);
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
@@ -221,51 +137,36 @@ void TutorialScene2::Init() //defines what shader to use
 	// Stuff added so far
 	meshList[GEO_STRETCHER] = MeshBuilder::GenerateOBJ("Stretcher", "OBJ//Stretcher.obj");
 	meshList[GEO_STRETCHER]->textureID = LoadTGA("Image//Stretcher.tga"); 
-	Obj[OBJ_STRETCHER] = new ObjectBox(Vector3(0, 0, 6), 40, 24, 12);
 
 	meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateOBJ("Defibrillator", "OBJ//Defibrillator2.obj");
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
-	// Obj[OBJ_DEFIBRILLATOR] = new ObjectBox(Vector3(20, 21, 0), 2, 2, 2);
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
 	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
-	// Obj[OBJ_FIRSTAIDKIT] = new ObjectBox(Vector3(20, 20, -5), 3, 1, 3);
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
 	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
-	 Obj[OBJ_CABINET] = new ObjectBox(Vector3(-15, 10, -15), 16, 26, 6); 
 
 	meshList[GEO_CABINET2] = MeshBuilder::GenerateOBJ("Cabinet2", "OBJ//Cabinet2Working.obj"); // med cabinet
 	meshList[GEO_CABINET2]->textureID = LoadTGA("Image//Cabinet2Working.tga"); 
-	Obj[OBJ_CABINET2] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
 	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJ("Chair", "OBJ//Chair.obj");
 	meshList[GEO_CHAIR]->textureID = LoadTGA("Image//Chair.tga");
-	 Obj[OBJ_CHAIR] = new ObjectBox(Vector3(20, 10, 13), 8, 12, 7); 
 
 	meshList[GEO_TOPSHELVE1] = MeshBuilder::GenerateOBJ("TopShelve1", "OBJ//TopShelve.obj");
 	meshList[GEO_TOPSHELVE1]->textureID = LoadTGA("Image//TopShelve1.tga");
-	 Obj[OBJ_TOPSHELVE1] = new ObjectBox(Vector3(3, 23, -15), 20, 5, 5);
 
 	meshList[GEO_TOPSHELVE2] = MeshBuilder::GenerateOBJ("TopShelve2", "OBJ//TopShelve.obj");
 	meshList[GEO_TOPSHELVE2]->textureID = LoadTGA("Image//TopShelve2.tga");
-	 Obj[OBJ_TOPSHELVE2] = new ObjectBox(Vector3(-10, 23, 15), 20, 5, 5);
 
 	meshList[GEO_TOPSHELVE3] = MeshBuilder::GenerateOBJ("TopShelve3", "OBJ//TopShelve.obj");
 	meshList[GEO_TOPSHELVE3]->textureID = LoadTGA("Image//TopShelve3.tga");
-	 Obj[OBJ_TOPSHELVE3] = new ObjectBox(Vector3(10, 23, 15), 20, 5, 5);
 
 	meshList[GEO_METALSHELVE] = MeshBuilder::GenerateOBJ("MetalShelve", "OBJ//MetalShelve2.obj");
 	meshList[GEO_METALSHELVE]->textureID = LoadTGA("Image//MetalShelveNew.tga");
-	Obj[OBJ_METALSHELVE] = new ObjectBox(Vector3(22.0f, 5.0f, -3.0f), 10, 30, 30); 
 
 	// Collision Box for Camera/Player -> brot from A2 Scene
 	meshList[GEO_PLAYER] = MeshBuilder::GenerateCube("Box", Color(0, 0, 1), 3.0f, 3.0f, 3.0f); // 10, 15, 15
-	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(camera.position.x, camera.position.y, camera.position.z), 10.0f, 10.0f, 10.0f);
-
-	// Random stuff to test collision box of individual obj
-	//meshList[GEO_TEST] = MeshBuilder::GenerateCube("Test", Color(0, 0, 1), 7.0f, 12.0f, 4.0f);
-	//Obj[OBJ_TEST] = new ObjectBox(Vector3(-23, 10, 12), 14, 24, 8);
 
 	// Patient Obj
 	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
@@ -307,13 +208,47 @@ void TutorialScene2::Init() //defines what shader to use
 
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START]->textureID = LoadTGA("Image//Tutorial2.2.tga");
+	meshList[GEO_START]->textureID = LoadTGA("Image//TutScene2Pt1.tga");
+
+	meshList[GEO_START2] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
+	meshList[GEO_START2]->textureID = LoadTGA("Image//TutScene2Pt2.tga");
 }
 
 
 void TutorialScene2::Update(double dt)
 {
-	// Empty
+	f_TPCRotateBy += 0.5f;
+
+	d_BounceTime -= dt;
+
+	if (Application::IsKeyPressed(VK_LEFT) && d_BounceTime < 0.0f)
+	{
+		if (b_Switch)
+			b_Switch = false;
+		else
+			b_Switch = true;
+
+		d_BounceTime = 0.25f;
+	}
+	else if (Application::IsKeyPressed(VK_RIGHT) && d_BounceTime < 0.0f)
+	{
+		if (b_Switch)
+			b_Switch = false;
+		else
+			b_Switch = true;
+		d_BounceTime = 0.25f;
+	}
+
+	if (Application::IsKeyPressed(VK_ESCAPE))
+	{
+		Application app;
+		app.SetSceneNumber(0);
+		app.Run();
+	}
+	
+
+	camera.Update(f_TPCRotateBy, 0, 20, 6);
+	f_TPCRotateBy = 0.0f;
 }
 
 void TutorialScene2::Render()
@@ -350,17 +285,6 @@ void TutorialScene2::Render()
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1,
 			&lightPosition_cameraspace.x);
 	}
-
-	////<-----------Axes----------->
-	//modelStack.PushMatrix();
-	//RenderMesh(meshList[GEO_AXES], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Light ball Sphere lighting 1----------->
-	//modelStack.PushMatrix();
-	//modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	//RenderMesh(meshList[GEO_LIGHTBALL], false);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-5, 12, 13);
@@ -437,41 +361,16 @@ void TutorialScene2::Render()
 	modelStack.Translate(10, 0, -3);
 	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
 	modelStack.PopMatrix();
-
-
-	//if (collide)
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(1, 1, 0), 2, 66, 54);
-	//	modelStack.PopMatrix();
-	//}
-
-	//else
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(1, 1, 0), 2, 60, 54);
-	//	modelStack.PopMatrix();
-	//}
-
-	int speedct = abs(speed); // no idea what this does
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(speedct), Color(1, 1, 1), 3, 2, 55);
-	modelStack.PopMatrix();
-
-	//<--Get cameras position-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	modelStack.PopMatrix();
-	
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	modelStack.PopMatrix();
-
-	if (showIntro)
+	if (b_Switch)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_START2], Color(0, 0, 1), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
 
@@ -729,101 +628,6 @@ void TutorialScene2::DrawHUD(Mesh* mesh, Color color, bool enableLight, float si
 	modelStack.PopMatrix();
 
 	glEnable(GL_DEPTH_TEST);
-}
-
-void TutorialScene2::uploadItem(int newobject)
-{
-	forward = new Item(newobject);
-	if (first == NULL)
-	{
-		first = last = forward;
-		current = first;
-	}
-	else
-	{
-		last->next = forward;
-		forward->prev = last;
-		last = forward;
-	}
-}
-
-void TutorialScene2::printNext()
-{
-	Item *check;
-	check = current->next;
-	if (check != NULL)
-	{
-		current = check;
-		rendertag();
-	}
-	else if (check == NULL && current == first)
-	{
-		current = last;
-		rendertag();
-	}
-	else if (check == NULL && current == last)
-	{
-		current = first;
-		rendertag();
-	}
-}
-
-void TutorialScene2::printPrev()
-{
-	Item *check;
-	check = current->prev;
-	if (check != NULL)
-	{
-		current = check;
-		rendertag();
-	}
-	else if (check == NULL && current == first)
-	{
-		current = last;
-		rendertag();
-	}
-	else if (check == NULL && current == last)
-	{
-		current = first;
-		rendertag();
-	}
-}
-
-void TutorialScene2::rendertag()
-{
-	for (int i = 0; i < 34; i++)
-	{
-		if (current->data == i)
-		{
-			DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 8, 2);
-		}
-		if (current->prev != NULL && current->next != NULL)
-		{
-			if (current->prev->data == i)
-			{
-				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
-			}
-			if (current->next->data == i)
-			{
-				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
-			}
-		}
-		else if (current->prev == NULL && current->next != NULL)
-		{
-			if (current->next->data == i)
-			{
-				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 11, 2);
-			}
-		}
-		else if (current->prev != NULL && current->next == NULL)
-		{
-			if (current->prev->data == i)
-			{
-				DrawHUD(meshList[i], Color(0, 0, 0), false, 5, 5, 2);
-
-			}
-		}
-	}
 }
 
 void TutorialScene2::Exit()

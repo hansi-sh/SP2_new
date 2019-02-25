@@ -265,14 +265,14 @@ void MainMenuScene::Update(double dt)
 		if (i_Selector == 0)	//Start
 		{
 			Application app;
-			app.SetSceneNumber(7);
+			app.SetSceneNumber(1);
 			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
 		{
-			//Application app;
-			//app.SetSceneNumber(instruction scene number);
-			//app.Run();
+			Application app;
+			app.SetSceneNumber(4);
+			app.Run();
 		}
 		else if (i_Selector == 2)	//LeaderBoard
 		{
@@ -305,7 +305,7 @@ void MainMenuScene::Update(double dt)
 	if (Application::IsKeyPressed('O'))
 		light[0].position.y += (float)(LSPEED * dt);
 
-	camera.Update(dt);
+	camera.Update(dt, false);
 }
 
 void MainMenuScene::Render()

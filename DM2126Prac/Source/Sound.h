@@ -15,6 +15,7 @@ public:
 	void playSound(const char* music, bool looping);
 	void playSound(const char* music);
 	void setSoundVol(const float volume);
+	void stopSound();
 
 private:
 	static short count;// count how many sound playing

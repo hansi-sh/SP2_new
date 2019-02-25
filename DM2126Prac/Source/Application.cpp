@@ -127,7 +127,7 @@ void Application::Run()
 		scene = new PuzzleRoom();
 		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
 	}
-	if (GetSceneNumber()==2)
+	else if (GetSceneNumber()==2)
 	{
 		scene = new Scene2();
 		glfwSetCursorPosCallback(m_window, Scene2::mouse_callback);// when ever the cursor moves, this function will be called
@@ -135,6 +135,10 @@ void Application::Run()
 	else if (GetSceneNumber() == 3)
 	{
 		scene = new RaceScene();
+	}
+	else if (GetSceneNumber() == 4)
+	{
+		scene = new TutorialScene2();
 	}
 	else if (GetSceneNumber() == 7)	//Win screen
 	{

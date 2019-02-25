@@ -152,7 +152,9 @@ private:
 		GEO_RACETRACK,
 		GEO_AMBULANCE,
 
-		GEO_CAR,
+		GEO_CAR1,
+		GEO_CAR2,
+		GEO_CAR3,
 
 		//GEO_BOX1,
 		//GEO_BOX2,

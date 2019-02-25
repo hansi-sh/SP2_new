@@ -257,7 +257,7 @@ void WinScene::Update(double dt)
 
 	fps = 1.0f / (float)dt;
 
-	camera.Update(dt);
+	camera.Update(dt, false);
 }
 
 void WinScene::Render()

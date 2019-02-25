@@ -74,7 +74,6 @@ Vector3 enemy2::walking(float X, float Y, float PrevZ, double dt, bool checkmove
 		{
 			randNum = 0;
 		}
-		std::cout << randNum << std::endl;
 	}
 	if (randNum ==1)
 	{
