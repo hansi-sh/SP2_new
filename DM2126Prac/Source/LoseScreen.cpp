@@ -262,7 +262,7 @@ void LoseScene::Update(double dt)
 	}
 
 
-	camera.Update(dt);
+	camera.Update(dt, false);
 }
 
 void LoseScene::Render()

@@ -10,37 +10,9 @@
 #include <string>
 #include "Sound.h"
 
-float RaceScene::lastX = 0.0f;
-float RaceScene::lastY = 0.0f;
-//Camera2 RaceScene::camera = Camera2();
-
 RaceScene::RaceScene()
 {
 }
-
-//void RaceScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-//{
-//	float xoffset = (float)xpos - lastX;
-//	float yoffset = (float)ypos - lastY;
-//	float sensitivity = 0.05f;
-//
-//	lastX = (float)xpos;
-//	lastY = (float)ypos;
-//
-//	xoffset *= sensitivity;
-//	yoffset *= sensitivity;
-//
-//	Vector3 view = camera.target - camera.position;
-//	Mtx44 rotate;
-//	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-//	view = rotate * view;
-//
-//	Vector3 rightVector = view.Cross(camera.up);
-//	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-//	view = rotate * view;
-//
-//	camera.target = camera.position + view;
-//}
 
 RaceScene::~RaceScene()
 {
@@ -220,7 +192,12 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	//meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
-	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR1]->textureID = LoadTGA("Image//cartexture.tga");
+	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR2]->textureID = LoadTGA("Image//cartexture2.tga");
+	meshList[GEO_CAR3] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR3]->textureID = LoadTGA("Image//cartexture3.tga");
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
 	for (int i = 3; i < NUM_OBJ; i++)
 	{
@@ -283,10 +260,19 @@ void RaceScene::Update(double dt)
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{
 		timerunout = true;
+		Application app;
+		app.SetSceneNumber(8);
+		app.Run();
 	}
 	if (timerunout == false)
 	{
 		RaceTimer.v_UpdateTime(dt);
+	}
+	if (TranslateBodyZ >= 1350)
+	{
+		Application app;
+		app.SetSceneNumber(7);
+		app.Run();
 	}
 	for (int i = 0; i < 10; i++)	//golden
 	{
@@ -540,7 +526,6 @@ void RaceScene::Update(double dt)
 			{
 				dead = true;
 				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) *0.75));
-				std::cout << PlayerCar.f_GetSpeed() << std::endl;
 				
 			}
 
@@ -718,12 +703,28 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i <= 15; i++)
+	for (int i = 0; i <=4; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
 		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
-		RenderMesh(meshList[GEO_CAR], false);
+		RenderMesh(meshList[GEO_CAR1], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 5; i <= 9; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
+		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR2], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 10; i <= 15; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
+		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR3], false);
 		modelStack.PopMatrix();
 	}
 

@@ -313,6 +313,9 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_KEY1]->textureID = LoadTGA("Image//Key1.tga");
 	Obj[OBJ_KEY1] = new ObjectBox(Vector3(10, 52.50, 76), 16, 36, 10);
 
+	//KeyNote
+	meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("afs", Color(1, 1, 1), 1, 1, 1);
+	meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//keyonewords.tga");
 
 	meshList[GEO_TABLEPAINTING] = MeshBuilder::GenerateOBJ("tablepainting", "OBJ//tablepainting.obj");
 	meshList[GEO_TABLEPAINTING]->textureID = LoadTGA("Image//TablePainting.tga");
@@ -551,7 +554,8 @@ void PuzzleRoom::Update(double dt)
 		havekey1 = true;
 		havekey2 = true; 
 		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
-		meshList[GEO_KEY1]->textureID = LoadTGA("Image/InvKey1.tga");
+		meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
+		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyoneword");
 		uploadItem(27);
 		std::cout << "0" << std::endl;
 	}
@@ -644,14 +648,16 @@ void PuzzleRoom::Update(double dt)
 	//key1
 	if (key1int == true)
 	{
-		if (Application::IsKeyPressed('E'))
+		if (Application::IsKeyPressed('E') && elapsedtime > 1)
 		{
 			interactioncomplete = true;
 			havekey1 = true;
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_KEY1]->textureID = LoadTGA("Image//Black.tga");
+			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
 			uploadItem(27);
-
+			meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("twst",Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//keyonewords.tga");
+			uploadItem(43);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
@@ -957,7 +963,7 @@ void PuzzleRoom::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 	//PlayMusic();
-	camera.Update(dt);
+	camera.Update(dt,true);
 }
 
 void PuzzleRoom::Render()
@@ -1055,10 +1061,9 @@ void PuzzleRoom::Render()
 	{
 		
 	}
-	
 	//float time = 120;
 	//<--Get cameras position-->
-	modelStack.PushMatrix();
+	/*modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT],("Time"+ std::to_string(PuzzleTimer->d_GetPuzzleSceneTime())),Color(0, 1, 0), 2, 25, 25);
 	modelStack.PopMatrix();
 
@@ -1068,7 +1073,7 @@ void PuzzleRoom::Render()
 	
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	 modelStack.PopMatrix();
+	 modelStack.PopMatrix();*/
 	 if (interaction == true)
 	 {
 		 modelStack.PushMatrix();
