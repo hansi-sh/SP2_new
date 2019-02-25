@@ -7,7 +7,6 @@
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
-    <ClCompile Include="Source\PauseScreen.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Racing.cpp" />
@@ -25,7 +24,12 @@
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
     <ClCompile Include="Source\WinScreen.cpp" />
-    <ClCompile Include="Source\Leaderboard.cpp" />
+    <ClCompile Include="Source\TutorialScene2.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Leaderboard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -34,7 +38,6 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\LoseScreen.h" />
     <ClInclude Include="Source\MainMenu.h" />
-    <ClInclude Include="Source\PauseScreen.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Racing.h" />
@@ -55,7 +58,6 @@
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\WinScreen.h" />
-    <ClInclude Include="Source\Leaderboard.h" />
     <ClCompile Include="Source\Application.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -134,6 +136,12 @@
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClInclude Include="Source\TutorialScene2.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Leaderboard.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">

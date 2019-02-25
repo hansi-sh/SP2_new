@@ -57,7 +57,7 @@ void RaceScene::Init() //defines what shader to use
 	collider1 = 0;
 	collider2 = 0;
 
-	// sound
+	//<---Sound--->
 	music::player.init();
 	music::player.setSoundVol(0.5);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
@@ -332,6 +332,11 @@ void RaceScene::Update(double dt)
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
+
+		// Cancer af
+		//music::player.init();
+		//music::player.setSoundVol(0.5);
+		//music::player.playSound("Sound//Scene3//Accelerate2.wav");
 	}
 	else if (Application::IsKeyPressed('S'))//backward
 	{

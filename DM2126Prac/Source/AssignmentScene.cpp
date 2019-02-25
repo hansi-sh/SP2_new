@@ -81,17 +81,17 @@ void AssignmentScene::Init() //defines what shader to use
 	enemyX[1] = -15;
 	enemyY[1] = 64;
 	enemyZ[1] = -200;
-	RotateEnemyBody = 0.0f;
+	//RotateEnemyBody = 0.0f;
 
 	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
 	e[1].SetEnemyPosition(Vector3(enemyX[1], enemyY[1], enemyZ[1]));
 	enemyUpdatePos[0] = Vector3(0, 0, 0);
 	enemyUpdatePos[1] = Vector3(0, 0, 0);
-	f_RotateENEMYPrevFrame = 0.0f;
+	//f_RotateENEMYPrevFrame = 0.0f;
 	b_StepENEMYAccelerator = true;
 	b_StepENEMYBrakes = false;
-	b_ENEMYSteer = false;
-	f_ENEMYRotateAmt = 0.0f;
+	//b_ENEMYSteer = false;
+	//f_ENEMYRotateAmt = 0.0f;
 
 	f_TPCRotateBy = 0.0f;
 	
@@ -261,7 +261,7 @@ void AssignmentScene::Update(double dt)
 	else
 		b_viewStats = false;
 
-	f_RotateENEMYPrevFrame = RotateEnemyBody;
+	// f_RotateENEMYPrevFrame = RotateEnemyBody;
 	fps = 1.0f / (float)dt;
 
 	//if (Application::IsKeyPressed('I'))//forward
@@ -355,7 +355,7 @@ void AssignmentScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 	
-	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody,0);
+	// e[0].v_UpdateEnemyCarDirection(RotateEnemyBody,0);
 	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
 	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
 	enemyX[0] = enemyUpdatePos[0].x;

@@ -69,8 +69,6 @@ private:
 	float speed;
 	double delay;
 
-	void RenderSkybox();
-
 	bool b_BMO;
 	bool b_viewStats;
 
@@ -121,6 +119,10 @@ private:
 	int RNG = rand() % 100;
 	int leaderboard[100];
 	int counter = 0;
+
+	int first = 0;
+	int second = 0;
+	int third = 0;
 
 
 };

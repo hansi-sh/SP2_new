@@ -5,21 +5,21 @@
 #include "MeshBuilder.h"
 #include "Camera.h"
 #include "GLFW/glfw3.h"
-#include "Scene2.h"
+#include "TutorialScene2.h"
 #include "Utility.h"
 #include <string>
 #include "Sound.h"
 
-float Scene2::lastX = 0.0f;
-float Scene2::lastY = 0.0f;
-Camera2 Scene2::camera = Camera2();
+float TutorialScene2::lastX = 0.0f;
+float TutorialScene2::lastY = 0.0f;
+Camera2 TutorialScene2::camera = Camera2();
 
-Scene2::Scene2()
+TutorialScene2::TutorialScene2()
 {
 	first = last = forward = current = backward = NULL;
 }
 
-void Scene2::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void TutorialScene2::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	float xoffset = (float)xpos - lastX;
 	float yoffset = (float)ypos - lastY;
@@ -43,21 +43,17 @@ void Scene2::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	camera.target = camera.position + view;
 }
 
-Scene2::~Scene2()
+TutorialScene2::~TutorialScene2()
 {
 	delete AmbulanceTimer;
 }
 
-void Scene2::Init() //defines what shader to use
+void TutorialScene2::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	AmbulanceTimer = new StopWatchTimer;
-	checkmodelStack = false;
-	running = true;
-	bodyMovement = true;
-	b_BMO = true;
-	b_viewStats = false;
+
 	speed = 0;
 
 	delay = 0;
@@ -87,11 +83,6 @@ void Scene2::Init() //defines what shader to use
 	//<----for randomizing the instructions for player--->
 	srand(time(NULL));
 	instruction = rand() % 2;
-
-	//<--Music-->
-	b_musicSelected = false;
-	b_inPM = false;
-	b_inPC = false;
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -315,269 +306,17 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_HELP]->textureID = LoadTGA("Image//FrameNew.tga");
 
 	// Switching Stage
-	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
-	meshList[GEO_START]->textureID = LoadTGA("Image//Stage2.tga");
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
+	meshList[GEO_START]->textureID = LoadTGA("Image//Tutorial2.2.tga");
 }
 
 
-void Scene2::Update(double dt)
+void TutorialScene2::Update(double dt)
 {
-	delay += dt;
-
-	score = score + 0.2;
-
-	if (score > 20)
-	{
-		showIntro = false;
-	}
-
-	if (Application::IsKeyPressed(VK_BACK)) // testing for now
-	{
-		useSound = false;
-	}
-
-	if (Application::IsKeyPressed('1'))
-	{
-		
-	}
-	if (Application::IsKeyPressed('2'))
-	{
-		printNext();
-	}
-	if (nextStage || Application::IsKeyPressed('3'))
-	{
-		// leaderboard thingy
-		ofstream saveToFile("loli.txt", fstream::app);
-		saveToFile << score << endl;
-		
-		Application app;
-		app.SetSceneNumber(4); // go to RaceScene when done here -> double check isit 4
-		app.Run();
-	}
-	if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	if (Application::IsKeyPressed('0'))
-	{
-		TranslateBodyY = 0.0f;
-		TranslateBodyY = 15.0f;
-		TranslateBodyZ = 0.0f;
-	}
-	if (Application::IsKeyPressed('T'))
-	{
-		RotateBody = 180.0f;
-		if (TranslateBodyZ > -90.0f)
-		{
-			TranslateBodyZ -= (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else if (Application::IsKeyPressed('F'))
-	{
-		RotateBody = 270.0f;
-		if (TranslateBodyX > -90.0f)
-		{
-			TranslateBodyX -= (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else if (Application::IsKeyPressed('G'))
-	{
-		RotateBody = 0.0f;
-		if (TranslateBodyZ < 90.0f)
-		{
-			TranslateBodyZ += (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else if (Application::IsKeyPressed('H'))
-	{
-		RotateBody = 90.0f;
-		if (TranslateBodyX < 90.0f)
-		{
-			TranslateBodyX += (float)(dt * 16);
-			checkmodelStack = true;
-		}
-	}
-	else
-	{
-		checkmodelStack = false;
-		running = true;
-		bodyMovement = true;
-		LeftLegX = 90.0f;
-		RightLegX = 90.0f;
-		ArmRotation = 0.0f;
-		TranslateBodyY = 15.0f;
-
-	}
-
-	if (Application::IsKeyPressed('P'))
-		b_viewStats = true;
-	else
-		b_viewStats = false;
-
-	if (camera.position.x > 10 && camera.position.x < 13)
-	{
-		if (Application::IsKeyPressed('C') && (delay > 0.3)) // Get key delay from sihan
-		{
-			delay = 0;
-			collectDefi = true;
-			notification1 = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene2//PickUp.wav");
-			
-		}
-		// not suppose to be in actual game
-		// cheat key for obj to reappear
-		if (Application::IsKeyPressed('V') && (delay>0.3)) 
-		{
-			delay = 0;
-			collectDefi = false;
-			//if (collectDefi == false)
-			//{
-			//	uploadItem(8);
-			//}
-		}
-	}
-
-	if (camera.position.x > -3 && camera.position.x < 3 && 
-		camera.position.z > -8 && camera.position.z < -5)
-	{ 
-		if (Application::IsKeyPressed('C') && (delay > 0.3))
-		{
-			delay = 0;
-			collectKit = true;
-			notification2 = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene2//PickUp.wav");
-		}
-		if (Application::IsKeyPressed('V'))
-		{
-			collectKit = false;
-		}
-	}
-
-	if (Application::IsKeyPressed('M')) // Defi
-	{
-		notification1 = false;
-	}
-
-	if (Application::IsKeyPressed('N')) // Kit
-	{
-		notification2 = false;
-	}
-	
-	if (camera.position.x > 0 && camera.position.x < 5)
-	{
-		if (Application::IsKeyPressed('U') && collectDefi)
-		{
-			useDefi = true;
-		}
-
-		if (Application::IsKeyPressed('I') && collectKit)
-
-		{
-			useKit = true;
-		}
-	}
-
-	// Collision Box
-	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
-
-	for (int AllObjs = 1; AllObjs < NUM_OBJ; ++AllObjs)
-	{
-		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
-		{
-			collide = true;
-			camera.position = currentCamPos;
-			camera.target = currentCamTarget;
-			break;
-		}
-		collide = false;
-	}
-
-	if (!collide)
-	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
-	}
-
-	if (collide)
-	{
-		//music::player.init();
-		//music::player.setSoundVol(0.5);
-		//music::player.playSound("Sound//Scene2//PickUp.wav");
-	}
-
-	// If collision is true, disable player movement,
-	// When the player moves, check which keypress is selected and if detected
-	// , set previous position to current
-
-	fps = 1.0f / (float)dt;
-
-	// Light movement
-	if (Application::IsKeyPressed('I')) // backward
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K')) // forward
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J')) // left
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L')) // right
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U')) // down
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O')) // up
-		light[0].position.y += (float)(LSPEED * dt);
-
-	//<--Walking animation--> removed
-
-	if (getCurrentCam)
-	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
-	}
-
-	if (Application::IsKeyPressed('Z'))
-	{
-		light[0].type = Light::LIGHT_POINT;  // For a lamp post
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to POINT and pass the information to shader
-	}
-	else if (Application::IsKeyPressed('X'))
-	{
-		light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to DIRECTIONAL and pass the information to shader
-	}
-	else if (Application::IsKeyPressed('C'))
-	{
-		light[0].type = Light::LIGHT_SPOT; // For a torch light
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to SPOT and pass the information to shader
-	}
-
-	// PlayMusic();
-	camera.Update(dt);
+	// Empty
 }
 
-void Scene2::Render()
+void TutorialScene2::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -623,16 +362,6 @@ void Scene2::Render()
 	//RenderMesh(meshList[GEO_LIGHTBALL], false);
 	//modelStack.PopMatrix();
 
-	//<-----------Collision Box-------------->
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	//modelStack.Rotate(rotationangle, 0, 1, 0);
-	//RenderMesh(meshList[GEO_PLAYER], false);
-	//modelStack.PopMatrix();
-
-	//<--Lego Model-->
-
 	modelStack.PushMatrix();
 	modelStack.Translate(-5, 12, 13);
 	modelStack.Scale(3, 3, 3);
@@ -657,25 +386,6 @@ void Scene2::Render()
 	modelStack.Scale(1.5, 1, 1.5);
 	RenderMesh(meshList[GEO_STRETCHER], setTrueFalse);
 	modelStack.PopMatrix();
-
-	if (!collectDefi)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(20, 21, 0);
-		modelStack.Scale(2, 2, 2);
-		RenderMesh(meshList[GEO_DEFIBRILLATOR], setTrueFalse);
-		modelStack.PopMatrix();
-	}	
-
-	if (!collectKit)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(0, 7, -15);
-		modelStack.Scale(2, 2, 2);
-		modelStack.Rotate(90, 1, 0, 0);
-		RenderMesh(meshList[GEO_FIRSTAIDKIT], setTrueFalse);
-		modelStack.PopMatrix();
-	}
 
 
 	modelStack.PushMatrix();
@@ -728,18 +438,6 @@ void Scene2::Render()
 	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
 	modelStack.PopMatrix();
 
-	if (b_viewStats)
-	{
-		RenderMission();
-	}
-
-	else
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_HELP], Color(0, 0, 1), false, 1, 65, 56);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("View Task:[P]"), Color(1, 1, 0), 2, 54, 56);
-		modelStack.PopMatrix();
-	}
 
 	//if (collide)
 	//{
@@ -770,26 +468,6 @@ void Scene2::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();
 
-	if (collectDefi && notification1)
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Defibrillator added to"), Color(0, 0, 1), 2, 20, 35);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Inventory"), Color(0, 0, 1), 2, 33, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("[M] to close"), Color(0, 0, 1), 2, 29, 25);
-		modelStack.PopMatrix();
-	}
-
-	if (collectKit && notification2)
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("First Aid Kit added to"), Color(0, 0, 1), 2, 20, 35);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Inventory"), Color(0, 0, 1), 2, 33, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("[M] to close"), Color(0, 0, 1), 2, 29, 25);
-		modelStack.PopMatrix();
-	}
-
 	if (showIntro)
 	{
 		modelStack.PushMatrix();
@@ -797,81 +475,11 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	EndMission();
-
 }
 
-void Scene2::RenderMission() // has transparent box now
-{
-	if (instruction == 0)
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_FRAME], Color(1, 1, 0), false, 1, 40, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("1. Find Defibrillator"), Color(0, 0, 1), 2, 19, 27);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("2. Collect it [C]"), Color(0, 0, 1), 2, 19, 23);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("3. Use it on Patient[U]"), Color(0, 0, 1), 2, 19, 18);
-		modelStack.PopMatrix();
-	}
-	else if (instruction == 1)
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_FRAME], Color(1, 1, 0), false, 1, 40, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("1. Find First Aid Kit"), Color(0, 0, 1), 2, 19, 28);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("2. Collect it [C]"), Color(0, 0, 1), 2, 19, 23);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("3. Use it on Patient[I]"), Color(0, 0, 1), 2, 19, 18);
-		modelStack.PopMatrix();
-	}
-}
 
-void Scene2::EndMission()
-{
-	if (instruction == 0) // use defi
-	{
-		if (useDefi) // which is correct
-		{
-			modelStack.PushMatrix();
-			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
-			modelStack.PopMatrix();
-			nextStage = true;
-		} 
 
-		if (useKit) // which is wrong
-		{
-			modelStack.PushMatrix();
-			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
-			modelStack.PopMatrix();
-			nextStage = true;
-		}
-		
-	}
-
-	if (instruction == 1) // use kit
-	{
-		if (useKit) // which is correct
-		{
-			modelStack.PushMatrix();
-			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
-			modelStack.PopMatrix();
-			nextStage = true;
-		}
-
-		if (useDefi) // which is wrong
-		{
-			modelStack.PushMatrix();
-			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
-			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
-			modelStack.PopMatrix();
-			nextStage = true;
-		}
-	}
-}
-
-void Scene2::RenderMesh(Mesh *mesh, bool enableLight)
+void TutorialScene2::RenderMesh(Mesh *mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -916,7 +524,7 @@ void Scene2::RenderMesh(Mesh *mesh, bool enableLight)
 
 static const float SKYBOXSIZE = 30.f;
 
-void Scene2::RenderSkybox()
+void TutorialScene2::RenderSkybox()
 {
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
@@ -995,7 +603,7 @@ void Scene2::RenderSkybox()
 	//modelStack.PopMatrix();
 }
 
-void Scene2::RenderText(Mesh* mesh, std::string text, Color color)
+void TutorialScene2::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	if (!mesh || mesh->textureID <= 0)
 		return;
@@ -1024,7 +632,7 @@ void Scene2::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Scene2::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void TutorialScene2::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	if (!mesh || mesh->textureID <= 0) //Proper error check
 		return;
@@ -1063,7 +671,7 @@ void Scene2::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Scene2::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y)
+void TutorialScene2::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y)
 {
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -1123,7 +731,7 @@ void Scene2::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, floa
 	glEnable(GL_DEPTH_TEST);
 }
 
-void Scene2::uploadItem(int newobject)
+void TutorialScene2::uploadItem(int newobject)
 {
 	forward = new Item(newobject);
 	if (first == NULL)
@@ -1139,7 +747,7 @@ void Scene2::uploadItem(int newobject)
 	}
 }
 
-void Scene2::printNext()
+void TutorialScene2::printNext()
 {
 	Item *check;
 	check = current->next;
@@ -1160,7 +768,7 @@ void Scene2::printNext()
 	}
 }
 
-void Scene2::printPrev()
+void TutorialScene2::printPrev()
 {
 	Item *check;
 	check = current->prev;
@@ -1181,7 +789,7 @@ void Scene2::printPrev()
 	}
 }
 
-void Scene2::rendertag()
+void TutorialScene2::rendertag()
 {
 	for (int i = 0; i < 34; i++)
 	{
@@ -1218,7 +826,7 @@ void Scene2::rendertag()
 	}
 }
 
-void Scene2::Exit()
+void TutorialScene2::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)
 	{
