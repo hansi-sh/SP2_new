@@ -95,7 +95,7 @@ void RaceScene::Init() //defines what shader to use
 	}
 	
 
-	for (int i = 0; i < 14; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		enemyX[i] = 15;
 		enemyY[i] = 64;
@@ -107,7 +107,7 @@ void RaceScene::Init() //defines what shader to use
 		b_ENEMYSteer[i] = false;
 		f_ENEMYRotateAmt[i] = 0.0f;
 	}
-	for (int i = 15; i < 30; i++)
+	for (int i = 8; i < 15; i++)
 	{
 		enemyX[i] = -15;
 		enemyY[i] = 64;
@@ -388,12 +388,12 @@ void RaceScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		randomMove[i] = e[i].randchecker(randcheck[i], randomMove[i]);
 		enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[i], randomMove[i], randcheck[i]);
 		RotateEnemyBody[i] = e[i].getenemyrotate();
-		for (int i = 0; i < 14; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			if (enemyUpdatePos[i].z > 1400)
 			{
@@ -403,7 +403,7 @@ void RaceScene::Update(double dt)
 				enemyZ[i] = enemyUpdatePos[i].z;
 			}
 		}
-		for (int i = 15; i < 30; i++)
+		for (int i = 7; i < 15; i++)
 		{
 			if (enemyUpdatePos[i].z > 1400)
 			{
@@ -426,7 +426,7 @@ void RaceScene::Update(double dt)
 		Obj[i + 3]->setOBB(Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
 	}
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		Obj[i + 33]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
 	}
@@ -459,13 +459,13 @@ void RaceScene::Update(double dt)
 				{
 					if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
 					{
-						e[collider1 - 33].v_SetEnemySpeed((e[collider1 - 33].f_GetEnemySpeed()*1.1));
-						e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*0.5));
+						e[collider1 - 33].v_SetEnemySpeed((e[collider1 - 33].f_GetEnemySpeed()*1.5));
+						e[collider2 - 33].v_SetEnemySpeed(-(e[collider2 - 33].f_GetEnemySpeed()*1.0));
 					}
 					else
 					{
-						e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*0.5));
-						e[collider2 - 33].v_SetEnemySpeed((e[collider2 - 33].f_GetEnemySpeed()*1.1));
+						e[collider1 - 33].v_SetEnemySpeed(-(e[collider1 - 33].f_GetEnemySpeed()*1.0));
+						e[collider2 - 33].v_SetEnemySpeed((e[collider2 - 33].f_GetEnemySpeed()*1.5));
 					}
 
 					Obj[collider1]->setOBB(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
@@ -487,38 +487,38 @@ void RaceScene::Update(double dt)
 		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
 		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
 
-		if (i_CollidedWith >= 1 && i_CollidedWith < 2) /*&& i_CollidedWith <= last car AI*/ //num in object type
+		if (i_CollidedWith >= 33 && i_CollidedWith < 48) /*i_CollidedWith <= last car AI*/ //num in object type
 		{
-			if (TranslateBodyZ > enemyZ[i_CollidedWith - 1])
+			if (TranslateBodyZ > enemyZ[i_CollidedWith - 33])
 			{
-				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 1]) >= f_HeightAIP)	//if AI directly hits back of the car of player
+				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 33]) >= f_HeightAIP)	//if AI directly hits back of the car of player
 				{
 					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+					e[i_CollidedWith - 33].v_SetEnemySpeed(-(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0));
 				}
 				else
 				{
 					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+					e[i_CollidedWith - 33].v_SetEnemySpeed(-(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0));
 				}
 			}
 			else
 			{
-				if ((enemyZ[i_CollidedWith - 1] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
+				if ((enemyZ[i_CollidedWith - 33] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
 				{
 					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.5));
+					e[i_CollidedWith - 33].v_SetEnemySpeed((e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5));
 				}
 				else
 				{
 					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+					e[i_CollidedWith - 33].v_SetEnemySpeed(-(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0));
 				}
 			}
 		}
 		else
 		{
-			PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
+			PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
 		}
 
 		/*TranslateBodyX = prevBodyX;
@@ -631,7 +631,7 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i < 30; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
