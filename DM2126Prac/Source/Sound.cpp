@@ -15,7 +15,7 @@ Sound::Sound()
 Sound::~Sound()
 {
 	--count;
-	engine->drop(); // delete engine
+ 	engine->drop(); // delete engine
 }
 
 bool Sound::init()
