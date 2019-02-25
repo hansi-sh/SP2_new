@@ -53,6 +53,8 @@ void AssignmentScene::Init() //defines what shader to use
 
 	//<collison class>
 	collide = false;
+	rotationangle = 0;
+	updatedangle = 0;
 
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
@@ -73,33 +75,23 @@ void AssignmentScene::Init() //defines what shader to use
 
 	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
 
-	AIWalkX[0] = 30;
-	AIWalkY[0] = 64;
-	AIWalkZ[0] = -200;
-	checkmove[0] = false;
-	AIpos[0] = (Vector3(AIWalkX[0], AIWalkY[0], AIWalkZ[0]));
-
 	enemyX[0] = 15;
 	enemyY[0] = 64;
-	enemyZ[0] = -200;
+	enemyZ[0]= -200;
 	enemyX[1] = -15;
 	enemyY[1] = 64;
 	enemyZ[1] = -200;
-	RotateEnemyBody[0] = 0.0f;
-	RotateEnemyBody[1] = 0.0f;
-	randcheck[0] = false;
-	randcheck[1] = false;
+	RotateEnemyBody = 0.0f;
 
 	e[0].SetEnemyPosition(Vector3(enemyX[0], enemyY[0], enemyZ[0]));
 	e[1].SetEnemyPosition(Vector3(enemyX[1], enemyY[1], enemyZ[1]));
 	enemyUpdatePos[0] = Vector3(0, 0, 0);
 	enemyUpdatePos[1] = Vector3(0, 0, 0);
+	f_RotateENEMYPrevFrame = 0.0f;
 	b_StepENEMYAccelerator = true;
 	b_StepENEMYBrakes = false;
-	b_ENEMYSteer[0] = false;
-	b_ENEMYSteer[1] = false;
-	f_ENEMYRotateAmt[0] = 0.0f;
-	f_ENEMYRotateAmt[1] = 0.0f;
+	b_ENEMYSteer = false;
+	f_ENEMYRotateAmt = 0.0f;
 
 	f_TPCRotateBy = 0.0f;
 	
@@ -230,13 +222,17 @@ void AssignmentScene::Init() //defines what shader to use
 
 void AssignmentScene::Update(double dt)
 {
-	//AIpos[0] = AIwalker[0].walking(AIWalkX[0]);
 	if (Application::IsKeyPressed('1'))
 	{
+		Application app;
+		app.SetSceneNumber(1);
+		app.Run();
 	}
 	if (Application::IsKeyPressed('2'))
 	{
-		
+		Application app;
+		app.SetSceneNumber(2);
+		app.Run();
 	}
 	if (Application::IsKeyPressed('3'))
 	{
@@ -265,6 +261,7 @@ void AssignmentScene::Update(double dt)
 	else
 		b_viewStats = false;
 
+	f_RotateENEMYPrevFrame = RotateEnemyBody;
 	fps = 1.0f / (float)dt;
 
 	//if (Application::IsKeyPressed('I'))//forward
@@ -358,34 +355,12 @@ void AssignmentScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 	
-	for (int i = 0; i < 2; i++)
-	{
-		randomMove[i] = e[i].randchecker(randcheck[i], randomMove[i]);
-		enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[i], randomMove[i], randcheck[i]);
-		RotateEnemyBody[i] = e[i].getenemyrotate();
-		if (enemyUpdatePos[0].z > 200)
-		{
-			e[0].SetEnemyPosition(Vector3(15, 64, -200));
-			enemyX[0] = enemyUpdatePos[0].x;
-			enemyY[0] = enemyUpdatePos[0].y;
-			enemyZ[0] = enemyUpdatePos[0].z;
-		}
-		if (enemyUpdatePos[1].z > 200)
-		{
-			e[1].SetEnemyPosition(Vector3(-15, 64, -200));
-			enemyX[1] = enemyUpdatePos[1].x;
-			enemyY[1] = enemyUpdatePos[1].y;
-			enemyZ[1] = enemyUpdatePos[1].z;
-		}
-		else
-		{
-			enemyX[i] = enemyUpdatePos[i].x;
-			enemyY[i] = enemyUpdatePos[i].y;
-			enemyZ[i] = enemyUpdatePos[i].z;
-		}
-
-
-	}
+	e[0].v_UpdateEnemyCarDirection(RotateEnemyBody,0);
+	e[0].E_carspeed(b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt);
+	enemyUpdatePos[0] = e[0].V_UpdateenemyCarPos(dt);
+	enemyX[0] = enemyUpdatePos[0].x;
+	enemyY[0] = enemyUpdatePos[0].y;
+	enemyZ[0] = enemyUpdatePos[0].z;
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
@@ -406,46 +381,6 @@ void AssignmentScene::Update(double dt)
 		}
 		collide = false;
 	}
-	for (int AllObjs2 = 0; AllObjs2 < NUM_OBJ; ++AllObjs2)
-	{
-		for (int i = 0; i < NUM_OBJ; ++i)
-		{
-			if (AllObjs2 == i)
-				break;
-			else if (ObjectBox::checkCollision(*Obj[AllObjs2], *Obj[i]))
-			{
-				AIcollide = true;
-				collider1 = AllObjs2;
-				collider2 = i;
-				break;
-			}
-			AIcollide = false;
-		}
-	}
-	if (AIcollide == true)
-	{
-		if (enemyZ[collider1 - 1] - enemyZ[collider2 - 1] >= 6)
-		{
-			e[collider1 - 1].v_SetEnemySpeed((e[collider1 - 1].f_GetEnemySpeed()*1.5));
-			e[collider2 - 1].v_SetEnemySpeed(-(e[collider2 - 1].f_GetEnemySpeed()));
-		}
-		else
-		{
-			e[collider1 - 1].v_SetEnemySpeed(-(e[collider1 - 1].f_GetEnemySpeed()*0.5));
-			e[collider2 - 1].v_SetEnemySpeed((e[collider2 - 1].f_GetEnemySpeed()*1.5));
-		}
-
-
-
-		/*randcheck[collider1 - 1] = false;
-		randomMove[collider1 - 1] = e[collider1 - 1].randchecker(randcheck[collider1 - 1], randomMove[collider1 - 1]);
-		enemyUpdatePos[collider1 - 1] = e[collider1 - 1].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[collider1 - 1], randomMove[collider1 - 1], randcheck[collider1 - 1]);*/
-
-		Obj[OBJ_ENEMY1]->setOBB(Vector3(enemyX[collider1 - 1], enemyY[collider1 - 1], enemyZ[collider1 - 1]));
-		e[collider1 - 1].SetEnemyPosition(Vector3(enemyX[collider1 - 1], enemyY[collider1 - 1], enemyZ[collider1 - 1]));
-		AIcollide = false;
-
-	}
 
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
@@ -461,26 +396,26 @@ void AssignmentScene::Update(double dt)
 			{
 				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 1]) >= f_HeightAIP)	//if AI directly hits back of the car of player
 				{
-					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
+					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.3));
 					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
 				}
 			}
 			else
 			{
 				if ((enemyZ[i_CollidedWith - 1] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.5));
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed((e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.3));
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 1.0));
-					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 1.0));
+					PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
+					e[i_CollidedWith - 1].v_SetEnemySpeed(-(e[i_CollidedWith - 1].f_GetEnemySpeed() * 0.5));
 				}
 			}
 		}

@@ -59,7 +59,6 @@ void MainMenuScene::Init() //defines what shader to use
 	f_TInstruction = 22.0f;
 	f_TLeaderBoard = 22.0f;
 	f_TExit = 22.0f;
-	d_BounceTime = 0.25f;
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -168,6 +167,19 @@ void MainMenuScene::Update(double dt)
 {
 	d_BounceTime -= dt;
 
+	if (Application::IsKeyPressed('1'))
+	{
+
+	}
+	if (Application::IsKeyPressed('2'))
+	{
+		
+	}
+	if (Application::IsKeyPressed('3'))
+	{
+
+	}
+
 	if (Application::IsKeyPressed('6'))
 	{
 		glEnable(GL_CULL_FACE);
@@ -248,13 +260,13 @@ void MainMenuScene::Update(double dt)
 			f_TExit += dt * i_SpeedUp;
 	}
 
-	if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
+	if (Application::IsKeyPressed(VK_RETURN))
 	{
 		if (i_Selector == 0)	//Start
 		{
-			//Application app;
-			//app.SetSceneNumber(8);
-			//app.Run();
+			Application app;
+			app.SetSceneNumber(7);
+			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
 		{
