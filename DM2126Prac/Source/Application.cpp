@@ -136,22 +136,12 @@ void Application::Run()
 	{
 		scene = new RaceScene();
 	}
-	else if (GetSceneNumber() == 4)	//Win screen
-	{
-		scene = new RaceScene();
-		//glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
-	}
-	else // change back to PuzzleRoom when pushing 
-	{
-		scene = new PuzzleRoom();
-		glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called, AssignmentScene::mouse_callback);
-		scene = new WinScene();	
-	}
 	else if (GetSceneNumber() == 7)	//Win screen
 	{
-		scene = new WinScene();	
+		scene = new WinScene();
+		//glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
 	}
-	else if (GetSceneNumber() == 8)	//Win screen
+	else if (GetSceneNumber() == 8)	//Lose screen
 	{
 		scene = new LoseScene();	
 	}
