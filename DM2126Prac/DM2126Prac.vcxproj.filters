@@ -7,7 +7,6 @@
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
-    <ClCompile Include="Source\PauseScreen.cpp" />
     <ClCompile Include="Source\Physics.cpp" />
     <ClCompile Include="Source\Item.cpp" />
     <ClCompile Include="Source\Racing.cpp" />
@@ -34,7 +33,6 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\LoseScreen.h" />
     <ClInclude Include="Source\MainMenu.h" />
-    <ClInclude Include="Source\PauseScreen.h" />
     <ClInclude Include="Source\Physics.h" />
     <ClInclude Include="Source\Item.h" />
     <ClInclude Include="Source\Racing.h" />
