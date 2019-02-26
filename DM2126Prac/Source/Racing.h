@@ -120,6 +120,12 @@ private:
 	Vector3 AIpos[30];
 	int movechoice[30];
 
+	// stuff for sound:
+	bool warning; // print the out of bound
+	bool alertSound; // for warning sound
+	double delay;
+	int countDown;
+
 	float f_HeightAIP;	//AI + players car height
 
 	enum GEOMETRY_TYPE
@@ -158,6 +164,8 @@ private:
 
 		//GEO_BOX1,
 		//GEO_BOX2,
+		
+		GEO_WARNING, // if car onto pavement
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
@@ -234,6 +242,8 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+
+	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
 	StopWatchTimer RaceTimer;
 	bool timerunout = false;

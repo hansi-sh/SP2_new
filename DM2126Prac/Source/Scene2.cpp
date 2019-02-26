@@ -461,7 +461,6 @@ void Scene2::Update(double dt)
 		//to do: switch light type to SPOT and pass the information to shader
 	}
 
-	// PlayMusic();
 	camera.Update(dt, false);
 }
 

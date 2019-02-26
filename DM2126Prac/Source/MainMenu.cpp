@@ -8,6 +8,7 @@
 #include "MainMenu.h"
 #include "Utility.h"
 #include <string>
+#include "Sound.h"
 
 float MainMenuScene::lastX = 0.0f;
 float MainMenuScene::lastY = 0.0f;
@@ -49,6 +50,10 @@ void MainMenuScene::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
+
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	music::player.playSound("Sound//Other//MainMenuBGM.wav", true);
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -169,12 +174,16 @@ void MainMenuScene::Update(double dt)
 
 	if (Application::IsKeyPressed('2') && Application::IsKeyPressed(VK_CONTROL))
 	{
+		music::player.stopSound(); // End all sound when switch stage
+
 		Application app;
 		app.SetSceneNumber(2);
 		app.Run();
 	}
 	if (Application::IsKeyPressed('3') && Application::IsKeyPressed(VK_CONTROL))
 	{
+		music::player.stopSound(); // End all sound when switch stage
+
 		Application app;
 		app.SetSceneNumber(3);
 		app.Run();
@@ -264,18 +273,24 @@ void MainMenuScene::Update(double dt)
 	{
 		if (i_Selector == 0)	//Start
 		{
+			music::player.stopSound(); // End all sound when switch stage
+			
 			Application app;
 			app.SetSceneNumber(1);
 			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
 		{
+			music::player.stopSound(); // End all sound when switch stage
+
 			Application app;
 			app.SetSceneNumber(4);
 			app.Run();
 		}
 		else if (i_Selector == 2)	//LeaderBoard
 		{
+			music::player.stopSound(); // End all sound when switch stage
+
 			//Application app;
 			//app.SetSceneNumber(1);
 			//app.Run();

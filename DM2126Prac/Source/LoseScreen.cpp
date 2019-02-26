@@ -8,6 +8,7 @@
 #include "LoseScreen.h"
 #include "Utility.h"
 #include <string>
+#include "Sound.h"
 
 float LoseScene::lastX = 0.0f;
 float LoseScene::lastY = 0.0f;
@@ -49,6 +50,10 @@ void LoseScene::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
+
+	music::player.init();
+	music::player.setSoundVol(0.2);
+	music::player.playSound("Sound//Other//Lose2.wav");
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -249,12 +254,16 @@ void LoseScene::Update(double dt)
 	{
 		if (i_Selector == 0)	//Restart from puzzle one
 		{
+			music::player.stopSound();
+
 			Application app;
 			app.SetSceneNumber(7);
 			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
 		{
+			music::player.stopSound();
+
 			Application app;
 			app.SetSceneNumber(0);
 			app.Run();

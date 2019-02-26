@@ -60,22 +60,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	// testing irrklan
 	music::player.init();
 	music::player.setSoundVol(0.5);
-	// music::player.playSound("Sound//Scene1//PuzzleBGM1.wav", true);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
-
-	//<----for BMO body animation movement when running---->
-	//LeftLegX = 90.0f;
-	//RightLegX = 90.0f;
-	//ArmRotation = 0.0f;
-	//TranslateBodyX = 0.0f;
-	//TranslateBodyY = 15.0f;
-	//TranslateBodyZ = 0.0f;
-	//RotateBody = 0.0f;
-
-	//<--Music-->
-	/*b_musicSelected = false;
-	b_inPM = false;
-	b_inPC = false;*/
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -408,7 +393,7 @@ void PuzzleRoom::Update(double dt)
 		&& camera.position.z > 25 && camera.position.z < 45)
 	{ 
 		music::player.init();
-		music::player.setSoundVol(0.3);
+		music::player.setSoundVol(0.1);
 		music::player.playSound("Sound//Scene1//Static2.wav");
 	}
 
@@ -465,10 +450,6 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	
@@ -566,9 +547,6 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete = true;
 			safecracking = true;
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (safecracking == true)
@@ -670,10 +648,6 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete =true;
 			patienthint = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (havekey3 == true && patientint == true)
@@ -693,11 +667,14 @@ void PuzzleRoom::Update(double dt)
 		{
 			timeleft = true;
 			interactioncomplete = true;
+
+			music::player.stopSound();
 			Application app;
 			app.SetSceneNumber(2);
 			app.Run();
 		}
 	}
+
 	if (doorunlocked == false && finaldoorint == true)
 	{
 		if (Application::IsKeyPressed('E'))

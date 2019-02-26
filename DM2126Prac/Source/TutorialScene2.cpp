@@ -28,6 +28,10 @@ void TutorialScene2::Init() //defines what shader to use
 	b_Switch = false;
 	d_BounceTime = 0.25f;
 
+	music::player.init();
+	music::player.setSoundVol(0.2);
+	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
+
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
@@ -241,6 +245,8 @@ void TutorialScene2::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_ESCAPE))
 	{
+		music::player.stopSound();
+
 		Application app;
 		app.SetSceneNumber(0);
 		app.Run();
@@ -324,11 +330,6 @@ void TutorialScene2::Render()
 	RenderMesh(meshList[GEO_CABINET2], setTrueFalse);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-23, 10, 12);
-	//RenderMesh(meshList[GEO_TEST], setTrueFalse);
-	//modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 0, 13);
 	modelStack.Rotate(270, 0, 1, 0);
@@ -373,7 +374,6 @@ void TutorialScene2::Render()
 		DrawHUD(meshList[GEO_START2], Color(0, 0, 1), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
-
 }
 
 

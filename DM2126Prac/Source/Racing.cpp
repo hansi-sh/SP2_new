@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include <string>
 #include "Sound.h"
+#include <fstream>
 
 RaceScene::RaceScene()
 {
@@ -32,7 +33,7 @@ void RaceScene::Init() //defines what shader to use
 
 	//<---Sound--->
 	music::player.init();
-	music::player.setSoundVol(0.5);
+	music::player.setSoundVol(0.4);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	//<----For player car---->
@@ -52,6 +53,10 @@ void RaceScene::Init() //defines what shader to use
 
 	i_CollidedWith = 0;
 	i_CollidedWith2 = 0;
+
+	warning = false;
+	alertSound = false;
+	delay = 0;
 
 	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
 
@@ -245,9 +250,13 @@ void RaceScene::Init() //defines what shader to use
 	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, /*636.0f*/77, 20.0f), 20.0f, 40.0f, 2830.0f);
 	/*meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);*/
 	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, /*639.0f*/77, 20.0f), 20.0f, 50.0f, 2830.0f);
+
+	meshList[GEO_WARNING] = MeshBuilder::GenerateQuad("Out Of Bound", Color(0, 0, 1), 22, 22, 0);
+	meshList[GEO_WARNING]->textureID = LoadTGA("Image//OutOfBound.tga");
+
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(40);
+		RaceTimer.v_SetRaceSceneTime(60);
 	}
 	else
 	{
@@ -258,7 +267,13 @@ void RaceScene::Init() //defines what shader to use
 void RaceScene::Update(double dt)
 {
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
-	{
+	{		
+		ofstream saveFile("loli.txt", fstream::app);
+		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
+		saveFile << 9 << endl;
+
+		music::player.stopSound();
+
 		timerunout = true;
 		Application app;
 		app.SetSceneNumber(8);
@@ -268,8 +283,13 @@ void RaceScene::Update(double dt)
 	{
 		RaceTimer.v_UpdateTime(dt);
 	}
-	if (TranslateBodyZ >= 1350)
+	if (TranslateBodyZ >= 1400)
 	{
+		ofstream saveFile("loli.txt", fstream::app);
+		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
+		saveFile << 9 << endl;
+		music::player.stopSound();
+
 		Application app;
 		app.SetSceneNumber(7);
 		app.Run();
@@ -307,7 +327,6 @@ void RaceScene::Update(double dt)
 	}
 	if (Application::IsKeyPressed('3'))
 	{
-		
 	}
 
 	if (Application::IsKeyPressed('6'))
@@ -333,16 +352,22 @@ void RaceScene::Update(double dt)
 		b_viewStats = false;
 
 
+	// delay audio
+	delay = delay + 0.2;
 
 	if (Application::IsKeyPressed('W'))//forward
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
 
-		// Cancer af
-		//music::player.init();
-		//music::player.setSoundVol(0.5);
-		//music::player.playSound("Sound//Scene3//Accelerate2.wav");
+		if (delay > 30) 
+		{
+			music::player.init();
+			music::player.setSoundVol(1);
+			music::player.playSound("Sound//Scene3//Accelerate1.wav");
+			delay = 0;
+		}
+
 	}
 	else if (Application::IsKeyPressed('S'))//backward
 	{
@@ -379,12 +404,14 @@ void RaceScene::Update(double dt)
 			b_Steer = true;
 			f_UpdatedAngle = (RotateBody + f_RotateAmt) - RotateBody;
 			RotateBody += f_RotateAmt;
+
 		}
 		else if (Application::IsKeyPressed('D'))//rotate left
 		{
 			b_Steer = true;
 			f_UpdatedAngle = (RotateBody - f_RotateAmt) - RotateBody;
 			RotateBody -= f_RotateAmt;
+
 		}
 		else
 		{
@@ -529,6 +556,9 @@ void RaceScene::Update(double dt)
 				
 			}
 
+			music::player.init();
+			music::player.setSoundVol(0.3);
+			music::player.playSound("Sound//Scene3//CrashHuman.wav");
 		}
 	}
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
@@ -546,6 +576,10 @@ void RaceScene::Update(double dt)
 				{
 					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
 					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
+
+					music::player.init();
+					music::player.setSoundVol(0.3);
+					music::player.playSound("Sound//Scene3//CrashCar.wav");
 				}
 				else
 				{
@@ -559,6 +593,10 @@ void RaceScene::Update(double dt)
 				{
 					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
 					e[i_CollidedWith - 33].v_SetEnemySpeed((fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5)));
+
+					music::player.init();
+					music::player.setSoundVol(0.3);
+					music::player.playSound("Sound//Scene3//CrashCar.wav");
 				}
 				else
 				{
@@ -631,16 +669,48 @@ void RaceScene::Update(double dt)
 	}
 	if (TranslateBodyZ>=1400)
 	{
+		ofstream saveFile("loli.txt", fstream::app);
+		 saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
+		//saveFile << 9 << endl;
+
 		music::player.stopSound(); // end all music at the des of scene
 		
 		Application app;
-		app.SetSceneNumber(9);
+		app.SetSceneNumber(7);
 		app.Run();
 	}
 
 	//camera.Update(dt);
 	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
 	f_TPCRotateBy = 0.0f;
+
+	// Check if out of bound -> ask sihan tis part
+
+	if (camera.position.x > 27 || camera.position.x < -27)
+	{
+		warning = true;
+		if (delay > 10)
+		{
+			music::player.init();
+			music::player.setSoundVol(1);
+			music::player.playSound("Sound//Scene3//Warning.wav");
+			delay = 0;
+		}
+	}
+	else
+	{
+		warning = false;
+	}
+
+	// Issue: audio v blurred out
+	//countDown = RaceTimer.d_GetRaceSceneTime();
+	//if (countDown < 40) // change time to 12
+	//{
+	//	music::player.init();
+	//	music::player.setSoundVol(0.5);
+	//	music::player.playSound("Sound//Scene3//HurryUp.wav");
+	//}
+
 }
 
 void RaceScene::Render()
@@ -653,22 +723,6 @@ void RaceScene::Render()
 	modelStack.LoadIdentity();
 
 	RenderSkybox();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	//modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
-	//RenderMesh(meshList[GEO_CUBE], false);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(52, 77, 20);
-	//RenderMesh(meshList[GEO_BOX1], false);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-52, 77, 20);
-	//RenderMesh(meshList[GEO_BOX1], false);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4);
@@ -781,8 +835,8 @@ void RaceScene::Render()
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
 	modelStack.PopMatrix();
-
 	}
+
 	else
 	{
 		//<--View stats for nerds-->
@@ -812,9 +866,17 @@ void RaceScene::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
 		modelStack.PopMatrix();
 	}
+
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
 	modelStack.PopMatrix();
+
+	if (warning)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
 }
 
 void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
@@ -909,6 +971,7 @@ void RaceScene::RenderSkybox()
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
+
 }
 
 void RaceScene::RenderButton(int geo_circle, int geo_cylinder)
@@ -987,6 +1050,66 @@ void RaceScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, fl
 	projectionStack.PopMatrix();
 	viewStack.PopMatrix();
 	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
+void RaceScene::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y)
+{
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Scale(size, size, size);
+	modelStack.Translate(x, y, 0);
+
+	Mtx44 MVP, modelView, modelView_inverse_transpose;
+	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	modelView = viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
+
+	if (enableLight)
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
+		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
+		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE,
+			&modelView_inverse_transpose.a[0]);
+		//load material
+		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
+		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
+		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
+		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	}
+	if (mesh->textureID > 0)
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+	}
+	mesh->Render();
+	if (mesh->textureID > 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+
 	glEnable(GL_DEPTH_TEST);
 }
 

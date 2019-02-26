@@ -4,6 +4,8 @@
 #include "irrklang.h"
 #include <stdexcept>
 using namespace irrklang;
+#include <string>
+using namespace std;
 #pragma comment(lib, "irrKlang.lib")
 
 class Sound
