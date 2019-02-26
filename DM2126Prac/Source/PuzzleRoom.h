@@ -211,6 +211,7 @@ private:
 		GEO_START, // Raphael Added
 		GEO_KEY1NOTE,
 		GEO_TIME,
+		GEO_Centre,//sihan added
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
