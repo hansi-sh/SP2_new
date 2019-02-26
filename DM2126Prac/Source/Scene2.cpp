@@ -291,6 +291,9 @@ void Scene2::Init() //defines what shader to use
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage2.tga");
+
+	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
+	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 }
 
 
@@ -699,6 +702,32 @@ void Scene2::Render()
 		rendertag();
 	}
 
+	modelStack.PushMatrix();
+	DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
+	modelStack.PopMatrix();
+
+	int timecount = AmbulanceTimer->d_GetAmbulanceTimer();
+	if (timecount >= 10)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		if (timecount % 2)
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(0.9294f, 0.2156f, 0.1372f), 2.5, 40.8, 57.5);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
+			modelStack.PopMatrix();
+		}
+	}
 }
 
 void Scene2::RenderMission() // has transparent box now
