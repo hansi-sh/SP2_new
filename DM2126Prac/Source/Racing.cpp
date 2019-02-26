@@ -268,7 +268,7 @@ void RaceScene::Init() //defines what shader to use
 
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(60);
+		RaceTimer.v_SetRaceSceneTime(35);
 	}
 	else
 	{
@@ -907,6 +907,13 @@ void RaceScene::Render()
 		{
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+			modelStack.PopMatrix();
+		}
+
+		if (b_showIntro)
+		{
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 			modelStack.PopMatrix();
 		}
 }

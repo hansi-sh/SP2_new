@@ -250,7 +250,7 @@ void WinScene::Update(double dt)
 			music::player.stopSound();
 
 			Application app;
-			app.SetSceneNumber(8);
+			app.SetSceneNumber(1);
 			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
