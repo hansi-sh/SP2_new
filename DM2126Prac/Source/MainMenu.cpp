@@ -52,7 +52,7 @@ void MainMenuScene::Init() //defines what shader to use
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
 	music::player.init();
-	music::player.setSoundVol(0.5);
+	music::player.setSoundVol(0.3);
 	music::player.playSound("Sound//Other//MainMenuBGM.wav", true);
 
 	glGenVertexArrays(1, &m_vertexArrayID);

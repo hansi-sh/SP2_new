@@ -43,5 +43,6 @@ void Sound::setSoundVol(const float volume)
 void Sound::stopSound()
 {
 	// Bug not fixed yet
+	// -> removed initmusic from every but the one in init scene
 	engine->stopAllSounds();
 }

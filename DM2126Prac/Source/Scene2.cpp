@@ -60,7 +60,7 @@ void Scene2::Init() //defines what shader to use
 
 	// testing irrklan
 	music::player.init();
-	music::player.setSoundVol(0.5);
+	music::player.setSoundVol(0.2);
 	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
 
 	//<collison class>
@@ -381,8 +381,7 @@ void Scene2::Update(double dt)
 			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 			uploadItem(8);
 
-			music::player.init();
-			music::player.setSoundVol(0.5);
+			music::player.setSoundVol(0.2);
 			music::player.playSound("Sound//Scene2//PickUp.wav");
 			
 			b_defiCollected = true;
@@ -409,8 +408,7 @@ void Scene2::Update(double dt)
 			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
 			uploadItem(9);
 
-			music::player.init();
-			music::player.setSoundVol(0.5);
+			music::player.setSoundVol(0.2);
 			music::player.playSound("Sound//Scene2//PickUp.wav");
 
 			b_firstAidKitCollected = true;
@@ -464,13 +462,6 @@ void Scene2::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 
-	if (b_collide)
-	{
-		//music::player.init();
-		//music::player.setSoundVol(0.5);
-		//music::player.playSound("Sound//Scene2//PickUp.wav");
-	}
-
 	// If collision is true, disable player movement,
 	// When the player moves, check which keypress is selected and if detected
 	// , set previous position to current
@@ -502,7 +493,6 @@ void Scene2::Update(double dt)
 		//to do: switch light type to SPOT and pass the information to shader
 	}
 
-	// PlayMusic();
 	camera.Update(dt, true);
 }
 

@@ -40,7 +40,7 @@ void RaceScene::Init() //defines what shader to use
 
 	//<---Sound--->
 	music::player.init();
-	music::player.setSoundVol(0.4);
+	music::player.setSoundVol(0.2);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	// For pop up screen
@@ -119,8 +119,6 @@ void RaceScene::Init() //defines what shader to use
 	}
 
 	f_TPCRotateBy = 0.0f;
-
-
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -273,7 +271,7 @@ void RaceScene::Init() //defines what shader to use
 	
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(35);
+		RaceTimer.v_SetRaceSceneTime(60);
 	}
 	else
 	{
@@ -293,10 +291,6 @@ void RaceScene::Update(double dt)
 
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{		
-		ofstream saveFile("loli.txt", fstream::app);
-		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		saveFile << 9 << endl;
-
 		music::player.stopSound();
 
 		timerunout = true;
@@ -311,8 +305,7 @@ void RaceScene::Update(double dt)
 	if (f_TranslateBodyZ >= 1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
-		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		saveFile << 9 << endl;
+		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
 		music::player.stopSound();
 
 		Application app;
@@ -396,8 +389,7 @@ void RaceScene::Update(double dt)
 
 		if (d_Delay > 30) 
 		{
-			music::player.init();
-			music::player.setSoundVol(1);
+			music::player.setSoundVol(0.2);
 			music::player.playSound("Sound//Scene3//Accelerate1.wav");
 			d_Delay = 0;
 		}
@@ -603,7 +595,6 @@ void RaceScene::Update(double dt)
 				
 			}
 
-			music::player.init();
 			music::player.setSoundVol(0.3);
 			music::player.playSound("Sound//Scene3//CrashHuman.wav");
 		}
@@ -619,7 +610,6 @@ void RaceScene::Update(double dt)
 					P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) * 1.5));
 					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 
-					music::player.init();
 					music::player.setSoundVol(0.3);
 					music::player.playSound("Sound//Scene3//CrashCar.wav");
 				}
@@ -636,7 +626,6 @@ void RaceScene::Update(double dt)
 					P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 1.0)));
 					e[i_CollidedWith - 33].v_SetEnemySpeed((fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5)));
 
-					music::player.init();
 					music::player.setSoundVol(0.3);
 					music::player.playSound("Sound//Scene3//CrashCar.wav");
 				}
@@ -688,19 +677,6 @@ void RaceScene::Update(double dt)
 		f_TPCRotateBy = 1.0f;
 	}
 	
-	if (f_TranslateBodyZ >= 1400)
-	{
-		ofstream saveFile("loli.txt", fstream::app);
-		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		//saveFile << 9 << endl;
-
-		music::player.stopSound(); // end all music at the des of scene
-
-		Application app;
-		app.SetSceneNumber(7);
-		app.Run();
-	}
-
 	// Check if out of bound -> ask sihan tis part
 
 	if (f_TranslateBodyX > 20 || f_TranslateBodyX < -20) //fix rap
@@ -708,8 +684,7 @@ void RaceScene::Update(double dt)
 		b_Warning = true;
 		if (d_Delay > 10)
 		{
-			music::player.init();
-			music::player.setSoundVol(1);
+			music::player.setSoundVol(0.2);
 			music::player.playSound("Sound//Scene3//Warning.wav");
 			d_Delay = 0;
 		}
@@ -718,15 +693,6 @@ void RaceScene::Update(double dt)
 	{
 		b_Warning = false;
 	}
-
-	// Issue: audio v blurred out
-	//i_CountDown = RaceTimer.d_GetRaceSceneTime();
-	//if (i_CountDown < 40) // change time to 12
-	//{
-	//	music::player.init();
-	//	music::player.setSoundVol(0.5);
-	//	music::player.playSound("Sound//Scene3//HurryUp.wav");
-	//}
 
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime <0.0f)
 	{

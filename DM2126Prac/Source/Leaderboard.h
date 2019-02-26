@@ -113,12 +113,12 @@ private:
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
 	// <<---Leaderboard stuff--->>
-	int i_RNG = rand() % 100;
-	int i_leaderboard[100];
+	float i_RNG;
+	float i_leaderboard[100];
 	int i_counter = 0;
-	int i_first = 0;
-	int i_second = 0;
-	int i_third = 0;
+	float i_first = 0;
+	float i_second = 0;
+	float i_third = 0;
 };
 
 #endif
