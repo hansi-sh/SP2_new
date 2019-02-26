@@ -16,10 +16,8 @@ public:
 	int randchecker(bool randomise,int random);
 	Vector3 V_UpdateenemyCarPos(double dt);
 	Vector3 enemyMove(Vector3 player ,bool stepAccelerator, bool stepBrakes, bool steerWheel, double dt, float RotateEnemyBody,int random,bool randcheck);
-	Vector3 collidedwithPlayer(Vector3 player);
 private:
-	float E_carSpeed, E_Acceleration,E_rotateAmt, E_Rotate;
-	Vector3 E_Position, E_Direction;
-	bool randch;
+	float F_EnemyCarSpeed, F_EnemyAcceleration, F_EnemyRotateAmt, F_EnemyRotate;
+	Vector3 V_EnemyPosition, V_EnemyDirection;
 };
 
