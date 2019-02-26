@@ -480,7 +480,6 @@ void TutorialPuzzleRoom::CreepyHouse()
 
 	//TablePainting
 	RenderMesh(meshList[GEO_TABLEPAINTING], true);
-
 	//Safe
 	RenderMesh(meshList[GEO_SAFE], true);
 	RenderMesh(meshList[GEO_SAFEDOOR], true);
@@ -566,7 +565,6 @@ void TutorialPuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_HOUSE], true);
 
 	modelStack.PopMatrix();
-
 
 }
 
@@ -696,7 +694,6 @@ void TutorialPuzzleRoom::DrawHUD(Mesh* mesh, Color color, bool enableLight, floa
 
 	glEnable(GL_DEPTH_TEST);
 }
-
 void TutorialPuzzleRoom::Exit()
 {
 	for (int i = 0; i < NUM_GEOMETRY; ++i)

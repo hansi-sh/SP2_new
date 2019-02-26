@@ -629,7 +629,14 @@ void RaceScene::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to SPOT and pass the information to shader
 	}
-
+	if (TranslateBodyZ>=1400)
+	{
+		music::player.stopSound(); // end all music at the des of scene
+		
+		Application app;
+		app.SetSceneNumber(9);
+		app.Run();
+	}
 
 	//camera.Update(dt);
 	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);

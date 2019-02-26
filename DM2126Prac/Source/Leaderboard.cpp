@@ -316,26 +316,17 @@ void Leaderboard::Render()
 			&lightPosition_cameraspace.x);
 	}
 
-	//<--Get cameras position-->
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-	
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	//modelStack.PopMatrix();
-
 	//<---Print Leaderboard--->
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("First: " + std::to_string(first)), Color(1, 0, 0), 2, 2, 40);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("First: " + std::to_string(first)), Color(1, 0, 0), 2, 30, 40);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Second: " + std::to_string(second)), Color(1, 0, 0), 2, 2, 38);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Second: " + std::to_string(second)), Color(1, 0, 0), 2, 30, 38);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Third: " + std::to_string(third)), Color(1, 0, 0), 2, 2, 36);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Third: " + std::to_string(third)), Color(1, 0, 0), 2, 30, 36);
 	modelStack.PopMatrix();
 
 

@@ -29,10 +29,10 @@
     <ClCompile Include="Source\Leaderboard.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TutorialPuzzleRoom.cpp">
+    <ClCompile Include="Source\TutorialRacing.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\TutorialRacing.cpp">
+    <ClCompile Include="Source\TutorialPuzzleRoom.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
