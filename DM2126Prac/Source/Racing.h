@@ -230,7 +230,6 @@ private:
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
 	StopWatchTimer RaceTimer;
-	bool timerunout = false;
 
 	bool b_showIntro;
 	double d_score;
