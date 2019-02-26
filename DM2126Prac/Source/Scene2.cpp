@@ -502,7 +502,6 @@ void Scene2::Update(double dt)
 		//to do: switch light type to SPOT and pass the information to shader
 	}
 
-<<<<<<< HEAD
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
 	{
 		if (b_pause)
@@ -557,9 +556,7 @@ void Scene2::Update(double dt)
 		camera.Update(dt, false);
 	else
 		camera.Update(dt, true);
-=======
-	camera.Update(dt, true);
->>>>>>> 38d2696c8d3be3c7b8fbcdba88037d454960ec51
+
 }
 
 void Scene2::Render()

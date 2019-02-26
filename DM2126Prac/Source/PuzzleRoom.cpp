@@ -52,7 +52,9 @@ void PuzzleRoom::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	PuzzleTimer = new StopWatchTimer;
-	b_checkmodelStack = false;
+	d_BounceTime = 0.0f;
+	i_Selector = 0;
+	b_pause = false;
 	
 	b_itemcollect = false;
 	b_viewStats = false;
@@ -382,6 +384,10 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_NOTE] = MeshBuilder::GenerateQuad("note", Color(1, 1, 1), 14, 5, 0);
 	meshList[GEO_NOTE]->textureID = LoadTGA("Image//note.tga");
 
+	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
+
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
 }
 
 void PuzzleRoom::Update(double dt)
@@ -389,6 +395,7 @@ void PuzzleRoom::Update(double dt)
 	
 	// Raphael Added
 	score = score + 0.2;
+	d_BounceTime -= dt;
 	if (score > 20)
 	{
 		b_showIntro = false;
@@ -402,7 +409,7 @@ void PuzzleRoom::Update(double dt)
 		b_timerunout = true;
 	}
 	//Prevent time from going negative
-	if (b_timerunout == false)
+	if (b_timerunout == false && b_pause == false)
 	{
 		PuzzleTimer->v_UpdateTime(dt);
 	}
@@ -882,8 +889,62 @@ void PuzzleRoom::Update(double dt)
 		currentCamPos = camera.position;
 		currentCamTarget = camera.target;
 	}
-	//PlayMusic();
-	camera.Update(dt,true);
+
+	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
+	{
+		if (b_pause)
+			b_pause = false;
+		else
+			b_pause = true;
+		d_BounceTime = 0.3;
+	}
+
+	if (b_pause)
+	{
+		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector > 0)
+				--i_Selector;
+			else
+				i_Selector = 2;
+
+			d_BounceTime = 0.25;
+		}
+		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector < 2)
+				++i_Selector;
+			else
+				i_Selector = 0;
+
+			d_BounceTime = 0.25;
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector == 0)	//Resume
+				b_pause = false;
+			else if (i_Selector == 1)	//Restart
+			{
+				Application app;
+				app.SetSceneNumber(2);
+				app.Run();
+			}
+			else if (i_Selector == 2)	//Main menu
+			{
+				Application app;
+				app.SetSceneNumber(0);
+				app.Run();
+			}
+			d_BounceTime = 0.25;
+		}
+	}
+
+	if (b_pause)
+		camera.Update(dt, false);
+	else
+		camera.Update(dt, true);
+
 }
 
 void PuzzleRoom::Render()
@@ -1110,6 +1171,39 @@ void PuzzleRoom::Render()
 			 RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
 			 modelStack.PopMatrix();
 		 }
+	 }
+
+	 if (b_pause)
+	 {
+		 modelStack.PushMatrix();
+		 DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+		 modelStack.PopMatrix();
+
+		 if (i_Selector == 0)
+		 {
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+		 }
+		 else if (i_Selector == 1)
+		 {
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.5);
+		 }
+		 else
+		 {
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 14);
+		 }
+
+
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
+		 modelStack.PopMatrix();
+
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.3);
+		 modelStack.PopMatrix();
+
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
+		 modelStack.PopMatrix();
 	 }
 }
 
