@@ -33,7 +33,7 @@ void TutorialPuzzleRoom::Init() //defines what shader to use
 	f_TPCRotateBy = 90.0f;
 
 	music::player.init();
-	music::player.setSoundVol(0.2);
+	music::player.setSoundVol(0.1);
 	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
 
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -314,6 +314,8 @@ void TutorialPuzzleRoom::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_ESCAPE))
 	{
+		music::player.stopSound();
+
 		Application app;
 		app.SetSceneNumber(0);
 		app.Run();

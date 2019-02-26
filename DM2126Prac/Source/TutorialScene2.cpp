@@ -29,10 +29,6 @@ void TutorialScene2::Init() //defines what shader to use
 	d_BounceTime = 0.25f;
 	f_TPCRotateBy = 0.0f;
 
-	music::player.init();
-	music::player.setSoundVol(0.2);
-	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
-
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 

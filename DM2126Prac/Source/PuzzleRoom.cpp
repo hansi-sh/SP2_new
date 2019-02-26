@@ -59,7 +59,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	// testing irrklan
 	music::player.init();
-	music::player.setSoundVol(0.5);
+	music::player.setSoundVol(0.2);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
 	i_itemcount = 0;
 	i_totalitem = 0;
@@ -281,20 +281,16 @@ void PuzzleRoom::Init() //defines what shader to use
 		Obj[OBJ_PILLOW] = new ObjectBox(Vector3(21, 58.50, -86.03), 6, 65, 34.82);
 	}
 	
-
 	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
 	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 
 	meshList[GEO_SECRETWALL] = MeshBuilder::GenerateOBJ("Book1", "OBJ//secretwall.obj");
 	meshList[GEO_SECRETWALL]->textureID = LoadTGA("Image//SecretWall2.tga");
 
-
-
 	meshList[GEO_SAFE] = MeshBuilder::GenerateOBJ("Book1", "OBJ//safebox.obj");
 	meshList[GEO_SAFE]->textureID = LoadTGA("Image//SafeBox.tga");
 	Obj[OBJ_SAFE] = new ObjectBox(Vector3(110.55, 58.50, 135.23), 48, 65, 48);
 	Obj[OBJ_SAFEINT] = new ObjectBox(Vector3(110.55, 58.50, 135.23), 51, 65, 51);
-
 
 	meshList[GEO_SAFEDOOR] = MeshBuilder::GenerateOBJ("Book1", "OBJ//safedoor.obj");
 	meshList[GEO_SAFEDOOR]->textureID = LoadTGA("Image//SafeDoor.tga");
@@ -388,11 +384,6 @@ void PuzzleRoom::Init() //defines what shader to use
 
 }
 
-//void PuzzleRoom::PlayMusic()
-//{
-//	
-//}
-
 void PuzzleRoom::Update(double dt)
 {
 	
@@ -402,16 +393,6 @@ void PuzzleRoom::Update(double dt)
 	{
 		b_showIntro = false;
 	}
-
-	// Raphael Added -> not working 
-	if (camera.position.x > 80 && camera.position.x < 90 
-		&& camera.position.z > 25 && camera.position.z < 45)
-	{ 
-		music::player.init();
-		music::player.setSoundVol(0.1);
-		music::player.playSound("Sound//Scene1//Static2.wav");
-	}
-
 
 	f_elapsedtime += dt;
 	//Timer
@@ -457,8 +438,7 @@ void PuzzleRoom::Update(double dt)
 			{
 				b_door1open = !b_door1open;
 				f_bouncetime = f_elapsedtime + 0.4f;
-				music::player.init();
-				music::player.setSoundVol(0.5);
+				music::player.setSoundVol(0.2);
 				music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
 			}
 
@@ -492,10 +472,6 @@ void PuzzleRoom::Update(double dt)
 			{
 				b_secretdooropen = !b_secretdooropen;
 				f_bouncetime = f_elapsedtime + 0.4f;
-
-				music::player.init();
-				music::player.setSoundVol(0.5);
-				music::player.playSound("Sound//Scene1//MouseClick.wav");
 			}
 		}
 
@@ -625,9 +601,6 @@ void PuzzleRoom::Update(double dt)
 			meshList[GEO_NOTE] = MeshBuilder::GenerateQuad("note", Color(1, 1, 1), 1, 1, 0);
 			meshList[GEO_NOTE]->textureID = LoadTGA("Image//note.tga");
 			v_uploadItem(45);
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//PickUp.wav");
 		}
 		if (b_draweropen == false && f_drawertranslation <= 1.5 && interactioncomplete == true)
 		{
@@ -643,6 +616,8 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (Application::IsKeyPressed('E') && f_elapsedtime > 2)
 		{
+			music::player.setSoundVol(0.2);
+			music::player.playSound("Sound//Scene1//PickUp.wav");
 			f_elapsedtime = 0;
 			interactioncomplete = true;
 			b_havekey2 = true;
@@ -650,9 +625,6 @@ void PuzzleRoom::Update(double dt)
 			meshList[GEO_KEY2] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY2]->textureID = LoadTGA("Image//InvKey2.tga");
 			v_uploadItem(31);
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//PickUp.wav");
 		}
 	}
 	//key1
@@ -660,6 +632,8 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (Application::IsKeyPressed('E') && f_elapsedtime > 2)
 		{
+			music::player.setSoundVol(0.2);
+			music::player.playSound("Sound//Scene1//PickUp.wav");
 			f_elapsedtime = 0;
 			interactioncomplete = true;
 			b_havekey1 = true;
@@ -667,9 +641,6 @@ void PuzzleRoom::Update(double dt)
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
 			v_uploadItem(27);
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//PickUp.wav");
 			b_collectionkey1 = true;
 		}
 	}
@@ -719,7 +690,7 @@ void PuzzleRoom::Update(double dt)
 	if (Application::IsKeyPressed('5'))
 	{
 		music::player.stopSound(); // end all music at the des of scene
-		
+
 		Application app;
 		app.SetSceneNumber(2);
 		app.Run();
