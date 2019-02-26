@@ -53,6 +53,9 @@ void Scene2::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	AmbulanceTimer = new StopWatchTimer;
+	d_BounceTime = 0.0f;
+	i_Selector = 0;
+	b_pause = false;
 
 	f_speed = 0;
 
@@ -294,12 +297,18 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
 	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
+
+	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
+
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
 }
 
 
 void Scene2::Update(double dt)
 {
 	d_delay += dt;
+	d_BounceTime -= dt;
 	// Timer-> aorion added
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
@@ -308,7 +317,7 @@ void Scene2::Update(double dt)
 		app.SetSceneNumber(8);
 		app.Run();
 	}
-	if (b_timerunout == false)
+	if (b_timerunout == false && b_pause == false)
 	{
 		AmbulanceTimer->v_UpdateTime(dt);
 	}
@@ -502,8 +511,60 @@ void Scene2::Update(double dt)
 		//to do: switch light type to SPOT and pass the information to shader
 	}
 
-	// PlayMusic();
-	camera.Update(dt, true);
+	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
+	{
+		if (b_pause)
+			b_pause = false;
+		else
+			b_pause = true;
+		d_BounceTime = 0.3;
+	}
+
+	if (b_pause)
+	{
+		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector > 0)
+				--i_Selector;
+			else
+				i_Selector = 2;
+
+			d_BounceTime = 0.25;
+		}
+		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector < 2)
+				++i_Selector;
+			else
+				i_Selector = 0;
+
+			d_BounceTime = 0.25;
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector == 0)	//Resume
+				b_pause = false;
+			else if (i_Selector == 1)	//Restart
+			{
+				Application app;
+				app.SetSceneNumber(2);
+				app.Run();
+			}
+			else if (i_Selector == 2)	//Main menu
+			{
+				Application app;
+				app.SetSceneNumber(0);
+				app.Run();
+			}
+			d_BounceTime = 0.25;
+		}
+	}
+
+	if (b_pause)
+		camera.Update(dt, false);
+	else
+		camera.Update(dt, true);
 }
 
 void Scene2::Render()
@@ -646,17 +707,6 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	//<--Get cameras position-->
-	// Delete when submitting
-	// Keeping first in case of any bug fix
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-	//
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	//modelStack.PopMatrix();
-
 	if (b_collectDefi && b_notification1)
 	{
 		modelStack.PushMatrix();
@@ -717,6 +767,40 @@ void Scene2::Render()
 			modelStack.PopMatrix();
 		}
 	}
+
+	if (b_pause)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+		modelStack.PopMatrix();
+
+		if (i_Selector == 0)
+		{
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+		}
+		else if (i_Selector == 1)
+		{
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.5);
+		}
+		else
+		{
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 14);
+		}
+
+
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.3);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
+		modelStack.PopMatrix();
+	}
+
 }
 
 void Scene2::RenderMission() // has transparent box now

@@ -291,9 +291,6 @@ void MainMenuScene::Update(double dt)
 		{
 			music::player.stopSound(); // End all sound when switch stage
 
-			//Application app;
-			//app.SetSceneNumber(1);
-			//app.Run();
 			Application app;
 			app.SetSceneNumber(9);
 			app.Run();
