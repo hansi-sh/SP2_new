@@ -370,7 +370,7 @@ void Scene2::Update(double dt)
 
 	if (camera.position.x > 10 && camera.position.x < 13)
 	{
-		if (Application::IsKeyPressed('C') && (delay > 0.3) && defiCollected) // Get key delay from sihan
+		if (Application::IsKeyPressed('C') && (delay > 0.3) && defiCollected==false) // Get key delay from sihan
 		{
 			delay = 0;
 			collectDefi = true;
@@ -398,7 +398,7 @@ void Scene2::Update(double dt)
 	if (camera.position.x > -3 && camera.position.x < 3 && 
 		camera.position.z > -8 && camera.position.z < -5)
 	{ 
-		if (Application::IsKeyPressed('C') && (delay > 0.3) && firstAidKitCollected)
+		if (Application::IsKeyPressed('C') && (delay > 0.3) && firstAidKitCollected==false)
 		{
 			delay = 0;
 			collectKit = true;
@@ -697,7 +697,7 @@ void Scene2::Render()
 
 	EndMission();
 
-	if (collectDefi)
+	if (collectDefi || collectKit)
 	{
 		rendertag();
 	}
