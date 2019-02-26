@@ -24,7 +24,7 @@ void TutorialScene2::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
-	setTrueFalse = false;
+	b_SetTrueFalse = false;
 	b_Switch = false;
 	d_BounceTime = 0.25f;
 	f_TPCRotateBy = 0.0f;
@@ -42,7 +42,7 @@ void TutorialScene2::Init() //defines what shader to use
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	LSPEED = 30.0f;
+	f_LSPEED = 30.0f;
 
 	// Change here for camera initial position
 	camera.Init(Vector3(0, 20, 6), Vector3(-10, 0, 0), Vector3(0, 1, 0));
@@ -111,12 +111,9 @@ void TutorialScene2::Init() //defines what shader to use
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], light[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], light[0].exponent);
 
-	glUniform1i(m_parameters[U_NUMLIGHTS], 1);//if you add lights, add number here
+	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
-
-	//Guide lines - Turn on if need
-	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//WallWindow.tga");
@@ -261,7 +258,6 @@ void TutorialScene2::Update(double dt)
 		app.Run();
 	}
 	
-
 	camera.Update(f_TPCRotateBy, 0, 20, 6);
 	f_TPCRotateBy = 0.0f;
 }
@@ -306,16 +302,16 @@ void TutorialScene2::Render()
 	modelStack.Scale(3, 3, 3);
 	modelStack.Rotate(270, 0, 0, 1);
 	modelStack.Rotate(270, 0, 1, 0);
-	RenderMesh(meshList[GEO_HAIR], setTrueFalse);
-	RenderMesh(meshList[GEO_FACE], setTrueFalse);
-	RenderMesh(meshList[GEO_BODY], setTrueFalse);
-	RenderMesh(meshList[GEO_RARM], setTrueFalse);
-	RenderMesh(meshList[GEO_LARM], setTrueFalse);
-	RenderMesh(meshList[GEO_RHAND], setTrueFalse);
-	RenderMesh(meshList[GEO_LHAND], setTrueFalse);
-	RenderMesh(meshList[GEO_RLEG], setTrueFalse);
-	RenderMesh(meshList[GEO_LLEG], setTrueFalse);
-	RenderMesh(meshList[GEO_CROTCH], setTrueFalse);
+	RenderMesh(meshList[GEO_HAIR], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_FACE], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_BODY], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_RARM], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_LARM], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_RHAND], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_LHAND], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_RLEG], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_LLEG], b_SetTrueFalse);
+	RenderMesh(meshList[GEO_CROTCH], b_SetTrueFalse);
 	modelStack.PopMatrix();
 
 	//<--Stuff in Ambulance Scene-->
@@ -323,53 +319,52 @@ void TutorialScene2::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 6);
 	modelStack.Scale(1.5, 1, 1.5);
-	RenderMesh(meshList[GEO_STRETCHER], setTrueFalse);
+	RenderMesh(meshList[GEO_STRETCHER], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-18, 0, -15);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_CABINET], setTrueFalse);
+	RenderMesh(meshList[GEO_CABINET], b_SetTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-23, 0, 15);
 	modelStack.Scale(1.5, 1.5, 1.5);
-	RenderMesh(meshList[GEO_CABINET2], setTrueFalse);
+	RenderMesh(meshList[GEO_CABINET2], b_SetTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 0, 13);
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(1.5, 1.5, 1.5);
-	RenderMesh(meshList[GEO_CHAIR], setTrueFalse);
+	RenderMesh(meshList[GEO_CHAIR], b_SetTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(3, 23, -15);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE1], setTrueFalse); // same side as cabinet
+	RenderMesh(meshList[GEO_TOPSHELVE1], b_SetTrueFalse); // same side as cabinet
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-10, 23, 15);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE2], setTrueFalse); // diff side as cabinet
+	RenderMesh(meshList[GEO_TOPSHELVE2], b_SetTrueFalse); // diff side as cabinet
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(10, 23, 15);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE3], setTrueFalse); // diff side as cabinet
+	RenderMesh(meshList[GEO_TOPSHELVE3], b_SetTrueFalse); // diff side as cabinet
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
 	modelStack.Translate(10, 0, -3);
-	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
+	RenderMesh(meshList[GEO_METALSHELVE], b_SetTrueFalse);
 	modelStack.PopMatrix();
 	if (!b_Switch)
 	{
@@ -438,77 +433,47 @@ void TutorialScene2::RenderSkybox()
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.0f, 1.0f, -1.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_BACK], setTrueFalse);
+	RenderMesh(meshList[GEO_BACK], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 15.0f, -21.0f);
-	//RenderMesh(meshList[GEO_TEST2], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.0f, 1.0f, 1.0f);
 	modelStack.Rotate(180, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_FRONT], setTrueFalse);
+	RenderMesh(meshList[GEO_FRONT], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 15.0f, 20.0f);
-	//RenderMesh(meshList[GEO_TEST1], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, 20.0f);
 	modelStack.Translate(0.0f, 1.0f, 0.0f); // y ori 2
 	modelStack.Rotate(180, 0.0f, 0.0f, 1.0f);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
-	RenderMesh(meshList[GEO_TOP], setTrueFalse);
+	RenderMesh(meshList[GEO_TOP], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 30.0f, 0.0f); 
-	//RenderMesh(meshList[GEO_TEST3], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, 20.0f);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
 	modelStack.Translate(0.0f, -0.00f, 0.0f);
-	RenderMesh(meshList[GEO_BOTTOM], setTrueFalse);
+	RenderMesh(meshList[GEO_BOTTOM], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0.0f, 0.0f, 0.0f); 
-	//RenderMesh(meshList[GEO_TEST4], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(-1.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_LEFT], setTrueFalse);
+	RenderMesh(meshList[GEO_LEFT], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-30.0f, 15.0f, 0.0f);
-	//RenderMesh(meshList[GEO_TEST5], setTrueFalse);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.98f, 0.96f, 0.0f);
 	modelStack.Rotate(-90, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_RIGHT], setTrueFalse);
+	RenderMesh(meshList[GEO_RIGHT], b_SetTrueFalse);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(30.0f, 15.0f, 0.0f);
-	//RenderMesh(meshList[GEO_TEST6], setTrueFalse);
-	//modelStack.PopMatrix();
 }
 
 void TutorialScene2::RenderText(Mesh* mesh, std::string text, Color color)

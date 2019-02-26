@@ -170,7 +170,7 @@ private:
 		OBJ_walker8,   //Golden mushroom
 		OBJ_walker9,   //Golden mushroom
 		OBJ_walker10,  //Golden mushroom
-		OBJ_walker11,  //Normal mushroom
+		k,  //Normal mushroom
 		OBJ_walker12,  //Normal mushroom
 		OBJ_walker13,  //Normal mushroom
 		OBJ_walker14,  //Normal mushroom
