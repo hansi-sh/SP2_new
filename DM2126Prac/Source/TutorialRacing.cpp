@@ -199,7 +199,12 @@ void TutorialRaceScene::Init() //defines what shader to use
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 	//meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
-	meshList[GEO_CAR] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR1]->textureID = LoadTGA("Image//cartexture.tga");
+	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR2]->textureID = LoadTGA("Image//cartexture2.tga");
+	meshList[GEO_CAR3] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
+	meshList[GEO_CAR3]->textureID = LoadTGA("Image//cartexture3.tga");
 	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
 	for (int i = 3; i < NUM_OBJ; i++)
 	{
@@ -648,12 +653,28 @@ void TutorialRaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	for (int i = 0; i <= 15; i++)
+	for (int i = 0; i <= 4; i++)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(f_enemyX[i], f_enemyY[i], f_enemyZ[i]);
 		modelStack.Rotate(f_RotateEnemyBody[i], 0, 1, 0);
-		RenderMesh(meshList[GEO_CAR], false);
+		RenderMesh(meshList[GEO_CAR1], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 5; i <= 9; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(f_enemyX[i], f_enemyY[i], f_enemyZ[i]);
+		modelStack.Rotate(f_RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR2], false);
+		modelStack.PopMatrix();
+	}
+	for (int i = 10; i <= 15; i++)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(f_enemyX[i], f_enemyY[i], f_enemyZ[i]);
+		modelStack.Rotate(f_RotateEnemyBody[i], 0, 1, 0);
+		RenderMesh(meshList[GEO_CAR3], false);
 		modelStack.PopMatrix();
 	}
 

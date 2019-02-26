@@ -460,6 +460,20 @@ void RaceScene::Update(double dt)
 	f_TranslateBodyY = V_UpdatedPlayerPos.y;
 	f_TranslateBodyZ = V_UpdatedPlayerPos.z;
 
+	for (int i = 0; i < 30; i++)
+	{
+		for (int i = 0; i < 30; i++)
+		{
+			if (i == i)
+			{
+				break;
+			}
+			else if (f_enemyZ[i] == f_enemyZ[i])
+			{
+				f_enemyZ[i] = ((rand() % 2750) - 1300);
+			}
+		}
+	}
 	if (b_movement==true)
 	{
 		for (int i = 0; i < 15; i++)
