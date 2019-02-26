@@ -659,18 +659,17 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (Application::IsKeyPressed('E') && elapsedtime > 1)
 		{
+			elapsedtime = 0;
 			interactioncomplete = true;
 			havekey1 = true;
 			itemcollect = true;
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
 			uploadItem(27);
-			meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("twst",Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//keyonewords.tga");
-			uploadItem(43);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
+			collectionkey1 = true;
 		}
 	}
 	//Patient
@@ -850,7 +849,7 @@ void PuzzleRoom::Update(double dt)
 				break;
 			}
 			//Key1
-			if (AllObjs == 20)
+			if (AllObjs == 20 && collectionkey1 ==false)
 			{
 				key1int = true;
 				interaction = true;
@@ -987,6 +986,7 @@ void PuzzleRoom::Render()
 
 	RenderSkybox();
 	CreepyHouse();
+			
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
@@ -1105,15 +1105,16 @@ void PuzzleRoom::Render()
 			 interactioncomplete = true;
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Nice Painting"), Color(1, 1, 1), 2, 4, 42);
-		 modelStack.PopMatrix();}
+		 modelStack.PopMatrix();
+		 }
 	 }
 	 if (havekey1 == true)
 	 {
+		 modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Unlocks Door Perhaps"), Color(0, 0, 0), 2, 40, 30);
 		DrawHUD(meshList[GEO_KEY1NOTE], Color(0, 0, 1),false, 0.5, 40, 30);
-		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
-		meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
-		uploadItem(27);
+		rendertag();
+		modelStack.PopMatrix();
 	 }
 	 if (havekey2 == true)
 	 {

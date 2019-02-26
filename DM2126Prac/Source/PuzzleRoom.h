@@ -126,6 +126,7 @@ private:
 	//key1
 	bool key1int;
 	bool havekey1 = false;
+	bool collectionkey1 = false;
 	//key2
 	bool key2int;
 	bool havekey2 = false;
