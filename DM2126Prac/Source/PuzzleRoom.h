@@ -217,6 +217,7 @@ private:
 		GEO_CROTCH,
 		GEO_START, // Raphael Added
 		GEO_KEY1NOTE,
+		GEO_TIME,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE

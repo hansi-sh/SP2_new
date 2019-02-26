@@ -119,6 +119,8 @@ private:
 	Vector3 AIpos[30];
 	int movechoice[30];
 
+	bool movement;
+
 	// stuff for sound:
 	bool warning; // print the out of bound
 	bool alertSound; // for warning sound
