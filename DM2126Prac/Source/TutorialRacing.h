@@ -48,7 +48,6 @@ public:
 	TutorialRaceScene();
 	~TutorialRaceScene();
 
-	//static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();
@@ -153,6 +152,8 @@ private:
 		GEO_AMBULANCE,
 
 		GEO_CAR,
+		GEO_START,
+		GEO_START2,
 
 		//GEO_BOX1,
 		//GEO_BOX2,
@@ -221,9 +222,10 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	//static Camera2 camera;
 	Camera3 camera;
 	float f_TPCRotateBy;
+	bool b_Switch;
+	double d_BounceTime;
 
 	Light light[1];
 
@@ -232,6 +234,8 @@ private:
 	void RenderText(Mesh* mesh, std::string text, Color color);
 
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+
+	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
 	StopWatchTimer RaceTimer;
 	bool timerunout = false;

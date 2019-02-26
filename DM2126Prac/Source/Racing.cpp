@@ -193,10 +193,6 @@ void RaceScene::Init() //defines what shader to use
 
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
 
-	//Guide lines - Turn on if need
-	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
-	//meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
-
 	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
 	meshList[GEO_CAR1]->textureID = LoadTGA("Image//cartexture.tga");
 	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
@@ -218,6 +214,9 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 12);//For Player
+
+	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 8, 8, 0);
+	meshList[GEO_SPEEDMETER]->textureID = LoadTGA("Image//speedmeter.tga");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front3.tga");
@@ -805,12 +804,6 @@ void RaceScene::Render()
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1,
 			&lightPosition_cameraspace.x);
 	}
-
-	//<-----------Axes----------->
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
 	modelStack.Translate(0, 8, 180);
@@ -875,6 +868,27 @@ void RaceScene::Render()
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
+	modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
+	modelStack.PopMatrix();
+	int speedcount = fabs(PlayerCar.f_GetSpeed());
+
+	if (speedcount <= 9)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 71.3, 10);
+		modelStack.PopMatrix();
+	}
+	else if (speedcount >= 10 && speedcount < 100)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 69.3, 10);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 67, 10);
 		modelStack.PopMatrix();
 	}
 }
@@ -972,17 +986,6 @@ void RaceScene::RenderSkybox()
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
-}
-
-void RaceScene::RenderButton(int geo_circle, int geo_cylinder)
-{
-	//<----Button circle---->
-	RenderMesh(meshList[geo_circle], false);
-
-	//<----Button cylinder---->
-	modelStack.PushMatrix();
-	RenderMesh(meshList[geo_cylinder], false);
-	modelStack.PopMatrix();
 }
 
 void RaceScene::RenderText(Mesh* mesh, std::string text, Color color)

@@ -57,7 +57,6 @@ public:
 	virtual void Exit();
 
 private:
-	void RenderButton(int, int);
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
@@ -131,21 +130,10 @@ private:
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
-		//GEO_CUBE,
 		GEO_AICUBE,
 		GEO_Pedestrains1,
 		GEO_Pedestrains2,
 		GEO_Pedestrains3,
-		/*GEO_USB,
-		GEO_YELLOWBUTTONCUBOID,
-		GEO_BLUEBUTTONCIRCLE,
-		GEO_BLUEBUTTONCYLINDER,
-		GEO_GREENBUTTONCIRCLE,
-		GEO_GREENBUTTONCYLINDER,
-		GEO_REDBUTTONCIRCLE,
-		GEO_REDBUTTONCYLINDER,
-		GEO_TRIPRISM,*/
-		GEO_AXES,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -157,6 +145,7 @@ private:
 		GEO_HOSPITAL,
 		GEO_RACETRACK,
 		GEO_AMBULANCE,
+		GEO_SPEEDMETER,
 
 		GEO_CAR1,
 		GEO_CAR2,

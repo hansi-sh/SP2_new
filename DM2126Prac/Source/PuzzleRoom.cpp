@@ -54,7 +54,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	PuzzleTimer = new StopWatchTimer;
 	checkmodelStack = false;
 	
-	b_BMO = true;
+	itemcollect = false;
 	b_viewStats = false;
 
 	// testing irrklan
@@ -370,7 +370,10 @@ void PuzzleRoom::Init() //defines what shader to use
 	// User Interface -> Raphael Added
 
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
-	meshList[GEO_START]->textureID = LoadTGA("Image//Stage1.tga");
+	meshList[GEO_START]->textureID = LoadTGA("Image//Stage1.tga"); 
+
+	meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1),20, 5, 0);
+	meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//UserInterfaceDesign.tga");
 }
 
 //void PuzzleRoom::PlayMusic()
@@ -417,13 +420,19 @@ void PuzzleRoom::Update(double dt)
 	//Inventory
 	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
 	{
-		elapsedtime = 0;
-		printPrev();
+		if (itemcollect ==true)
+		{
+			elapsedtime = 0;
+			printPrev();
+		}
 	}
 	if(Application::IsKeyPressed(VK_RIGHT) && elapsedtime > 1)
 	{
-		elapsedtime = 0;
-		printNext();
+		if (itemcollect == true)
+		{
+			elapsedtime = 0;
+			printNext();
+		}
 	}
 	//DoorOpening
 	if (doorint == true && havekey1 == true)
@@ -534,9 +543,9 @@ void PuzzleRoom::Update(double dt)
 		elapsedtime = 0;
 		havekey1 = true;
 		havekey2 = true; 
+		itemcollect = true;
 		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
-		meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
-		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyoneword");
+		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyonewords");
 		uploadItem(27);
 		std::cout << "0" << std::endl;
 	}
@@ -628,17 +637,17 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (Application::IsKeyPressed('E') && elapsedtime > 1)
 		{
+			elapsedtime = 0;
 			interactioncomplete = true;
 			havekey1 = true;
+			itemcollect = true;
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
 			uploadItem(27);
-			meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("twst",Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//keyonewords.tga");
-			uploadItem(43);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
+			collectionkey1 = true;
 		}
 	}
 	//Patient
@@ -817,7 +826,7 @@ void PuzzleRoom::Update(double dt)
 				break;
 			}
 			//Key1
-			if (AllObjs == 20)
+			if (AllObjs == 20 && collectionkey1 ==false)
 			{
 				key1int = true;
 				interaction = true;
@@ -954,6 +963,7 @@ void PuzzleRoom::Render()
 
 	RenderSkybox();
 	CreepyHouse();
+			
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
@@ -1019,14 +1029,6 @@ void PuzzleRoom::Render()
 	RenderMesh(meshList[GEO_LIGHTBALL2], false);
 	modelStack.PopMatrix();
 
-
-	//<--BMO-->
-	if (b_BMO)
-	{
-
-	}
-	//<--BMO-->
-
 	if (b_viewStats)
 	{
 		//<--FPS-->
@@ -1040,10 +1042,10 @@ void PuzzleRoom::Render()
 	}
 	//float time = 120;
 	//<--Get cameras position-->
-	/*modelStack.PushMatrix();
+	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT],("Time"+ std::to_string(PuzzleTimer->d_GetPuzzleSceneTime())),Color(0, 1, 0), 2, 25, 25);
 	modelStack.PopMatrix();
-
+	/*
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
 	modelStack.PopMatrix();
@@ -1051,16 +1053,19 @@ void PuzzleRoom::Render()
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	 modelStack.PopMatrix();*/
-	 if (interaction == true)
+	 if (interaction == true && interactioncomplete == false)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 1, 1), 2, 14, 48);
+		 DrawHUD(meshList[GEO_KEY1NOTE], Color(0, 0, 1), false, 1, 18, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(0,0,0), 2, 1, 48);
 		 modelStack.PopMatrix();
 	 }
-	 if (interactioncomplete == true)
+	 else if (interactioncomplete == true)
 	 {
+		
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 0, 0), 2, 14, 48);
+		 DrawHUD(meshList[GEO_KEY1NOTE], Color(0, 0, 1), false, 1, 18, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Press E to interact"), Color(1, 0, 0), 2, 1, 48);
 		 modelStack.PopMatrix();
 	 }
 	
@@ -1074,16 +1079,19 @@ void PuzzleRoom::Render()
 	 {
 		 if(Application::IsKeyPressed('E'))
 		 { 
+			 interactioncomplete = true;
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Nice Painting"), Color(1, 1, 1), 2, 4, 42);
-		 modelStack.PopMatrix();}
+		 modelStack.PopMatrix();
+		 }
 	 }
 	 if (havekey1 == true)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Unlocks a door perhaps"), Color(1, 1, 1), 1.5, 30, 16);
-		 modelStack.PopMatrix();
-		 rendertag();
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Unlocks Door Perhaps"), Color(0, 0, 0), 2, 40, 30);
+		DrawHUD(meshList[GEO_KEY1NOTE], Color(0, 0, 1),false, 0.5, 40, 30);
+		rendertag();
+		modelStack.PopMatrix();
 	 }
 	 if (havekey2 == true)
 	 {
@@ -1481,6 +1489,8 @@ void PuzzleRoom::uploadItem(int newobject)
 		forward->prev = last;
 		last = forward;
 	}
+	itemcount = 1;
+	totalitem++;
 }
 void PuzzleRoom::printNext()
 {
@@ -1489,16 +1499,19 @@ void PuzzleRoom::printNext()
 	if (check != NULL)
 	{
 		current = check;
+		itemcount++;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		itemcount = 1;
 		rendertag();
 	}
 }
@@ -1509,21 +1522,25 @@ void PuzzleRoom::printPrev()
 	if (check != NULL)
 	{
 		current = check;
+		itemcount--;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		itemcount = 1;
 		rendertag();
 	}
 }
 void PuzzleRoom::rendertag()
 {
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(itemcount) + "/" + std::to_string(totalitem), Color(0, 0, 1), 2, 5, 5);
 	for (int i = 0; i < 34; i++)
 	{
 		if (current->data == i)

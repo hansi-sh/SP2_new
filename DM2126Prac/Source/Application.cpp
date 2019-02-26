@@ -12,7 +12,6 @@
 #include "Racing.h"
 #include "Scene2.h"
 #include "Leaderboard.h"
-
 #include "TutorialPuzzleRoom.h"
 #include "TutorialScene2.h"
 #include "TutorialRacing.h"
@@ -141,7 +140,15 @@ void Application::Run()
 	}
 	else if (GetSceneNumber() == 4)
 	{
+		scene = new TutorialPuzzleRoom();
+	}
+	else if (GetSceneNumber() == 5)
+	{
 		scene = new TutorialScene2();
+	}
+	else if (GetSceneNumber() == 6)
+	{
+		scene = new TutorialRaceScene();
 	}
 	else if (GetSceneNumber() == 7)	//Win screen
 	{
@@ -151,6 +158,10 @@ void Application::Run()
 	else if (GetSceneNumber() == 8)	//Lose screen
 	{
 		scene = new LoseScene();	
+	}
+	else if (GetSceneNumber() == 9)	//Leaderboard screen
+	{
+		scene = new Leaderboard();	
 	}
 	else // change back to PuzzleRoom when pushing 
 	{

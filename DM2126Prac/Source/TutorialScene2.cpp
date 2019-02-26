@@ -27,6 +27,7 @@ void TutorialScene2::Init() //defines what shader to use
 	setTrueFalse = false;
 	b_Switch = false;
 	d_BounceTime = 0.25f;
+	f_TPCRotateBy = 0.0f;
 
 	music::player.init();
 	music::player.setSoundVol(0.2);
@@ -212,10 +213,10 @@ void TutorialScene2::Init() //defines what shader to use
 
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START]->textureID = LoadTGA("Image//TutScene2Pt1.tga");
+	meshList[GEO_START]->textureID = LoadTGA("Image//T2P1.tga");
 
 	meshList[GEO_START2] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START2]->textureID = LoadTGA("Image//TutScene2Pt2.tga");
+	meshList[GEO_START2]->textureID = LoadTGA("Image//T2P2.tga");
 }
 
 
@@ -230,16 +231,24 @@ void TutorialScene2::Update(double dt)
 		if (b_Switch)
 			b_Switch = false;
 		else
-			b_Switch = true;
+		{
+			Application app;
+			app.SetSceneNumber(4);
+			app.Run();
+		}
 
 		d_BounceTime = 0.25f;
 	}
 	else if (Application::IsKeyPressed(VK_RIGHT) && d_BounceTime < 0.0f)
 	{
-		if (b_Switch)
-			b_Switch = false;
-		else
+		if (!b_Switch)
 			b_Switch = true;
+		else
+		{
+			Application app;
+			app.SetSceneNumber(6);
+			app.Run();
+		}
 		d_BounceTime = 0.25f;
 	}
 
@@ -362,7 +371,7 @@ void TutorialScene2::Render()
 	modelStack.Translate(10, 0, -3);
 	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
 	modelStack.PopMatrix();
-	if (b_Switch)
+	if (!b_Switch)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);

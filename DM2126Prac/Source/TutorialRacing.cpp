@@ -28,6 +28,10 @@ void TutorialRaceScene::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
+	b_Switch = false;
+	d_BounceTime = 0.25f;
+	f_TPCRotateBy = 0.0f;
+
 	//<collison class>
 	collide = false;
 	AIcollide = false;
@@ -37,7 +41,7 @@ void TutorialRaceScene::Init() //defines what shader to use
 	//<----For player car---->
 	TranslateBodyX = 0.0f;
 	TranslateBodyY = 64.0f;
-	TranslateBodyZ = -1300.0f;
+	TranslateBodyZ = -650.0f;
 	RotateBody = 0.0f;
 
 	PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
@@ -235,6 +239,13 @@ void TutorialRaceScene::Init() //defines what shader to use
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
 
+	// Switching Stage
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
+	meshList[GEO_START]->textureID = LoadTGA("Image//T3P1.tga");
+
+	meshList[GEO_START2] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
+	meshList[GEO_START2]->textureID = LoadTGA("Image//T3P2.tga");
+
 	/*meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 1415.0f);*/
 	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, /*636.0f*/77, 20.0f), 20.0f, 40.0f, 2830.0f);
 	/*meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);*/
@@ -251,6 +262,46 @@ void TutorialRaceScene::Init() //defines what shader to use
 
 void TutorialRaceScene::Update(double dt)
 {
+	f_TPCRotateBy += 0.5f;
+
+	d_BounceTime -= dt;
+
+	if (Application::IsKeyPressed(VK_LEFT) && d_BounceTime < 0.0f)
+	{
+		if (b_Switch)
+			b_Switch = false;
+		else
+		{
+			Application app;
+			app.SetSceneNumber(5);
+			app.Run();
+		}
+
+		d_BounceTime = 0.25f;
+	}
+	else if (Application::IsKeyPressed(VK_RIGHT) && d_BounceTime < 0.0f)
+	{
+		if (!b_Switch)
+			b_Switch = true;
+		else
+		{
+			Application app;
+			app.SetSceneNumber(4);
+			app.Run();
+		}
+		d_BounceTime = 0.25f;
+	}
+
+	if (Application::IsKeyPressed(VK_ESCAPE))
+	{
+		Application app;
+		app.SetSceneNumber(0);
+		app.Run();
+	}
+
+	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	f_TPCRotateBy = 0.0f;
+
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{
 		timerunout = true;
@@ -312,69 +363,12 @@ void TutorialRaceScene::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	if (Application::IsKeyPressed('P'))
-		b_viewStats = true;
-	else
-		b_viewStats = false;
+	b_StepAccelerator = false;
+	b_StepBrakes = false;
 
-
-
-	if (Application::IsKeyPressed('W'))//forward
-	{
-		b_StepAccelerator = true;
-		b_StepBrakes = false;
-
-		// Cancer af
-		//music::player.init();
-		//music::player.setSoundVol(0.5);
-		//music::player.playSound("Sound//Scene3//Accelerate2.wav");
-	}
-	else if (Application::IsKeyPressed('S'))//backward
-	{
-		b_StepAccelerator = false;
-		b_StepBrakes = true;
-	}
-	else
-	{
-		b_StepAccelerator = false;
-		b_StepBrakes = false;
-	}
 	///////////////////////rotation
 	if (!collide)
 	{
-		if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
-		{
-			f_RotateAmt = 0.0f;
-		}
-		else if (fabs(PlayerCar.f_GetSpeed()) < 20.0f)
-		{
-			f_RotateAmt = 0.3f;
-		}
-		else if (fabs(PlayerCar.f_GetSpeed()) < 40.0f)
-		{
-			f_RotateAmt = 0.5f;
-		}
-		else if (fabs(PlayerCar.f_GetSpeed()) < 60.0f)
-		{
-			f_RotateAmt = 1.0f;
-		}
-
-		if (Application::IsKeyPressed('A'))//rotate left
-		{
-			b_Steer = true;
-			f_UpdatedAngle = (RotateBody + f_RotateAmt) - RotateBody;
-			RotateBody += f_RotateAmt;
-		}
-		else if (Application::IsKeyPressed('D'))//rotate left
-		{
-			b_Steer = true;
-			f_UpdatedAngle = (RotateBody - f_RotateAmt) - RotateBody;
-			RotateBody -= f_RotateAmt;
-		}
-		else
-		{
-			b_Steer = false;
-		}
 		PlayerCar.v_UpdateCarDirection(RotateBody);
 	}
 	PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
@@ -595,38 +589,14 @@ void TutorialRaceScene::Update(double dt)
 		currentCamTarget = camera.target;
 	}
 
-	if (Application::IsKeyPressed('Q'))
-	{
-		f_TPCRotateBy = -1.0f;
-		//light[0].type = Light::LIGHT_POINT;  // For a lamp post
-		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to POINT and pass the information to shader
-	}
-	else if (Application::IsKeyPressed('E'))
-	{
-		f_TPCRotateBy = 1.0f;
-		//light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
-		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to DIRECTIONAL and pass the information to shader
-	}
-	else if (Application::IsKeyPressed('C'))
-	{
-		light[0].type = Light::LIGHT_SPOT; // For a torch light
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to SPOT and pass the information to shader
-	}
 	if (TranslateBodyZ>=1400)
 	{
-		music::player.stopSound(); // end all music at the des of scene
+		//music::player.stopSound(); // end all music at the des of scene
 		
 		Application app;
 		app.SetSceneNumber(9);
 		app.Run();
 	}
-
-	//camera.Update(dt);
-	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	f_TPCRotateBy = 0.0f;
 }
 
 void TutorialRaceScene::Render()
@@ -639,22 +609,6 @@ void TutorialRaceScene::Render()
 	modelStack.LoadIdentity();
 
 	RenderSkybox();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	//modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
-	//RenderMesh(meshList[GEO_CUBE], false);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(52, 77, 20);
-	//RenderMesh(meshList[GEO_BOX1], false);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(-52, 77, 20);
-	//RenderMesh(meshList[GEO_BOX1], false);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4);
@@ -722,11 +676,6 @@ void TutorialRaceScene::Render()
 			&lightPosition_cameraspace.x);
 	}
 
-	//<-----------Axes----------->
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_AXES], false);
-	modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Scale(8, 8, 8);
 	modelStack.Translate(0, 8, 180);
@@ -744,47 +693,19 @@ void TutorialRaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-
-	if (b_viewStats)
+	if (!b_Switch)
 	{
-	//<--FPS-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
-	modelStack.PopMatrix();
-
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
 	}
 	else
 	{
-		//<--View stats for nerds-->
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("View stats:[P]"), Color(0, 0, 0), 2, 54, 58);
+		DrawHUD(meshList[GEO_START2], Color(0, 0, 1), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
-
-	//<--Get cameras position-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	modelStack.PopMatrix();
 	
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	modelStack.PopMatrix();
-
-	if (collide)
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
-		modelStack.PopMatrix();
-	}
-	else
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
-		modelStack.PopMatrix();
-	}
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
-	modelStack.PopMatrix();
 }
 
 void TutorialRaceScene::RenderMesh(Mesh *mesh, bool enableLight)
@@ -957,6 +878,67 @@ void TutorialRaceScene::RenderTextOnScreen(Mesh* mesh, std::string text, Color c
 	projectionStack.PopMatrix();
 	viewStack.PopMatrix();
 	modelStack.PopMatrix();
+	glEnable(GL_DEPTH_TEST);
+}
+
+
+void TutorialRaceScene::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y)
+{
+	glDisable(GL_DEPTH_TEST);
+	Mtx44 ortho;
+	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	projectionStack.PushMatrix();
+	projectionStack.LoadMatrix(ortho);
+	viewStack.PushMatrix();
+	viewStack.LoadIdentity(); //No need camera for ortho mode
+	modelStack.PushMatrix();
+	modelStack.LoadIdentity(); //Reset modelStack
+	modelStack.Scale(size, size, size);
+	modelStack.Translate(x, y, 0);
+
+	Mtx44 MVP, modelView, modelView_inverse_transpose;
+	MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
+	modelView = viewStack.Top() * modelStack.Top();
+	glUniformMatrix4fv(m_parameters[U_MODELVIEW], 1, GL_FALSE, &modelView.a[0]);
+
+	if (enableLight)
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 1);
+		modelView_inverse_transpose = modelView.GetInverse().GetTranspose();
+		glUniformMatrix4fv(m_parameters[U_MODELVIEW_INVERSE_TRANSPOSE], 1, GL_FALSE,
+			&modelView_inverse_transpose.a[0]);
+		//load material
+		glUniform3fv(m_parameters[U_MATERIAL_AMBIENT], 1, &mesh->material.kAmbient.r);
+		glUniform3fv(m_parameters[U_MATERIAL_DIFFUSE], 1, &mesh->material.kDiffuse.r);
+		glUniform3fv(m_parameters[U_MATERIAL_SPECULAR], 1, &mesh->material.kSpecular.r);
+		glUniform1f(m_parameters[U_MATERIAL_SHININESS], mesh->material.kShininess);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_LIGHTENABLED], 0);
+	}
+	if (mesh->textureID > 0)
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 1);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, mesh->textureID);
+		glUniform1i(m_parameters[U_COLOR_TEXTURE], 0);
+	}
+	else
+	{
+		glUniform1i(m_parameters[U_COLOR_TEXTURE_ENABLED], 0);
+	}
+	mesh->Render();
+	if (mesh->textureID > 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	projectionStack.PopMatrix();
+	viewStack.PopMatrix();
+	modelStack.PopMatrix();
+
 	glEnable(GL_DEPTH_TEST);
 }
 
