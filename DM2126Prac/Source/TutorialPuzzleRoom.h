@@ -1,8 +1,8 @@
-#ifndef PUZZLEROOM_H
-#define PUZZLEROOM_H
+#ifndef TUTORIALPUZZLEROOM_H
+#define TUTORIALPUZZLEROOM_H
 #include <iostream>
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -13,7 +13,7 @@
 #include "item.h"
 #include "StopWatchTimer.h"
 
-class PuzzleRoom : public Scene
+class TutorialPuzzleRoom : public Scene
 {
 	enum UNIFORM_TYPE
 	{
@@ -57,52 +57,35 @@ class PuzzleRoom : public Scene
 		
 	};
 public:
-	PuzzleRoom();
-	~PuzzleRoom();
+	TutorialPuzzleRoom();
+	~TutorialPuzzleRoom();
 
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();
-	virtual void Update(double dt);
+	void Update(double dt);
+	// virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
 	//item
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
-	void uploadItem(int);
-	void printNext();
-	void printPrev();
-	void rendertag();
-	Item *first, *last, *forward, *current, *backward;
+	
 private:
-	void RenderButton(int, int);
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
 	float fps;
-	bool getCurrentCam;
 
 	void RenderSkybox();
 	void CreepyHouse();
-
-	bool b_BMO;
-	bool b_viewStats;
-	//For collision
-	bool collide;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
 	
 	//Light
 	bool switchoneint;
 	bool lightoneon;
 	bool switchtwoint;
 	bool lighttwoon;
-	//time
-	float elapsedtime = 0;
-	float bouncetime = 0;
-	bool timerunout = false;
-	bool timeleft = false;
+	
 	
 	//For Running Animation
 	bool checkmodelStack;
@@ -155,13 +138,6 @@ private:
 	//final door
 	bool finaldoorint;
 	bool doorunlocked = false;
-	//<--Music-->
-	/*void PlayMusic();
-	bool b_musicSelected;
-	bool b_inPM;
-	bool b_checkinPM;
-	bool b_inPC;
-*/
 
 	bool showIntro = true; // Raphael Added
 	double score = 1.0; // Raphael Added
@@ -213,57 +189,19 @@ private:
 		GEO_LLEG,
 		GEO_CROTCH,
 		GEO_START, // Raphael Added
-		GEO_KEY1NOTE,
 		NUM_GEOMETRY,
 	};
-	enum OBJECT_TYPE
-	{
-		OBJ_PLAYER, // player
-		OBJ_ROOMWALL1,
-		OBJ_ROOMWALL2,
-		OBJ_HOUSEWALL1,
-		OBJ_HOUSEWALL2,
-		OBJ_HOUSEWALL3,
-		OBJ_HOUSEWALL4,
-		OBJ_HOUSEWALL5,
-		OBJ_HOUSEWALL6,
-		OBJ_HOUSEWALL7,
-		OBJ_HOUSEWALL8,
-		OBJ_HOUSEWALL9,
-		OBJ_HOUSEWALL10,
-		OBJ_SOFA,
-		OBJ_DOOR,
-		OBJ_TABLE,
-		OBJ_BOOKSHELF,
-		OBJ_SAFE,
-		OBJ_BED,
-		OBJ_DOORINT,
-		OBJ_KEY1,
-		OBJ_SECRETWALL,
-		OBJ_SECRETWALLINT,
-		OBJ_PAINTINGCASTLE,
-		OBJ_PAINTINGFOREST,
-		OBJ_PAINTINGFRUIT,
-		OBJ_TABLEPAINTING,
-		OBJ_SWITCHONE,
-		OBJ_SWITCHTWO,
-		OBJ_PILLOW,
-		OBJ_KEY2,
-		OBJ_TVTABLEDRAWERINT,
-		OBJ_SAFEINT,
-		OBJ_PATIENT,
-		OBJ_PATIENTINT,
-		OBJ_LASTDOOR,
-		OBJ_ALL,//when adding add directly above 
-		NUM_OBJ
-	};
+	
 	MS modelStack, viewStack, projectionStack;
 
 	Mesh* meshList[NUM_GEOMETRY];
 
-	ObjectBox* Obj[NUM_OBJ];
-
-	static Camera2 camera;
+	Camera3 camera;
+	float f_TPCRotateBy;
+	bool b_Switch;
+	double d_BounceTime;
+	bool b_SwitchRotation;
+	float f_TPCRotateTotal;
 
 	Light light[2];
 

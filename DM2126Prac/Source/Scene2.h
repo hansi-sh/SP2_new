@@ -106,7 +106,6 @@ private:
 
 	void RenderSkybox();
 
-	bool b_BMO;
 	bool b_viewStats;
 
 	// For Box collision
@@ -119,25 +118,6 @@ private:
 	float prevBodyX;
 	float prevBodyZ;
 	float prevAngle;
-
-	//For Running Animation
-	bool checkmodelStack;
-	float RotateBody;
-	bool running;
-	bool bodyMovement;
-	float LeftLegX;
-	float RightLegX;
-	float ArmRotation;
-	float TranslateBodyX;
-	float TranslateBodyY;
-	float TranslateBodyZ;
-
-	//<--Music-->
-	// void PlayMusic();
-	bool b_musicSelected;
-	bool b_inPM;
-	bool b_checkinPM;
-	bool b_inPC;
 
 	enum GEOMETRY_TYPE
 	{
@@ -162,13 +142,6 @@ private:
 		GEO_METALSHELVE, 
 
 		GEO_PLAYER,
-		//GEO_TEST, // Cabinet2
-		// GEO_TEST1, // Front
-		// GEO_TEST2, // back
-		// GEO_TEST3, // top
-		// GEO_TEST4, // bottom
-		// GEO_TEST5, // left
-		// GEO_TEST6, // right
 		GEO_TEXT,
 
 		GEO_HELP, // the top right panel
@@ -198,8 +171,6 @@ private:
 		OBJ_STRETCHER, // - > done
 		OBJ_CABINET, // - > done
 		OBJ_CHAIR, // - > done
-		// OBJ_DEFIBRILLATOR, // -> done
-		// OBJ_FIRSTAIDKIT, // -> done (changed)
 		OBJ_CABINET2, // -> done
 		OBJ_TOPSHELVE1, // - > done
 		OBJ_TOPSHELVE2, // - > done
@@ -211,14 +182,6 @@ private:
 		OBJ_BOTTOM,
 		OBJ_LEFT,
 		OBJ_RIGHT,
-
-		// OBJ_TEST, // Cabinet2
-		// OBJ_TEST1, // Front
-		// OBJ_TEST2, // Back
-		// OBJ_TEST3, // top
-		// OBJ_TEST4, // bottom
-		// OBJ_TEST5, // left
-		// OBJ_TEST6, // right
 
 		NUM_OBJ
 	};
