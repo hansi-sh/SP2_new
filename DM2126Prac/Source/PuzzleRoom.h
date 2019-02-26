@@ -87,6 +87,8 @@ private:
 	void CreepyHouse();
 
 	bool itemcollect;
+	int itemcount;
+	int totalitem;
 	bool b_viewStats;
 	//For collision
 	bool collide;
