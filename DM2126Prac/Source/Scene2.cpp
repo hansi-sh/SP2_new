@@ -277,6 +277,7 @@ void Scene2::Init() //defines what shader to use
 void Scene2::Update(double dt)
 {
 	delay += dt;
+	// Timer-> aorion added
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
 		timerunout = true;
@@ -288,6 +289,7 @@ void Scene2::Update(double dt)
 	{
 		AmbulanceTimer->v_UpdateTime(dt);
 	}
+	//^ aorion added
 
 	score = score + 0.2;
 
@@ -354,10 +356,6 @@ void Scene2::Update(double dt)
 		{
 			delay = 0;
 			collectDefi = false;
-			//if (collectDefi == false)
-			//{
-			//	uploadItem(8);
-			//}
 		}
 	}
 
@@ -462,7 +460,7 @@ void Scene2::Update(double dt)
 	}
 
 	// PlayMusic();
-	camera.Update(dt, false);
+	camera.Update(dt, true);
 }
 
 void Scene2::Render()
