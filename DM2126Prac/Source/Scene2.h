@@ -159,6 +159,7 @@ private:
 		GEO_RLEG,
 		GEO_LLEG,
 		GEO_CROTCH,
+		GEO_TIME,
 
 		NUM_GEOMETRY,
 	};

@@ -11,6 +11,8 @@
 #include "Sound.h"
 #include <fstream>
 
+using namespace std;
+
 RaceScene::RaceScene()
 {
 }
@@ -565,12 +567,7 @@ void RaceScene::Update(double dt)
 	}
 	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
-		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
-
-		//if i_CollidedWith the numbers of Car AI
-		//PlayerCar.v_SetSpeed(-(PlayerCar.f_GetSpeed() * 0.5));
-		//e[i_CollidedWith-1].v_SetEnemySpeed(-(e[i_CollidedWith-1].f_GetEnemySpeed() * 0.5));
-		if (i_CollidedWith >= 33 && i_CollidedWith <= 48) //i_CollidedWith <= last car AI //num in object type
+		if (i_CollidedWith >= 33 && i_CollidedWith <= 48) 
 		{
 			if (TranslateBodyZ > enemyZ[i_CollidedWith - 33])
 			{
@@ -611,9 +608,6 @@ void RaceScene::Update(double dt)
 		{
 			PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 0.5)));
 		}
-
-		/*TranslateBodyX = prevBodyX;
-		TranslateBodyZ = prevBodyZ;*/
 		RotateBody = prevAngle;
 
 		Obj[OBJ_PLAYER]->setRotatingAxis((-1 * f_UpdatedAngle), 0.0f, 1.0f, 0.0f);
@@ -622,8 +616,6 @@ void RaceScene::Update(double dt)
 	}
 	else	//if it does not collides, what ever happened in the previous frame will be saved
 	{
-		/*prevBodyX = TranslateBodyX;
-		prevBodyZ = TranslateBodyZ;*/
 		prevAngle = RotateBody;
 	}
 
@@ -652,23 +644,12 @@ void RaceScene::Update(double dt)
 	if (Application::IsKeyPressed('Q'))
 	{
 		f_TPCRotateBy = -1.0f;
-		//light[0].type = Light::LIGHT_POINT;  // For a lamp post
-		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to POINT and pass the information to shader
 	}
 	else if (Application::IsKeyPressed('E'))
 	{
 		f_TPCRotateBy = 1.0f;
-		//light[0].type = Light::LIGHT_DIRECTIONAL; // Used for smt like the sun, somewhere so far it shines on everything depending on angle
-		//glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to DIRECTIONAL and pass the information to shader
 	}
-	else if (Application::IsKeyPressed('C'))
-	{
-		light[0].type = Light::LIGHT_SPOT; // For a torch light
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
-		//to do: switch light type to SPOT and pass the information to shader
-	}
+	
 	if (TranslateBodyZ>=1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
@@ -688,7 +669,7 @@ void RaceScene::Update(double dt)
 
 	// Check if out of bound -> ask sihan tis part
 
-	if (camera.position.x > 27 || camera.position.x < -27)
+	if (TranslateBodyX > 20 || TranslateBodyX < -20) //fix rap
 	{
 		warning = true;
 		if (delay > 10)
@@ -824,87 +805,55 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-
-	if (b_viewStats)
-	{
-	//<--FPS-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
-	modelStack.PopMatrix();
-	}
-
-	else
-	{
-		//<--View stats for nerds-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("View stats:[P]"), Color(0, 0, 0), 2, 54, 58);
-		modelStack.PopMatrix();
-	}
-
-	//<--Get cameras position-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	modelStack.PopMatrix();
-	
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	modelStack.PopMatrix();
-
-	if (collide)
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(0, 0, 0), 2, 52, 50);
-		modelStack.PopMatrix();
-	}
-	else
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(0, 0, 0), 2, 54, 50);
-		modelStack.PopMatrix();
-	}
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
-	modelStack.PopMatrix();
-
 	if (warning)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
-	modelStack.PushMatrix();
+		modelStack.PopMatrix();
+	}
+		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
-	modelStack.PopMatrix();
+		modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
+		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
-	modelStack.PopMatrix();
-
-	int speedcount = fabs(PlayerCar.f_GetSpeed());
-
-	if (speedcount <= 9)
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 71.3, 10);
 		modelStack.PopMatrix();
-	}
-	else if (speedcount >= 10 && speedcount < 100)
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 69.3, 10);
-		modelStack.PopMatrix();
-	}
-	else
-	{
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 67, 10);
-		modelStack.PopMatrix();
-	}
 
+		int timecount = RaceTimer.d_GetRaceSceneTime();
 
-	int timecount = RaceTimer.d_GetRaceSceneTime();
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
-	modelStack.PopMatrix();
+		if (timecount >= 10 && timecount < 100)
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
+			modelStack.PopMatrix();
+		}
+
+		int speedcount = fabs(PlayerCar.f_GetSpeed());
+
+		if (speedcount <= 9)
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 71.3, 10);
+			modelStack.PopMatrix();
+		}
+		else if (speedcount >= 10 && speedcount < 100)
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 69.3, 10);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 67, 10);
+			modelStack.PopMatrix();
+		}
 }
 
 void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)
@@ -973,7 +922,6 @@ void RaceScene::RenderSkybox()
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, SKYBOXSIZE);
 	modelStack.Translate(0.0f, 1.95f, 0.0f);
 	modelStack.Rotate(180, 0.0f, 0.0f, 1.0f);
-	/*modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);*/
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 
