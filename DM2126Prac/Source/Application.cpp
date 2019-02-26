@@ -165,7 +165,8 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new Leaderboard();
+		scene = new Scene2();
+		glfwSetCursorPosCallback(m_window, Scene2::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	
 	//Main menu scene = 0 no cam

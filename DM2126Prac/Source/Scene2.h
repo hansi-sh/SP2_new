@@ -203,18 +203,18 @@ private:
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	// Stuff Added
-	bool setTrueFalse = false;
+	bool setTrueFalse;
 	int instruction;
-	bool collectDefi = false;
-	bool collectKit = false;
-	bool notification1 = false;
-	bool notification2 = false;
-	bool useDefi = false; 
-	bool useKit = false;
-	bool nextStage = false;
-	double score = 1.0;
-	bool showIntro = true;
-	bool useSound = true;
+	bool collectDefi;
+	bool collectKit;
+	bool notification1;
+	bool notification2;
+	bool useDefi; 
+	bool useKit;
+	bool nextStage;
+	double score;
+	bool showIntro;
+	bool useSound;
 
 	void RenderMission();
 	void EndMission();
@@ -224,11 +224,17 @@ private:
 	void printNext();
 	void printPrev();
 	void rendertag();
+
+	bool itemcollect;
+	int itemcount;
+	int totalItem;
+
 	Item *first, *last, *forward, *current, *backward;
 	//Timer
 	StopWatchTimer* AmbulanceTimer;
-	bool timerunout = false;
-
+	bool timerunout;
+	bool defiCollected;
+	bool firstAidKitCollected;
 };
 
 #endif
