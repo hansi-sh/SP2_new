@@ -15,6 +15,7 @@
 #include "TutorialPuzzleRoom.h"
 #include "TutorialScene2.h"
 #include "TutorialRacing.h"
+#include "HospitalCutScene.h"
 
 #include "Sound.h"
 #include "MainMenu.h"
@@ -167,7 +168,7 @@ void Application::Run()
 	{
 		scene = new MainMenuScene();
 		//scene = new RaceScene();
-
+		//scene = new HospitalCutScene();
 	}
 	
 	//Main menu scene = 0 no cam

@@ -702,18 +702,6 @@ void RaceScene::Update(double dt)
 		f_TPCRotateBy = 1.0f;
 	}
 	
-	if (f_TranslateBodyZ >= 1400)
-	{
-		ofstream saveFile("loli.txt", fstream::app);
-		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		//saveFile << 9 << endl;
-
-		music::player.stopSound(); // end all music at the des of scene
-
-		Application app;
-		app.SetSceneNumber(7);
-		app.Run();
-	}
 
 	// Check if out of bound -> ask sihan tis part
 
