@@ -40,6 +40,10 @@ void RaceScene::Init() //defines what shader to use
 	music::player.setSoundVol(0.4);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
+	// For pop up screen
+	b_showIntro = true;
+	d_score = 0;
+
 	//<----For player car---->
 	f_TranslateBodyX = 0.0f;
 	f_TranslateBodyY = 64.0f;
@@ -259,6 +263,9 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_START]->textureID = LoadTGA("Image//Stage3.tga");
+
 	if (Application::timerh == 0)
 	{
 		RaceTimer.v_SetRaceSceneTime(60);
@@ -271,6 +278,13 @@ void RaceScene::Init() //defines what shader to use
 
 void RaceScene::Update(double dt)
 {
+	d_score = d_score + 0.2;
+
+	if (d_score > 20)
+	{
+		b_showIntro = false;
+	}
+
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{		
 		ofstream saveFile("loli.txt", fstream::app);
