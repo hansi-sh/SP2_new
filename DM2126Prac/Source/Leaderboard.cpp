@@ -19,30 +19,6 @@ Leaderboard::Leaderboard()
 
 }
 
-void Leaderboard::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
-}
-
 Leaderboard::~Leaderboard()
 {
 }
@@ -51,6 +27,10 @@ void Leaderboard::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
+
+	music::player.init();
+	music::player.setSoundVol(0.5);
+	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
 
 	speed = 0;
 
@@ -143,6 +123,12 @@ void Leaderboard::Init() //defines what shader to use
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//calibri.tga");
 
+	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("Bg", Color(0, 0, 1), 45, 30, 0);
+	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//Leaderboard.tga");
+
+	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Bg", Color(0, 0, 1), 27, 20, 0);
+	meshList[GEO_BORDER]->textureID = LoadTGA("Image//LeaderboardBorder.tga");
+
 	// <<---Leaderboard stuff--->>
 
 	ifstream readFile("loli.txt");
@@ -230,21 +216,13 @@ void Leaderboard::Update(double dt)
 	delay += dt;
 
 
-	if (Application::IsKeyPressed(VK_BACK)) 
+	if (Application::IsKeyPressed(VK_ESCAPE))
 	{
+		music::player.stopSound();
 
-	}
-
-	if (Application::IsKeyPressed('1'))
-	{
 		Application app;
-		app.SetSceneNumber(3);
+		app.SetSceneNumber(0);
 		app.Run();
-		
-	}
-	if (Application::IsKeyPressed('2'))
-	{
-
 	}
 
 	if (Application::IsKeyPressed('6'))
@@ -265,20 +243,6 @@ void Leaderboard::Update(double dt)
 	}
 	
 	fps = 1.0f / (float)dt;
-
-	// Light movement
-	if (Application::IsKeyPressed('I')) // backward
-		light[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K')) // forward
-		light[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J')) // left
-		light[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L')) // right
-		light[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U')) // down
-		light[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O')) // up
-		light[0].position.y += (float)(LSPEED * dt);
 
 	camera.Update(dt, false);
 }
@@ -317,16 +281,27 @@ void Leaderboard::Render()
 	}
 
 	//<---Print Leaderboard--->
+	DrawHUD(meshList[GEO_BACKGROUND], Color(0, 0, 1), false, 1, 40, 30);
+	DrawHUD(meshList[GEO_BORDER], Color(0, 0, 1), false, 1, 40, 30);
+
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("First: " + std::to_string(first)), Color(1, 0, 0), 2, 30, 40);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("<<---Top Life Savers--->>"), Color(1, 0, 0), 2, 17, 42);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Second: " + std::to_string(second)), Color(1, 0, 0), 2, 30, 38);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Position     Time Left/s"), Color(1, 0, 0), 2, 18, 38);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Third: " + std::to_string(third)), Color(1, 0, 0), 2, 30, 36);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("First        " + std::to_string(first)), Color(1, 0, 0), 2, 18, 36);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Second       " + std::to_string(second)), Color(1, 0, 0), 2, 18, 34);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Third        " + std::to_string(third)), Color(1, 0, 0), 2, 18, 32);
 	modelStack.PopMatrix();
 
 

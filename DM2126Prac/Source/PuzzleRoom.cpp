@@ -60,23 +60,10 @@ void PuzzleRoom::Init() //defines what shader to use
 	// testing irrklan
 	music::player.init();
 	music::player.setSoundVol(0.5);
-	// music::player.playSound("Sound//Scene1//PuzzleBGM1.wav", true);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
 	itemcount = 0;
 	totalitem = 0;
-	//<----for BMO body animation movement when running---->
-	//LeftLegX = 90.0f;
-	//RightLegX = 90.0f;
-	//ArmRotation = 0.0f;
-	//TranslateBodyX = 0.0f;
-	//TranslateBodyY = 15.0f;
-	//TranslateBodyZ = 0.0f;
-	//RotateBody = 0.0f;
-
-	//<--Music-->
-	/*b_musicSelected = false;
-	b_inPM = false;
-	b_inPC = false;*/
+	
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -295,6 +282,8 @@ void PuzzleRoom::Init() //defines what shader to use
 	}
 	
 
+	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
+	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 
 	meshList[GEO_SECRETWALL] = MeshBuilder::GenerateOBJ("Book1", "OBJ//secretwall.obj");
 	meshList[GEO_SECRETWALL]->textureID = LoadTGA("Image//SecretWall.tga");
@@ -412,7 +401,7 @@ void PuzzleRoom::Update(double dt)
 		&& camera.position.z > 25 && camera.position.z < 45)
 	{ 
 		music::player.init();
-		music::player.setSoundVol(0.3);
+		music::player.setSoundVol(0.1);
 		music::player.playSound("Sound//Scene1//Static2.wav");
 	}
 
@@ -473,10 +462,6 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	
@@ -574,9 +559,6 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete = true;
 			safecracking = true;
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (safecracking == true)
@@ -682,10 +664,6 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete =true;
 			patienthint = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (havekey3 == true && patientint == true)
@@ -705,11 +683,14 @@ void PuzzleRoom::Update(double dt)
 		{
 			timeleft = true;
 			interactioncomplete = true;
+
+			music::player.stopSound();
 			Application app;
 			app.SetSceneNumber(2);
 			app.Run();
 		}
 	}
+
 	if (doorunlocked == false && finaldoorint == true)
 	{
 		if (Application::IsKeyPressed('E'))
@@ -1055,30 +1036,6 @@ void PuzzleRoom::Render()
 	RenderMesh(meshList[GEO_LIGHTBALL2], false);
 	modelStack.PopMatrix();
 
-	if (b_viewStats)
-	{
-		//<--FPS-->
-		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], ("FPS:" + std::to_string(fps)), Color(0, 0, 0), 2, 52, 58);
-		modelStack.PopMatrix();
-	}
-	else
-	{
-		
-	}
-	//float time = 120;
-	//<--Get cameras position-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT],("Time"+ std::to_string(PuzzleTimer->d_GetPuzzleSceneTime())),Color(0, 1, 0), 2, 25, 25);
-	modelStack.PopMatrix();
-	/*
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	modelStack.PopMatrix();
-	
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	 modelStack.PopMatrix();*/
 	 if (interaction == true && interactioncomplete == false)
 	 {
 		 modelStack.PushMatrix();
@@ -1191,6 +1148,39 @@ void PuzzleRoom::Render()
 		 modelStack.PushMatrix();
 		 DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 		 modelStack.PopMatrix();
+	 }
+
+	 modelStack.PushMatrix();
+	 DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
+	 modelStack.PopMatrix();
+
+	 int timecount = PuzzleTimer->d_GetPuzzleSceneTime();
+	 if (timecount >= 100)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 38.1, 57.5);
+		 modelStack.PopMatrix();
+	 }
+	 else if (timecount >= 10 && timecount < 100)
+	 {
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
+		 modelStack.PopMatrix();
+	 }
+	 else
+	 {
+		 if (timecount % 2)
+		 {
+			 modelStack.PushMatrix();
+			 RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(0.9294f, 0.2156f, 0.1372f), 2.5, 40.8, 57.5);
+			 modelStack.PopMatrix();
+		 }
+		 else
+		 {
+			 modelStack.PushMatrix();
+			 RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
+			 modelStack.PopMatrix();
+		 }
 	 }
 }
 

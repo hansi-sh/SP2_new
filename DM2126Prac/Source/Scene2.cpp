@@ -59,7 +59,6 @@ void Scene2::Init() //defines what shader to use
 	delay = 0;
 
 	// testing irrklan
-
 	music::player.init();
 	music::player.setSoundVol(0.5);
 	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
@@ -72,6 +71,27 @@ void Scene2::Init() //defines what shader to use
 	//<----for randomizing the instructions for player--->
 	srand(time(NULL));
 	instruction = rand() % 2;
+
+	// init the variables
+	setTrueFalse = false;
+	instruction;
+	collectDefi = false;
+	collectKit = false;
+	notification1 = false;
+	notification2 = false;
+	useDefi = false;
+	useKit = false;
+	nextStage = false;
+	score = 1.0;
+	showIntro = true;
+	useSound = true;
+	timerunout = false;
+
+	itemcollect = false;
+	itemcount = 0;
+	totalItem = 0;
+	defiCollected = false;
+	firstAidKitCollected = false;
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -271,6 +291,9 @@ void Scene2::Init() //defines what shader to use
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage2.tga");
+
+	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
+	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 }
 
 
@@ -298,12 +321,19 @@ void Scene2::Update(double dt)
 		showIntro = false;
 	}
 
-	if (Application::IsKeyPressed('1'))
+	if (Application::IsKeyPressed(VK_RIGHT))
 	{
+		if (itemcollect)
+		{
+			printNext();
+		}
 	}
-	if (Application::IsKeyPressed('2'))
+	if (Application::IsKeyPressed(VK_LEFT))
 	{
-		printNext();
+		if (itemcollect)
+		{
+			printPrev();
+		}
 	}
 	if (nextStage || Application::IsKeyPressed('3'))
 	{
@@ -340,16 +370,22 @@ void Scene2::Update(double dt)
 
 	if (camera.position.x > 10 && camera.position.x < 13)
 	{
-		if (Application::IsKeyPressed('C') && (delay > 0.3)) // Get key delay from sihan
+		if (Application::IsKeyPressed('C') && (delay > 0.3) && defiCollected==false) // Get key delay from sihan
 		{
 			delay = 0;
 			collectDefi = true;
 			notification1 = true;
 
+			itemcollect = true;
+			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("defi", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
+			uploadItem(8);
+
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene2//PickUp.wav");
 			
+			defiCollected = true;
 		}
 
 		if (Application::IsKeyPressed('V') && (delay>0.3)) 
@@ -362,15 +398,22 @@ void Scene2::Update(double dt)
 	if (camera.position.x > -3 && camera.position.x < 3 && 
 		camera.position.z > -8 && camera.position.z < -5)
 	{ 
-		if (Application::IsKeyPressed('C') && (delay > 0.3))
+		if (Application::IsKeyPressed('C') && (delay > 0.3) && firstAidKitCollected==false)
 		{
 			delay = 0;
 			collectKit = true;
 			notification2 = true;
 
+			itemcollect = true;
+			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("FAK", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
+			uploadItem(9);
+
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene2//PickUp.wav");
+
+			firstAidKitCollected = true;
 		}
 		if (Application::IsKeyPressed('V'))
 		{
@@ -473,6 +516,8 @@ void Scene2::Render()
 	modelStack.LoadIdentity();
 
 	RenderSkybox();
+
+
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
@@ -603,20 +648,6 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	//if (collide)
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(1, 1, 0), 2, 66, 54);
-	//	modelStack.PopMatrix();
-	//}
-
-	//else
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(1, 1, 0), 2, 60, 54);
-	//	modelStack.PopMatrix();
-	//}
-
 	int speedct = abs(speed); // no idea what this does
 
 	modelStack.PushMatrix();
@@ -666,6 +697,37 @@ void Scene2::Render()
 
 	EndMission();
 
+	if (collectDefi || collectKit)
+	{
+		rendertag();
+	}
+
+	modelStack.PushMatrix();
+	DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
+	modelStack.PopMatrix();
+
+	int timecount = AmbulanceTimer->d_GetAmbulanceTimer();
+	if (timecount >= 10)
+	{
+		modelStack.PushMatrix();
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		if (timecount % 2)
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(0.9294f, 0.2156f, 0.1372f), 2.5, 40.8, 57.5);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
+			modelStack.PopMatrix();
+		}
+	}
 }
 
 void Scene2::RenderMission() // has transparent box now
@@ -742,6 +804,8 @@ void Scene2::EndMission()
 			nextStage = true;
 		}
 	}
+
+
 }
 
 void Scene2::RenderMesh(Mesh *mesh, bool enableLight)

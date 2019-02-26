@@ -119,7 +119,18 @@ private:
 	Vector3 AIpos[30];
 	int movechoice[30];
 
+	bool movement;
+
+	// stuff for sound:
+	bool warning; // print the out of bound
+	bool alertSound; // for warning sound
+	double delay;
+	int countDown;
+
 	float f_HeightAIP;	//AI + players car height
+
+	//pausemenu
+	bool b_pause;
 
 	enum GEOMETRY_TYPE
 	{
@@ -140,10 +151,17 @@ private:
 		GEO_RACETRACK,
 		GEO_AMBULANCE,
 		GEO_SPEEDMETER,
+		GEO_TIME,
+		GEO_PAUSE,
 
 		GEO_CAR1,
 		GEO_CAR2,
 		GEO_CAR3,
+
+		//GEO_BOX1,
+		//GEO_BOX2,
+		
+		GEO_WARNING, // if car onto pavement
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
