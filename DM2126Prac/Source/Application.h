@@ -16,7 +16,6 @@ public:
 	int SetSceneNumber(int number);
 	static double timerh;
 
-private:
 
 	//Declare a window object
 	StopWatch m_timer;
