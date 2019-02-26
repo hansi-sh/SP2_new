@@ -1512,6 +1512,8 @@ void PuzzleRoom::uploadItem(int newobject)
 		forward->prev = last;
 		last = forward;
 	}
+	itemcount = 1;
+	totalitem++;
 }
 void PuzzleRoom::printNext()
 {
@@ -1520,16 +1522,19 @@ void PuzzleRoom::printNext()
 	if (check != NULL)
 	{
 		current = check;
+		itemcount++;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		itemcount = 1;
 		rendertag();
 	}
 }
@@ -1540,21 +1545,25 @@ void PuzzleRoom::printPrev()
 	if (check != NULL)
 	{
 		current = check;
+		itemcount--;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		itemcount = 1;
 		rendertag();
 	}
 }
 void PuzzleRoom::rendertag()
 {
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(itemcount) + "/" + std::to_string(totalitem), Color(0, 0, 1), 2, 5, 5);
 	for (int i = 0; i < 34; i++)
 	{
 		if (current->data == i)
