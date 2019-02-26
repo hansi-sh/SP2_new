@@ -127,6 +127,9 @@ private:
 
 	float f_HeightAIP;	//AI + players car height
 
+	//pausemenu
+	bool b_pause;
+
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
@@ -147,6 +150,7 @@ private:
 		GEO_AMBULANCE,
 		GEO_SPEEDMETER,
 		GEO_TIME,
+		GEO_PAUSE,
 
 		GEO_CAR1,
 		GEO_CAR2,
