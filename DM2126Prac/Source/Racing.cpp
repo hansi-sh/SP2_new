@@ -24,6 +24,7 @@ RaceScene::~RaceScene()
 void RaceScene::Init() //defines what shader to use
 {
 	
+	movement = true;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
@@ -258,6 +259,9 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_WARNING] = MeshBuilder::GenerateQuad("Out Of Bound", Color(0, 0, 1), 22, 22, 0);
 	meshList[GEO_WARNING]->textureID = LoadTGA("Image//OutOfBound.tga");
 
+	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
+
 	if (Application::timerh == 0)
 	{
 		RaceTimer.v_SetRaceSceneTime(60);
@@ -298,36 +302,51 @@ void RaceScene::Update(double dt)
 		app.SetSceneNumber(7);
 		app.Run();
 	}
-	for (int i = 0; i < 10; i++)	//golden
+	if (movement ==true)
 	{
-		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 5);
-		AIWalkX[i] = AIpos[i].x;
-		AIWalkY[i] = AIpos[i].y;
-		AIWalkZ[i] = AIpos[i].z;
+		for (int i = 0; i < 10; i++)	//golden
+		{
+			AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+			AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 5);
+			AIWalkX[i] = AIpos[i].x;
+			AIWalkY[i] = AIpos[i].y;
+			AIWalkZ[i] = AIpos[i].z;
+		}
+		for (int i = 11; i < 20; i++)	//red
+		{
+			AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+			AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 15);
+			AIWalkX[i] = AIpos[i].x;
+			AIWalkY[i] = AIpos[i].y;
+			AIWalkZ[i] = AIpos[i].z;
+		}
+		for (int i = 21; i < 30; i++)	//green
+		{
+			AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+			AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 20);
+			AIWalkX[i] = AIpos[i].x;
+			AIWalkY[i] = AIpos[i].y;
+			AIWalkZ[i] = AIpos[i].z;
+		}
 	}
-	for (int i = 11; i < 20; i++)	//red
+	else
 	{
-		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 15);
-		AIWalkX[i] = AIpos[i].x;
-		AIWalkY[i] = AIpos[i].y;
-		AIWalkZ[i] = AIpos[i].z;
+		for (int i = 0; i < 30; i++)
+		{
+			AIWalkX[i];
+			AIWalkY[i];
+			AIWalkZ[i];
+		}
 	}
-	for (int i = 21; i < 30; i++)	//green
-	{
-		AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-		AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 20);
-		AIWalkX[i] = AIpos[i].x;
-		AIWalkY[i] = AIpos[i].y;
-		AIWalkZ[i] = AIpos[i].z;
-	}
+	
 	
 	if (Application::IsKeyPressed('1'))
 	{
+		movement = false;
 	}
 	if (Application::IsKeyPressed('2'))
 	{
+		movement = true;
 	}
 	if (Application::IsKeyPressed('3'))
 	{
@@ -430,35 +449,48 @@ void RaceScene::Update(double dt)
 	TranslateBodyY = V_UpdatedPlayerPos.y;
 	TranslateBodyZ = V_UpdatedPlayerPos.z;
 
-	for (int i = 0; i < 15; i++)
+	if (movement==true)
 	{
-		randomMove[i] = e[i].randchecker(randcheck[i], randomMove[i]);
-		enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[i], randomMove[i], randcheck[i]);
-		RotateEnemyBody[i] = e[i].getenemyrotate();
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 15; i++)
 		{
-			if (enemyUpdatePos[i].z > 1400)
+			randomMove[i] = e[i].randchecker(randcheck[i], randomMove[i]);
+			enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[i], randomMove[i], randcheck[i]);
+			RotateEnemyBody[i] = e[i].getenemyrotate();
+			for (int i = 0; i < 6; i++)
 			{
-				e[i].SetEnemyPosition(Vector3(15, 64, -1300));
-				enemyX[i] = enemyUpdatePos[i].x;
-				enemyY[i] = enemyUpdatePos[i].y;
-				enemyZ[i] = enemyUpdatePos[i].z;
+				if (enemyUpdatePos[i].z > 1400)
+				{
+					e[i].SetEnemyPosition(Vector3(15, 64, -1300));
+					enemyX[i] = enemyUpdatePos[i].x;
+					enemyY[i] = enemyUpdatePos[i].y;
+					enemyZ[i] = enemyUpdatePos[i].z;
+				}
 			}
-		}
-		for (int i = 7; i < 15; i++)
-		{
-			if (enemyUpdatePos[i].z > 1400)
+			for (int i = 7; i < 15; i++)
 			{
-				e[i].SetEnemyPosition(Vector3(-15, 64, -1300));
-				enemyX[i] = enemyUpdatePos[i].x;
-				enemyY[i] = enemyUpdatePos[i].y;
-				enemyZ[i] = enemyUpdatePos[i].z;
+				if (enemyUpdatePos[i].z > 1400)
+				{
+					e[i].SetEnemyPosition(Vector3(-15, 64, -1300));
+					enemyX[i] = enemyUpdatePos[i].x;
+					enemyY[i] = enemyUpdatePos[i].y;
+					enemyZ[i] = enemyUpdatePos[i].z;
+				}
 			}
+			enemyX[i] = enemyUpdatePos[i].x;
+			enemyY[i] = enemyUpdatePos[i].y;
+			enemyZ[i] = enemyUpdatePos[i].z;
 		}
-		enemyX[i] = enemyUpdatePos[i].x;
-		enemyY[i] = enemyUpdatePos[i].y;
-		enemyZ[i] = enemyUpdatePos[i].z;
 	}
+	else
+	{
+		for (int i = 0; i < 15; i++)
+		{
+			enemyX[i];
+			enemyY[i];
+			enemyZ[i];
+		}
+	}
+	
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
@@ -694,6 +726,14 @@ void RaceScene::Update(double dt)
 	//	music::player.playSound("Sound//Scene3//HurryUp.wav");
 	//}
 
+	if (Application::IsKeyPressed('M'))
+	{
+		b_pause = false;
+	}
+	if (Application::IsKeyPressed('N'))
+	{
+		b_pause = true;
+	}
 }
 
 void RaceScene::Render()
@@ -815,7 +855,28 @@ void RaceScene::Render()
 		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
 		modelStack.PopMatrix();
 
+	if (b_pause)
+	{
 		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
+
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
+	modelStack.PopMatrix();
+
+	if (warning)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
+	}
+	modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
 		modelStack.PopMatrix();
 

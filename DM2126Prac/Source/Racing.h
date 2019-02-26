@@ -118,6 +118,8 @@ private:
 	Vector3 AIpos[30];
 	int movechoice[30];
 
+	bool movement;
+
 	// stuff for sound:
 	bool warning; // print the out of bound
 	bool alertSound; // for warning sound
@@ -125,6 +127,9 @@ private:
 	int countDown;
 
 	float f_HeightAIP;	//AI + players car height
+
+	//pausemenu
+	bool b_pause;
 
 	enum GEOMETRY_TYPE
 	{
@@ -146,6 +151,7 @@ private:
 		GEO_AMBULANCE,
 		GEO_SPEEDMETER,
 		GEO_TIME,
+		GEO_PAUSE,
 
 		GEO_CAR1,
 		GEO_CAR2,
@@ -175,7 +181,7 @@ private:
 		OBJ_walker8,   //Golden mushroom
 		OBJ_walker9,   //Golden mushroom
 		OBJ_walker10,  //Golden mushroom
-		OBJ_walker11,  //Normal mushroom
+		k,  //Normal mushroom
 		OBJ_walker12,  //Normal mushroom
 		OBJ_walker13,  //Normal mushroom
 		OBJ_walker14,  //Normal mushroom
