@@ -460,7 +460,7 @@ void Scene2::Update(double dt)
 	}
 
 	// PlayMusic();
-	camera.Update(dt, false);
+	camera.Update(dt, true);
 }
 
 void Scene2::Render()

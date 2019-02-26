@@ -54,7 +54,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	PuzzleTimer = new StopWatchTimer;
 	checkmodelStack = false;
 	
-	b_BMO = true;
+	itemcollect = false;
 	b_viewStats = false;
 
 	// testing irrklan
@@ -435,13 +435,19 @@ void PuzzleRoom::Update(double dt)
 	//Inventory
 	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
 	{
-		elapsedtime = 0;
-		printPrev();
+		if (itemcollect ==true)
+		{
+			elapsedtime = 0;
+			printPrev();
+		}
 	}
 	if(Application::IsKeyPressed(VK_RIGHT) && elapsedtime > 1)
 	{
-		elapsedtime = 0;
-		printNext();
+		if (itemcollect == true)
+		{
+			elapsedtime = 0;
+			printNext();
+		}
 	}
 	//DoorOpening
 	if (doorint == true && havekey1 == true)
@@ -556,6 +562,7 @@ void PuzzleRoom::Update(double dt)
 		elapsedtime = 0;
 		havekey1 = true;
 		havekey2 = true; 
+		itemcollect = true;
 		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
 		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyonewords");
 		uploadItem(27);
@@ -654,8 +661,13 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete = true;
 			havekey1 = true;
-			
-			
+			itemcollect = true;
+			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
+			uploadItem(27);
+			meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("twst",Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//keyonewords.tga");
+			uploadItem(43);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
@@ -1039,14 +1051,6 @@ void PuzzleRoom::Render()
 	modelStack.Translate(light[1].position.x, light[1].position.y, light[1].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL2], false);
 	modelStack.PopMatrix();
-
-
-	//<--BMO-->
-	if (b_BMO)
-	{
-
-	}
-	//<--BMO-->
 
 	if (b_viewStats)
 	{

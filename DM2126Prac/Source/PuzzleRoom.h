@@ -86,7 +86,7 @@ private:
 	void RenderSkybox();
 	void CreepyHouse();
 
-	bool b_BMO;
+	bool itemcollect;
 	bool b_viewStats;
 	//For collision
 	bool collide;

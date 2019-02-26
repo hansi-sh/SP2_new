@@ -268,7 +268,7 @@ void RaceScene::Update(double dt)
 	{
 		RaceTimer.v_UpdateTime(dt);
 	}
-	if (TranslateBodyZ >= 1350)
+	if (TranslateBodyZ >= 1400)
 	{
 		Application app;
 		app.SetSceneNumber(7);
