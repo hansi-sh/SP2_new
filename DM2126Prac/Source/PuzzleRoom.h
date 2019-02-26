@@ -128,6 +128,7 @@ private:
 	//key1
 	bool key1int;
 	bool havekey1 = false;
+	bool collectionkey1 = false;
 	//key2
 	bool key2int;
 	bool havekey2 = false;
@@ -216,6 +217,7 @@ private:
 		GEO_CROTCH,
 		GEO_START, // Raphael Added
 		GEO_KEY1NOTE,
+		GEO_TIME,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE

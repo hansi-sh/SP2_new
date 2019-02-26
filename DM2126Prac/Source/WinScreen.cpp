@@ -8,6 +8,7 @@
 #include "WinScreen.h"
 #include "Utility.h"
 #include <string>
+#include "Sound.h"
 
 float WinScene::lastX = 0.0f;
 float WinScene::lastY = 0.0f;
@@ -50,6 +51,10 @@ void WinScene::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
+	music::player.init();
+	music::player.setSoundVol(0.2);
+	music::player.playSound("Sound//Other//Win.wav");
+
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
@@ -91,7 +96,6 @@ void WinScene::Init() //defines what shader to use
 
 	m_parameters[U_TEXT_ENABLED] = glGetUniformLocation(m_programID, "textEnabled");
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
-
 
 	//Light 1
 	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
@@ -243,12 +247,16 @@ void WinScene::Update(double dt)
 	{
 		if (i_Selector == 0)	//Restart from puzzle one
 		{
+			music::player.stopSound();
+
 			Application app;
 			app.SetSceneNumber(8);
 			app.Run();
 		}
 		else if (i_Selector == 1)	//Instrusction
 		{
+			music::player.stopSound();
+
 			Application app;
 			app.SetSceneNumber(0);
 			app.Run();

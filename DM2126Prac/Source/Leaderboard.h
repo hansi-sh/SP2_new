@@ -12,7 +12,6 @@
 #include <Windows.h>
 #include "ObjectBox.h"
 
-
 #include <fstream>
 using namespace std;
 
@@ -51,7 +50,6 @@ public:
 	Leaderboard();
 	~Leaderboard();
 
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();
@@ -86,7 +84,8 @@ private:
 	enum GEOMETRY_TYPE
 	{
 		GEO_TEXT,
-
+		GEO_BACKGROUND,
+		GEO_BORDER,
 		NUM_GEOMETRY,
 	};
 
@@ -123,8 +122,6 @@ private:
 	int first = 0;
 	int second = 0;
 	int third = 0;
-
-
 };
 
 #endif
