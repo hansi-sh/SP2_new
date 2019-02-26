@@ -119,6 +119,7 @@ private:
 	Vector3 AIpos[30];
 	int movechoice[30];
 
+	bool movement;
 	float f_HeightAIP;	//AI + players car height
 
 	enum GEOMETRY_TYPE
