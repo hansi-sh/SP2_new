@@ -161,6 +161,7 @@ private:
 		//GEO_BOX2,
 		
 		GEO_WARNING, // if car onto pavement
+		GEO_START,
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
@@ -242,6 +243,9 @@ private:
 
 	StopWatchTimer RaceTimer;
 	bool timerunout = false;
+
+	bool b_showIntro;
+	double d_score;
 };
 
 #endif
