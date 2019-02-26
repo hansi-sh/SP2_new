@@ -684,7 +684,6 @@ void RaceScene::Update(double dt)
 	{
 		f_TPCRotateBy = 1.0f;
 	}
-
 	// Check if out of bound -> ask sihan tis part
 
 	if (f_TranslateBodyX > 20 || f_TranslateBodyX < -20) //fix rap
