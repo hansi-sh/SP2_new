@@ -48,9 +48,6 @@ public:
 	RaceScene();
 	~RaceScene();
 
-	//static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	static float lastX, lastY;
-
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Render();
@@ -61,44 +58,35 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
-	float fps;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
-	bool getCurrentCam;
 
-	bool collide;
-	bool AIcollide;
+	bool b_collide;
+	bool b_AIcollide;
 
-	int collider1;
-	int collider2;
+	int i_collider1;
+	int i_collider2;
 
-	float rotationangle;
-	float updatedangle;
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
+	float f_prevAngle;
 
 	void RenderSkybox();
 
-	bool b_viewStats;
 	//for enemy
-	int randomMove[30];
-	float RotateEnemyBody[30];
-	float enemyX[30], enemyY[30], enemyZ[30];
+	int i_randomMove[30];
+	float f_RotateEnemyBody[30];
+	float f_enemyX[30], f_enemyY[30], f_enemyZ[30];
 	Enemy e[30];
-	Vector3 enemyUpdatePos[30];
+	Vector3 V_enemyUpdatePos[30];
 	bool b_StepENEMYAccelerator;
 	bool b_StepENEMYBrakes;
 	bool b_ENEMYSteer[30];
-	bool randcheck[30];
+	bool b_randcheck[30];
 	float f_ENEMYRotateAmt[30];
 
 	//For Car
-	float RotateBody;
-	float TranslateBodyX;
-	float TranslateBodyY;
-	float TranslateBodyZ;
-	Physics PlayerCar;
+	float f_RotateBody;
+	float f_TranslateBodyX;
+	float f_TranslateBodyY;
+	float f_TranslateBodyZ;
+	Physics P_PlayerCar;
 	Vector3 V_UpdatedPlayerPos;
 	bool b_StepAccelerator;
 	bool b_StepBrakes;
@@ -109,23 +97,23 @@ private:
 	int i_CollidedWith2;
 
 	//AI
-	bool dead;
-	bool collideAI;
-	enemy2 AIwalker[30];
-	bool checkmove[30];
-	float AIWalkX[30];
-	float AIWalkY[30];
-	float AIWalkZ[30];
-	Vector3 AIpos[30];
-	int movechoice[30];
+	bool b_dead;
+	bool b_collideAI;
+	enemy2 e_AIwalker[30];
+	bool b_checkmove[30];
+	float f_AIWalkX[30];
+	float f_AIWalkY[30];
+	float f_AIWalkZ[30];
+	Vector3 V_AIpos[30];
+	int i_movechoice[30];
 
-	bool movement;
+	bool b_movement;
 
 	// stuff for sound:
-	bool warning; // print the out of bound
-	bool alertSound; // for warning sound
-	double delay;
-	int countDown;
+	bool b_Warning; // print the out of bound
+	bool b_AlertSound; // for warning sound
+	double d_Delay;
+	int i_CountDown;
 
 	float f_HeightAIP;	//AI + players car height
 
@@ -162,6 +150,7 @@ private:
 		//GEO_BOX2,
 		
 		GEO_WARNING, // if car onto pavement
+		GEO_START,
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
@@ -182,7 +171,7 @@ private:
 		OBJ_walker8,   //Golden mushroom
 		OBJ_walker9,   //Golden mushroom
 		OBJ_walker10,  //Golden mushroom
-		OBJ_walker11,  //Normal mushroom
+		k,  //Normal mushroom
 		OBJ_walker12,  //Normal mushroom
 		OBJ_walker13,  //Normal mushroom
 		OBJ_walker14,  //Normal mushroom
@@ -227,7 +216,6 @@ private:
 
 	ObjectBox* Obj[NUM_OBJ];
 
-	//static Camera2 camera;
 	Camera3 camera;
 	float f_TPCRotateBy;
 
@@ -243,6 +231,10 @@ private:
 
 	StopWatchTimer RaceTimer;
 	bool timerunout = false;
+
+	bool b_showIntro;
+	double d_score;
+	bool timerunout;
 };
 
 #endif

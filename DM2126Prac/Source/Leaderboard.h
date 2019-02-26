@@ -11,7 +11,6 @@
 #include "item.h"
 #include <Windows.h>
 #include "ObjectBox.h"
-
 #include <fstream>
 using namespace std;
 
@@ -61,25 +60,24 @@ private:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	float LSPEED;
-	float fps;
-	bool getCurrentCam;
-	float speed;
-	double delay;
+	float f_LSPEED;
+	float f_fps;
+	bool b_getCurrentCam;
+	float f_speed;
+	double d_delay;
 
-	bool b_BMO;
 	bool b_viewStats;
 
 	// For Box collision
-	bool collide;
+	bool b_collide;
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
 
-	float rotationangle; // not needed but jus leave here
-	float updatedangle; // not needed but jus leave here
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
+	float f_rotationangle; // not needed but jus leave here
+	float f_updatedangle; // not needed but jus leave here
+	float f_prevBodyX;
+	float f_prevBodyZ;
+	float f_prevAngle;
 
 	enum GEOMETRY_TYPE
 	{
@@ -115,13 +113,12 @@ private:
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
 	// <<---Leaderboard stuff--->>
-	int RNG = rand() % 100;
-	int leaderboard[100];
-	int counter = 0;
-
-	int first = 0;
-	int second = 0;
-	int third = 0;
+	int i_RNG = rand() % 100;
+	int i_leaderboard[100];
+	int i_counter = 0;
+	int i_first = 0;
+	int i_second = 0;
+	int i_third = 0;
 };
 
 #endif

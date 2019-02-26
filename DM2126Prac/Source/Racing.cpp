@@ -24,28 +24,33 @@ RaceScene::~RaceScene()
 void RaceScene::Init() //defines what shader to use
 {
 	
-	movement = true;
+	b_movement = true;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
 	//<collison class>
-	collide = false;
-	AIcollide = false;
-	collider1 = 0;
-	collider2 = 0;
+	b_collide = false;
+	b_AIcollide = false;
+	i_collider1 = 0;
+	i_collider2 = 0;
+	timerunout = false;
 
 	//<---Sound--->
 	music::player.init();
 	music::player.setSoundVol(0.4);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
-	//<----For player car---->
-	TranslateBodyX = 0.0f;
-	TranslateBodyY = 64.0f;
-	TranslateBodyZ = -1300.0f;
-	RotateBody = 0.0f;
+	// For pop up screen
+	b_showIntro = true;
+	d_score = 0;
 
-	PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	//<----For player car---->
+	f_TranslateBodyX = 0.0f;
+	f_TranslateBodyY = 64.0f;
+	f_TranslateBodyZ = -1300.0f;
+	f_RotateBody = 0.0f;
+
+	P_PlayerCar.v_SetPos(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
 
 	V_UpdatedPlayerPos = Vector3(0, 0, 0);
 	b_StepAccelerator = false;
@@ -57,55 +62,55 @@ void RaceScene::Init() //defines what shader to use
 	i_CollidedWith = 0;
 	i_CollidedWith2 = 0;
 
-	warning = false;
-	alertSound = false;
-	delay = 0;
+	b_Warning = false;
+	b_AlertSound = false;
+	d_Delay = 0;
 
 	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
 
 	for (int i = 0; i < 14; i++)
 	{
-		AIWalkX[i] = 30;
-		AIWalkY[i] = 64;
-		AIWalkZ[i] = ((rand() % 2750) - 1300);
-		checkmove[i] = false;
-		movechoice[i] = 0;
-		AIpos[i] = (Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
+		f_AIWalkX[i] = 30;
+		f_AIWalkY[i] = 64;
+		f_AIWalkZ[i] = ((rand() % 2750) - 1300);
+		b_checkmove[i] = false;
+		i_movechoice[i] = 0;
+		V_AIpos[i] = (Vector3(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]));
 	}
 	for (int i = 15; i < 30; i++)
 	{
-		AIWalkX[i] = -30;
-		AIWalkY[i] = 64;
-		AIWalkZ[i] = ((rand() % 2750) - 1300);
-		checkmove[i] = false;
-		movechoice[i] = 0;
-		AIpos[i] = (Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
+		f_AIWalkX[i] = -30;
+		f_AIWalkY[i] = 64;
+		f_AIWalkZ[i] = ((rand() % 2750) - 1300);
+		b_checkmove[i] = false;
+		i_movechoice[i] = 0;
+		V_AIpos[i] = (Vector3(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]));
 	}
 	
 	//AIWALK
-	bool dead = false;
-	bool collideAI = true;
+	b_dead = false;
+	b_collideAI = true;
 	for (int i = 0; i < 7; i++)
 	{
-		enemyX[i] = 15;
-		enemyY[i] = 64;
-		enemyZ[i] = ((rand() % 2750) - 1300);
-		RotateEnemyBody[i] = 0.0f;
-		randcheck[i] = false;
-		e[i].SetEnemyPosition(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
-		enemyUpdatePos[i] = Vector3(0, 0, 0);
+		f_enemyX[i] = 15;
+		f_enemyY[i] = 64;
+		f_enemyZ[i] = ((rand() % 2750) - 1300);
+		f_RotateEnemyBody[i] = 0.0f;
+		b_randcheck[i] = false;
+		e[i].SetEnemyPosition(Vector3(f_enemyX[i], f_enemyY[i], f_enemyZ[i]));
+		V_enemyUpdatePos[i] = Vector3(0, 0, 0);
 		b_ENEMYSteer[i] = false;
 		f_ENEMYRotateAmt[i] = 0.0f;
 	}
 	for (int i = 8; i < 15; i++)
 	{
-		enemyX[i] = -15;
-		enemyY[i] = 64;
-		enemyZ[i] = ((rand() % 2750) - 1300);
-		RotateEnemyBody[i] = 0.0f;
-		randcheck[i] = false;
-		e[i].SetEnemyPosition(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
-		enemyUpdatePos[i] = Vector3(0, 0, 0);
+		f_enemyX[i] = -15;
+		f_enemyY[i] = 64;
+		f_enemyZ[i] = ((rand() % 2750) - 1300);
+		f_RotateEnemyBody[i] = 0.0f;
+		b_randcheck[i] = false;
+		e[i].SetEnemyPosition(Vector3(f_enemyX[i], f_enemyY[i], f_enemyZ[i]));
+		V_enemyUpdatePos[i] = Vector3(0, 0, 0);
 		b_ENEMYSteer[i] = false;
 		f_ENEMYRotateAmt[i] = 0.0f;
 	}
@@ -125,10 +130,6 @@ void RaceScene::Init() //defines what shader to use
 	LSPEED = 30.0f;
 
 	camera.Init(Vector3(0, 100, -180), Vector3(0, 0, 0), Vector3(0, 1, 0));
-
-	currentCamPos = camera.position;
-	currentCamTarget = camera.target;
-	getCurrentCam = true;
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -216,7 +217,7 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_Pedestrains3]->textureID = LoadTGA("Image//oneup.tga");
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
-	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 12);//For Player
+	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ), 9, 14, 12);//For Player
 
 	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("speed", Color(0, 0, 1), 8, 8, 0);
 	meshList[GEO_SPEEDMETER]->textureID = LoadTGA("Image//speedmeter.tga");
@@ -262,6 +263,9 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_START]->textureID = LoadTGA("Image//Stage3.tga");
+
 	if (Application::timerh == 0)
 	{
 		RaceTimer.v_SetRaceSceneTime(60);
@@ -274,6 +278,13 @@ void RaceScene::Init() //defines what shader to use
 
 void RaceScene::Update(double dt)
 {
+	d_score = d_score + 0.2;
+
+	if (d_score > 20)
+	{
+		b_showIntro = false;
+	}
+
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{		
 		ofstream saveFile("loli.txt", fstream::app);
@@ -291,7 +302,7 @@ void RaceScene::Update(double dt)
 	{
 		RaceTimer.v_UpdateTime(dt);
 	}
-	if (TranslateBodyZ >= 1400)
+	if (f_TranslateBodyZ >= 1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
 		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
@@ -302,51 +313,51 @@ void RaceScene::Update(double dt)
 		app.SetSceneNumber(7);
 		app.Run();
 	}
-	if (movement ==true)
+	if (b_movement ==true)
 	{
 		for (int i = 0; i < 10; i++)	//golden
 		{
-			AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-			AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 5);
-			AIWalkX[i] = AIpos[i].x;
-			AIWalkY[i] = AIpos[i].y;
-			AIWalkZ[i] = AIpos[i].z;
+			e_AIwalker[i].setpos(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]);
+			V_AIpos[i] = e_AIwalker[i].walking(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i], dt, b_checkmove[i], i_movechoice[i], 5);
+			f_AIWalkX[i] = V_AIpos[i].x;
+			f_AIWalkY[i] = V_AIpos[i].y;
+			f_AIWalkZ[i] = V_AIpos[i].z;
 		}
 		for (int i = 11; i < 20; i++)	//red
 		{
-			AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-			AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 15);
-			AIWalkX[i] = AIpos[i].x;
-			AIWalkY[i] = AIpos[i].y;
-			AIWalkZ[i] = AIpos[i].z;
+			e_AIwalker[i].setpos(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]);
+			V_AIpos[i] = e_AIwalker[i].walking(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i], dt, b_checkmove[i], i_movechoice[i], 15);
+			f_AIWalkX[i] = V_AIpos[i].x;
+			f_AIWalkY[i] = V_AIpos[i].y;
+			f_AIWalkZ[i] = V_AIpos[i].z;
 		}
 		for (int i = 21; i < 30; i++)	//green
 		{
-			AIwalker[i].setpos(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
-			AIpos[i] = AIwalker[i].walking(AIWalkX[i], AIWalkY[i], AIWalkZ[i], dt, checkmove[i], movechoice[i], 20);
-			AIWalkX[i] = AIpos[i].x;
-			AIWalkY[i] = AIpos[i].y;
-			AIWalkZ[i] = AIpos[i].z;
+			e_AIwalker[i].setpos(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]);
+			V_AIpos[i] = e_AIwalker[i].walking(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i], dt, b_checkmove[i], i_movechoice[i], 20);
+			f_AIWalkX[i] = V_AIpos[i].x;
+			f_AIWalkY[i] = V_AIpos[i].y;
+			f_AIWalkZ[i] = V_AIpos[i].z;
 		}
 	}
 	else
 	{
 		for (int i = 0; i < 30; i++)
 		{
-			AIWalkX[i];
-			AIWalkY[i];
-			AIWalkZ[i];
+			f_AIWalkX[i];
+			f_AIWalkY[i];
+			f_AIWalkZ[i];
 		}
 	}
 	
 	
 	if (Application::IsKeyPressed('1'))
 	{
-		movement = false;
+		b_movement = false;
 	}
 	if (Application::IsKeyPressed('2'))
 	{
-		movement = true;
+		b_movement = true;
 	}
 	if (Application::IsKeyPressed('3'))
 	{
@@ -369,26 +380,20 @@ void RaceScene::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	if (Application::IsKeyPressed('P'))
-		b_viewStats = true;
-	else
-		b_viewStats = false;
-
-
-	// delay audio
-	delay = delay + 0.2;
+	// d_Delay audio
+	d_Delay = d_Delay + 0.2;
 
 	if (Application::IsKeyPressed('W'))//forward
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
 
-		if (delay > 30) 
+		if (d_Delay > 30) 
 		{
 			music::player.init();
 			music::player.setSoundVol(1);
 			music::player.playSound("Sound//Scene3//Accelerate1.wav");
-			delay = 0;
+			d_Delay = 0;
 		}
 
 	}
@@ -403,21 +408,21 @@ void RaceScene::Update(double dt)
 		b_StepBrakes = false;
 	}
 	///////////////////////rotation
-	if (!collide)
+	if (!b_collide)
 	{
-		if (fabs(PlayerCar.f_GetSpeed()) < 3.0f)
+		if (fabs(P_PlayerCar.f_GetSpeed()) < 3.0f)
 		{
 			f_RotateAmt = 0.0f;
 		}
-		else if (fabs(PlayerCar.f_GetSpeed()) < 20.0f)
+		else if (fabs(P_PlayerCar.f_GetSpeed()) < 20.0f)
 		{
 			f_RotateAmt = 0.3f;
 		}
-		else if (fabs(PlayerCar.f_GetSpeed()) < 40.0f)
+		else if (fabs(P_PlayerCar.f_GetSpeed()) < 40.0f)
 		{
 			f_RotateAmt = 0.5f;
 		}
-		else if (fabs(PlayerCar.f_GetSpeed()) < 60.0f)
+		else if (fabs(P_PlayerCar.f_GetSpeed()) < 60.0f)
 		{
 			f_RotateAmt = 1.0f;
 		}
@@ -425,84 +430,84 @@ void RaceScene::Update(double dt)
 		if (Application::IsKeyPressed('A'))//rotate left
 		{
 			b_Steer = true;
-			f_UpdatedAngle = (RotateBody + f_RotateAmt) - RotateBody;
-			RotateBody += f_RotateAmt;
+			f_UpdatedAngle = (f_RotateBody + f_RotateAmt) - f_RotateBody;
+			f_RotateBody += f_RotateAmt;
 
 		}
 		else if (Application::IsKeyPressed('D'))//rotate left
 		{
 			b_Steer = true;
-			f_UpdatedAngle = (RotateBody - f_RotateAmt) - RotateBody;
-			RotateBody -= f_RotateAmt;
+			f_UpdatedAngle = (f_RotateBody - f_RotateAmt) - f_RotateBody;
+			f_RotateBody -= f_RotateAmt;
 
 		}
 		else
 		{
 			b_Steer = false;
 		}
-		PlayerCar.v_UpdateCarDirection(RotateBody);
+		P_PlayerCar.v_UpdateCarDirection(f_RotateBody);
 	}
-	PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
-	V_UpdatedPlayerPos = PlayerCar.V_UpdateCarPos(dt);
+	P_PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
+	V_UpdatedPlayerPos = P_PlayerCar.V_UpdateCarPos(dt);
 
-	TranslateBodyX = V_UpdatedPlayerPos.x;
-	TranslateBodyY = V_UpdatedPlayerPos.y;
-	TranslateBodyZ = V_UpdatedPlayerPos.z;
+	f_TranslateBodyX = V_UpdatedPlayerPos.x;
+	f_TranslateBodyY = V_UpdatedPlayerPos.y;
+	f_TranslateBodyZ = V_UpdatedPlayerPos.z;
 
-	if (movement==true)
+	if (b_movement==true)
 	{
 		for (int i = 0; i < 15; i++)
 		{
-			randomMove[i] = e[i].randchecker(randcheck[i], randomMove[i]);
-			enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, RotateEnemyBody[i], randomMove[i], randcheck[i]);
-			RotateEnemyBody[i] = e[i].getenemyrotate();
+			i_randomMove[i] = e[i].randchecker(b_randcheck[i], i_randomMove[i]);
+			V_enemyUpdatePos[i] = e[i].enemyMove(V_UpdatedPlayerPos, b_StepENEMYAccelerator, b_StepENEMYBrakes, b_ENEMYSteer, dt, f_RotateEnemyBody[i], i_randomMove[i], b_randcheck[i]);
+			f_RotateEnemyBody[i] = e[i].getenemyrotate();
 			for (int i = 0; i < 6; i++)
 			{
-				if (enemyUpdatePos[i].z > 1400)
+				if (V_enemyUpdatePos[i].z > 1400)
 				{
 					e[i].SetEnemyPosition(Vector3(15, 64, -1300));
-					enemyX[i] = enemyUpdatePos[i].x;
-					enemyY[i] = enemyUpdatePos[i].y;
-					enemyZ[i] = enemyUpdatePos[i].z;
+					f_enemyX[i] = V_enemyUpdatePos[i].x;
+					f_enemyY[i] = V_enemyUpdatePos[i].y;
+					f_enemyZ[i] = V_enemyUpdatePos[i].z;
 				}
 			}
 			for (int i = 7; i < 15; i++)
 			{
-				if (enemyUpdatePos[i].z > 1400)
+				if (V_enemyUpdatePos[i].z > 1400)
 				{
 					e[i].SetEnemyPosition(Vector3(-15, 64, -1300));
-					enemyX[i] = enemyUpdatePos[i].x;
-					enemyY[i] = enemyUpdatePos[i].y;
-					enemyZ[i] = enemyUpdatePos[i].z;
+					f_enemyX[i] = V_enemyUpdatePos[i].x;
+					f_enemyY[i] = V_enemyUpdatePos[i].y;
+					f_enemyZ[i] = V_enemyUpdatePos[i].z;
 				}
 			}
-			enemyX[i] = enemyUpdatePos[i].x;
-			enemyY[i] = enemyUpdatePos[i].y;
-			enemyZ[i] = enemyUpdatePos[i].z;
+			f_enemyX[i] = V_enemyUpdatePos[i].x;
+			f_enemyY[i] = V_enemyUpdatePos[i].y;
+			f_enemyZ[i] = V_enemyUpdatePos[i].z;
 		}
 	}
 	else
 	{
 		for (int i = 0; i < 15; i++)
 		{
-			enemyX[i];
-			enemyY[i];
-			enemyZ[i];
+			f_enemyX[i];
+			f_enemyY[i];
+			f_enemyZ[i];
 		}
 	}
 	
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
-	Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+	Obj[OBJ_PLAYER]->setOBB(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
 
 	for (int i = 0; i < 30; i++)
 	{
-		Obj[i + 3]->setOBB(Vector3(AIWalkX[i], AIWalkY[i], AIWalkZ[i]));
+		Obj[i + 3]->setOBB(Vector3(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]));
 	}
 
 	for (int i = 0; i < 15; i++)
 	{
-		Obj[i + 33]->setOBB(Vector3(enemyX[i], enemyY[i], enemyZ[i]));
+		Obj[i + 33]->setOBB(Vector3(f_enemyX[i], f_enemyY[i], f_enemyZ[i]));
 	}
 
 	//<collision>
@@ -512,15 +517,15 @@ void RaceScene::Update(double dt)
 		{
 			if (AllObjs<=32)
 			{
-				collideAI = true;
+				b_collideAI = true;
 				i_CollidedWith2 = AllObjs;
 			}
-			collide = true;
+			b_collide = true;
 			i_CollidedWith = AllObjs;
 			break;
 		}
-		collide = false;
-		collideAI = false;
+		b_collide = false;
+		b_collideAI = false;
 	}
 	//ISSUE:AI MOVING BACK,IF HIT AI WILL FLY ,SOLUTION:FIX AI DECELERATION 
 	for (int AllObjs2 = 33; AllObjs2 < NUM_OBJ; ++AllObjs2)
@@ -531,64 +536,64 @@ void RaceScene::Update(double dt)
 				break;
 			else if (ObjectBox::checkCollision(*Obj[AllObjs2], *Obj[i]))
 			{
-				AIcollide = true;
-				collider1 = AllObjs2;
-				collider2 = i;
+				b_AIcollide = true;
+				i_collider1 = AllObjs2;
+				i_collider2 = i;
 
-				if (AIcollide == true)
+				if (b_AIcollide == true)
 				{
-					if (enemyZ[collider1 - 33] > enemyZ[collider2 - 33])
+					if (f_enemyZ[i_collider1 - 33] > f_enemyZ[i_collider2 - 33])
 					{
 
-						if (enemyZ[collider1 - 33] - enemyZ[collider2 - 33] >= 6)
+						if (f_enemyZ[i_collider1 - 33] - f_enemyZ[i_collider2 - 33] >= 6)
 						{
-							e[collider1 - 33].v_SetEnemySpeed(fabs((e[collider1 - 33].f_GetEnemySpeed()*1.1)));
-							e[collider2 - 33].v_SetEnemySpeed(-(fabs(e[collider2 - 33].f_GetEnemySpeed()*1.0)));
+							e[i_collider1 - 33].v_SetEnemySpeed(fabs((e[i_collider1 - 33].f_GetEnemySpeed()*1.1)));
+							e[i_collider2 - 33].v_SetEnemySpeed(-(fabs(e[i_collider2 - 33].f_GetEnemySpeed()*1.0)));
 						}
 						else
 						{
-							e[collider1 - 33].v_SetEnemySpeed(-(fabs(e[collider1 - 33].f_GetEnemySpeed()*1.0)));
-							e[collider2 - 33].v_SetEnemySpeed(-(fabs(e[collider2 - 33].f_GetEnemySpeed()*1.0)));
+							e[i_collider1 - 33].v_SetEnemySpeed(-(fabs(e[i_collider1 - 33].f_GetEnemySpeed()*1.0)));
+							e[i_collider2 - 33].v_SetEnemySpeed(-(fabs(e[i_collider2 - 33].f_GetEnemySpeed()*1.0)));
 						}
 					}
 					else
 					{
-						if (enemyZ[collider2 - 33] -enemyZ[collider1 - 33] >= 6)
+						if (f_enemyZ[i_collider2 - 33] -f_enemyZ[i_collider1 - 33] >= 6)
 						{
-							e[collider1 - 33].v_SetEnemySpeed(-(fabs(e[collider1 - 33].f_GetEnemySpeed()*1.0)));
-							e[collider2 - 33].v_SetEnemySpeed((fabs(e[collider2 - 33].f_GetEnemySpeed()*1.1)));
+							e[i_collider1 - 33].v_SetEnemySpeed(-(fabs(e[i_collider1 - 33].f_GetEnemySpeed()*1.0)));
+							e[i_collider2 - 33].v_SetEnemySpeed((fabs(e[i_collider2 - 33].f_GetEnemySpeed()*1.1)));
 						}
 						else
 						{
-							e[collider1 - 33].v_SetEnemySpeed(-(fabs(e[collider1 - 33].f_GetEnemySpeed()*1.0)));
-							e[collider2 - 33].v_SetEnemySpeed(-(fabs(e[collider2 - 33].f_GetEnemySpeed()*1.0)));
+							e[i_collider1 - 33].v_SetEnemySpeed(-(fabs(e[i_collider1 - 33].f_GetEnemySpeed()*1.0)));
+							e[i_collider2 - 33].v_SetEnemySpeed(-(fabs(e[i_collider2 - 33].f_GetEnemySpeed()*1.0)));
 						}
 					}
 
-					Obj[collider1]->setOBB(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
-					e[collider1 - 33].SetEnemyPosition(Vector3(enemyX[collider1 - 33], enemyY[collider1 - 33], enemyZ[collider1 - 33]));
-					AIcollide = false;
+					Obj[i_collider1]->setOBB(Vector3(f_enemyX[i_collider1 - 33], f_enemyY[i_collider1 - 33], f_enemyZ[i_collider1 - 33]));
+					e[i_collider1 - 33].SetEnemyPosition(Vector3(f_enemyX[i_collider1 - 33], f_enemyY[i_collider1 - 33], f_enemyZ[i_collider1 - 33]));
+					b_AIcollide = false;
 
 				}
 				break;
 			}
-			AIcollide = false;
+			b_AIcollide = false;
 		}
 	}
-	if (collideAI)
+	if (b_collideAI)
 	{
 		if (i_CollidedWith2 >= 3 && i_CollidedWith2 <= 32)
 		{
 			if (i_CollidedWith2 >= 3 && i_CollidedWith2 <= 12)//gold
 			{
-				dead = true;
-				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 0.5));
+				b_dead = true;
+				P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) * 0.5));
 				
 			}
 			else//rest
 			{
-				dead = true;
-				PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) *0.75));
+				b_dead = true;
+				P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) *0.75));
 				
 			}
 
@@ -597,15 +602,15 @@ void RaceScene::Update(double dt)
 			music::player.playSound("Sound//Scene3//CrashHuman.wav");
 		}
 	}
-	if (collide)	//if it collides, what ever that was changed will be set to the previous frame
+	if (b_collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
 		if (i_CollidedWith >= 33 && i_CollidedWith <= 48) 
 		{
-			if (TranslateBodyZ > enemyZ[i_CollidedWith - 33])
+			if (f_TranslateBodyZ > f_enemyZ[i_CollidedWith - 33])
 			{
-				if ((TranslateBodyZ - enemyZ[i_CollidedWith - 33]) >= f_HeightAIP)	//if AI directly hits back of the car of player
+				if ((f_TranslateBodyZ - f_enemyZ[i_CollidedWith - 33]) >= f_HeightAIP)	//if AI directly hits back of the car of player
 				{
-					PlayerCar.v_SetSpeed((fabs(PlayerCar.f_GetSpeed()) * 1.5));
+					P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) * 1.5));
 					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 
 					music::player.init();
@@ -614,15 +619,15 @@ void RaceScene::Update(double dt)
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
+					P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 1.0)));
 					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 				}
 			}
 			else
 			{
-				if ((enemyZ[i_CollidedWith - 33] - TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
+				if ((f_enemyZ[i_CollidedWith - 33] - f_TranslateBodyZ) >= f_HeightAIP)	//if player directly hits back of the car of AI
 				{
-					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
+					P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 1.0)));
 					e[i_CollidedWith - 33].v_SetEnemySpeed((fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5)));
 
 					music::player.init();
@@ -631,46 +636,41 @@ void RaceScene::Update(double dt)
 				}
 				else
 				{
-					PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 1.0)));
+					P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 1.0)));
 					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 				}
 			}
 		}
 		else if(i_CollidedWith >= 1 && i_CollidedWith <= 2)
 		{
-			PlayerCar.v_SetSpeed(-(fabs(PlayerCar.f_GetSpeed() * 0.5)));
+			P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 0.5)));
 		}
-		RotateBody = prevAngle;
+		f_RotateBody = f_prevAngle;
 
 		Obj[OBJ_PLAYER]->setRotatingAxis((-1 * f_UpdatedAngle), 0.0f, 1.0f, 0.0f);
-		Obj[OBJ_PLAYER]->setOBB(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
-		PlayerCar.v_SetPos(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ));
+		Obj[OBJ_PLAYER]->setOBB(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
+		P_PlayerCar.v_SetPos(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
 	}
 	else	//if it does not collides, what ever happened in the previous frame will be saved
 	{
-		prevAngle = RotateBody;
+		f_prevAngle = f_RotateBody;
 	}
 
 	f_UpdatedAngle = 0.0f;
-	if (dead == true)
+	if (b_dead == true)
 	{
-		if ((AIpos[i_CollidedWith2 - 3].z - TranslateBodyZ) >= 6)	//if player directly hits back of the car of AI
+		if ((V_AIpos[i_CollidedWith2 - 3].z - f_TranslateBodyZ) >= 6)	//if player directly hits back of the car of AI
 		{
-			AIpos[i_CollidedWith2 - 3].z += float(100 * dt);
-			AIpos[i_CollidedWith2 - 3].y += float(100 * dt);
-			AIWalkY[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].y;
-			AIWalkZ[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].z;
+			V_AIpos[i_CollidedWith2 - 3].z += float(100 * dt);
+			V_AIpos[i_CollidedWith2 - 3].y += float(100 * dt);
+			f_AIWalkY[i_CollidedWith2 - 3] = V_AIpos[i_CollidedWith2 - 3].y;
+			f_AIWalkZ[i_CollidedWith2 - 3] = V_AIpos[i_CollidedWith2 - 3].z;
 		}
 		else
 		{
-			AIpos[i_CollidedWith2 - 3].y += float(100 * dt);
-			AIWalkY[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].y;
+			V_AIpos[i_CollidedWith2 - 3].y += float(100 * dt);
+			f_AIWalkY[i_CollidedWith2 - 3] = V_AIpos[i_CollidedWith2 - 3].y;
 		}
-	}
-	if (getCurrentCam)
-	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
 	}
 
 	if (Application::IsKeyPressed('Q'))
@@ -682,7 +682,7 @@ void RaceScene::Update(double dt)
 		f_TPCRotateBy = 1.0f;
 	}
 	
-	if (TranslateBodyZ>=1400)
+	if (f_TranslateBodyZ>=1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
 		 saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
@@ -696,30 +696,30 @@ void RaceScene::Update(double dt)
 	}
 
 	//camera.Update(dt);
-	camera.Update(f_TPCRotateBy, TranslateBodyX, TranslateBodyY, TranslateBodyZ);
+	camera.Update(f_TPCRotateBy, f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ);
 	f_TPCRotateBy = 0.0f;
 
 	// Check if out of bound -> ask sihan tis part
 
-	if (TranslateBodyX > 20 || TranslateBodyX < -20) //fix rap
+	if (f_TranslateBodyX > 20 || f_TranslateBodyX < -20) //fix rap
 	{
-		warning = true;
-		if (delay > 10)
+		b_Warning = true;
+		if (d_Delay > 10)
 		{
 			music::player.init();
 			music::player.setSoundVol(1);
 			music::player.playSound("Sound//Scene3//Warning.wav");
-			delay = 0;
+			d_Delay = 0;
 		}
 	}
 	else
 	{
-		warning = false;
+		b_Warning = false;
 	}
 
 	// Issue: audio v blurred out
-	//countDown = RaceTimer.d_GetRaceSceneTime();
-	//if (countDown < 40) // change time to 12
+	//i_CountDown = RaceTimer.d_GetRaceSceneTime();
+	//if (i_CountDown < 40) // change time to 12
 	//{
 	//	music::player.init();
 	//	music::player.setSoundVol(0.5);
@@ -748,9 +748,9 @@ void RaceScene::Render()
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ - 4);
+	modelStack.Translate(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ - 4);
 	modelStack.Translate(0, 0, 4);
-	modelStack.Rotate(RotateBody, 0.0f, 1.0f, 0.0f);
+	modelStack.Rotate(f_RotateBody, 0.0f, 1.0f, 0.0f);
 	modelStack.Translate(0, 0, -4);
 	RenderMesh(meshList[GEO_AMBULANCE], false);
 	modelStack.PopMatrix();
@@ -758,7 +758,7 @@ void RaceScene::Render()
 	for (int i = 0; i <= 10; i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		modelStack.Translate(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]);
 		modelStack.Scale(3.5, 3.5, 3.5);
 		RenderMesh(meshList[GEO_Pedestrains1], false);
 		modelStack.PopMatrix();
@@ -766,7 +766,7 @@ void RaceScene::Render()
 	for (int i = 11; i <= 20; i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		modelStack.Translate(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]);
 		modelStack.Scale(3, 3, 3);
 		RenderMesh(meshList[GEO_Pedestrains2], false);
 		modelStack.PopMatrix();
@@ -774,7 +774,7 @@ void RaceScene::Render()
 	for (int i = 21; i <= 30; i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(AIWalkX[i], AIWalkY[i], AIWalkZ[i]);
+		modelStack.Translate(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]);
 		modelStack.Scale(2, 2, 2);
 		RenderMesh(meshList[GEO_Pedestrains3], false);
 		modelStack.PopMatrix();
@@ -783,24 +783,24 @@ void RaceScene::Render()
 	for (int i = 0; i <=4; i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
-		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		modelStack.Translate(f_enemyX[i], f_enemyY[i], f_enemyZ[i]);
+		modelStack.Rotate(f_RotateEnemyBody[i], 0, 1, 0);
 		RenderMesh(meshList[GEO_CAR1], false);
 		modelStack.PopMatrix();
 	}
 	for (int i = 5; i <= 9; i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
-		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		modelStack.Translate(f_enemyX[i], f_enemyY[i], f_enemyZ[i]);
+		modelStack.Rotate(f_RotateEnemyBody[i], 0, 1, 0);
 		RenderMesh(meshList[GEO_CAR2], false);
 		modelStack.PopMatrix();
 	}
 	for (int i = 10; i <= 15; i++)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(enemyX[i], enemyY[i], enemyZ[i]);
-		modelStack.Rotate(RotateEnemyBody[i], 0, 1, 0);
+		modelStack.Translate(f_enemyX[i], f_enemyY[i], f_enemyZ[i]);
+		modelStack.Rotate(f_RotateEnemyBody[i], 0, 1, 0);
 		RenderMesh(meshList[GEO_CAR3], false);
 		modelStack.PopMatrix();
 	}
@@ -845,29 +845,7 @@ void RaceScene::Render()
 		modelStack.PopMatrix();
 	}
 
-	if (warning)
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
-		modelStack.PopMatrix();
-	}
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
-		modelStack.PopMatrix();
-
-	if (b_pause)
-	{
-		modelStack.PushMatrix();
-		DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
-		modelStack.PopMatrix();
-	}
-
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
-	modelStack.PopMatrix();
-
-	if (warning)
+	if (b_Warning)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
@@ -904,7 +882,7 @@ void RaceScene::Render()
 			}
 		}
 
-		int speedcount = fabs(PlayerCar.f_GetSpeed());
+		int speedcount = fabs(P_PlayerCar.f_GetSpeed());
 
 		if (speedcount <= 9)
 		{
@@ -922,6 +900,13 @@ void RaceScene::Render()
 		{
 			modelStack.PushMatrix();
 			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 67, 10);
+			modelStack.PopMatrix();
+		}
+
+		if (b_pause)
+		{
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
 			modelStack.PopMatrix();
 		}
 }

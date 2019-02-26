@@ -24,13 +24,17 @@ void TutorialPuzzleRoom::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	PuzzleTimer = new StopWatchTimer;
-	checkmodelStack = false;
+	b_checkmodelStack = false;
 
 	b_Switch = false;
 	d_BounceTime = 0.25f;
 	b_SwitchRotation = false;
 	f_TPCRotateTotal = 0.0f;
 	f_TPCRotateBy = 90.0f;
+
+	music::player.init();
+	music::player.setSoundVol(0.2);
+	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -41,7 +45,7 @@ void TutorialPuzzleRoom::Init() //defines what shader to use
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	LSPEED = 30.0f;
+	f_LSPEED = 30.0f;
 
 	camera.Init(Vector3(-67.99, 92.75, -6.7), Vector3(-67.99, 52.8, -6.016), Vector3(0, 1, 0));
 
@@ -455,7 +459,7 @@ void TutorialPuzzleRoom::CreepyHouse()
 	modelStack.PushMatrix();
 	modelStack.Scale(10.f,10.f,10.f);
 	modelStack.PushMatrix();
-	if (havepatient == false)
+	if (b_havepatient == false)
 	{
 		modelStack.Translate(5.5, 2.8, 5.5);
 		modelStack.Scale(0.7, 0.7, 0.7);
@@ -485,7 +489,7 @@ void TutorialPuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_SAFEDOOR], true);
 	//SecretWall
 	modelStack.PushMatrix();
-	modelStack.Translate(0,-30+secretdoortranslation,0);
+	modelStack.Translate(0,-30 + f_secretdoortranslation,0);
 	RenderMesh(meshList[GEO_SECRETWALL], true);
 	modelStack.PopMatrix();
 
@@ -495,7 +499,7 @@ void TutorialPuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_BEDFRAME], true);
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0 + pillowtranslation,0,0);
+	modelStack.Translate(0 + f_pillowtranslation, 0, 0);
 	RenderMesh(meshList[GEO_PILLOW], true);
 	modelStack.PopMatrix();
 
@@ -530,7 +534,7 @@ void TutorialPuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_TV], true);
 	//TvTableDrawer
 	modelStack.PushMatrix();
-	modelStack.Translate(0-drawertranslation,0,0);
+	modelStack.Translate(0 - f_drawertranslation,0,0);
 	RenderMesh(meshList[GEO_TVTABLEDRAWER], true);
 	modelStack.PopMatrix();
 	//Tvtable
@@ -552,7 +556,7 @@ void TutorialPuzzleRoom::CreepyHouse()
 	modelStack.PushMatrix(); 
 	modelStack.Translate(7.93, 5, -2.08);
 	modelStack.Rotate(-90, 0.f, 1.f, 0.f);
-	modelStack.Rotate(RotateDoor1, 0, 1, 0);
+	modelStack.Rotate(f_RotateDoor1, 0, 1, 0);
 	modelStack.Translate(-7.93, -5, 2.08);
 	RenderMesh(meshList[GEO_DOORTOROOM1],true);
 	modelStack.PopMatrix();

@@ -11,10 +11,10 @@ public:
 	int choicemaker(int choice);
 	float speed(int velo ,float dt);
 private:
-	Vector3 AI_Position;
-	int randNum,PrevNum;
-	double timer;
-	float Z1,Z2,Y,X,walkingspeed,check,checkhop;
+	Vector3 V_AI_Position;
+	int I_randNum,I_PrevNum;
+	double D_timer;
+	float F_Z1,F_Z2,F_walkingspeed,F_check,F_checkhop;
 
 };
 

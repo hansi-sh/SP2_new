@@ -32,9 +32,9 @@ void Leaderboard::Init() //defines what shader to use
 	music::player.setSoundVol(0.5);
 	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
 
-	speed = 0;
+	f_speed = 0;
 
-	delay = 0;
+	d_delay = 0;
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -45,14 +45,14 @@ void Leaderboard::Init() //defines what shader to use
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	LSPEED = 30.0f;
+	f_LSPEED = 30.0f;
 
 	// Change here for camera initial position
 	camera.Init(Vector3(0, 20, 6), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
-	getCurrentCam = true;
+	b_getCurrentCam = true;
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -132,80 +132,80 @@ void Leaderboard::Init() //defines what shader to use
 	// <<---Leaderboard stuff--->>
 
 	ifstream readFile("loli.txt");
-	while (readFile >> RNG)
+	while (readFile >> i_RNG)
 	{
-		leaderboard[counter] = RNG;
-		counter++;
+		i_leaderboard[i_counter] = i_RNG;
+		i_counter++;
 	}
 
 
-	if (leaderboard[0] > leaderboard[1] &&
-		leaderboard[0] > leaderboard[2])
+	if (i_leaderboard[0] > i_leaderboard[1] &&
+		i_leaderboard[0] > i_leaderboard[2])
 	{
-		first = leaderboard[0];
+		i_first = i_leaderboard[0];
 
-		if (leaderboard[1] > leaderboard[2])
+		if (i_leaderboard[1] > i_leaderboard[2])
 		{
-			second = leaderboard[1];
-			third = leaderboard[2];
+			i_second = i_leaderboard[1];
+			i_third = i_leaderboard[2];
 		}
 		else
 		{
-			third = leaderboard[1];
-			second = leaderboard[2];
+			i_third = i_leaderboard[1];
+			i_second = i_leaderboard[2];
 		}
 	}
 
-	if (leaderboard[1] > leaderboard[0] &&
-		leaderboard[1] > leaderboard[2])
+	if (i_leaderboard[1] > i_leaderboard[0] &&
+		i_leaderboard[1] > i_leaderboard[2])
 	{
-		first = leaderboard[1];
+		i_first = i_leaderboard[1];
 
-		if (leaderboard[0] > leaderboard[2])
+		if (i_leaderboard[0] > i_leaderboard[2])
 		{
-			second = leaderboard[0];
-			third = leaderboard[2];
+			i_second = i_leaderboard[0];
+			i_third = i_leaderboard[2];
 		}
 		else
 		{
-			third = leaderboard[0];
-			second = leaderboard[2];
+			i_third = i_leaderboard[0];
+			i_second = i_leaderboard[2];
 		}
 	}
 
-	if (leaderboard[2] > leaderboard[0] &&
-		leaderboard[2] > leaderboard[1])
+	if (i_leaderboard[2] > i_leaderboard[0] &&
+		i_leaderboard[2] > i_leaderboard[1])
 	{
-		first = leaderboard[2];
+		i_first = i_leaderboard[2];
 
-		if (leaderboard[0] > leaderboard[1])
+		if (i_leaderboard[0] > i_leaderboard[1])
 		{
-			second = leaderboard[0];
-			third = leaderboard[1];
+			i_second = i_leaderboard[0];
+			i_third = i_leaderboard[1];
 		}
 		else
 		{
-			third = leaderboard[0];
-			second = leaderboard[1];
+			i_third = i_leaderboard[0];
+			i_second = i_leaderboard[1];
 		}
 	}
 
-	for (int i = 3; i < counter; i++)
+	for (int i = 3; i < i_counter; i++)
 	{
-		if (leaderboard[i] > first)
+		if (i_leaderboard[i] > i_first)
 		{
-			third = second;
-			second = first;
-			first = leaderboard[i];
+			i_third = i_second;
+			i_second = i_first;
+			i_first = i_leaderboard[i];
 		}
-		else if (leaderboard[i] > second && leaderboard[i] != first)
+		else if (i_leaderboard[i] > i_second && i_leaderboard[i] != i_first)
 		{
-			third = second;
-			second = leaderboard[i];
+			i_third = i_second;
+			i_second = i_leaderboard[i];
 		}
-		else if (leaderboard[i] > third && leaderboard[i] != second)
+		else if (i_leaderboard[i] > i_third && i_leaderboard[i] != i_second)
 		{
-			third = leaderboard[i];
+			i_third = i_leaderboard[i];
 		}
 	}
 }
@@ -213,7 +213,7 @@ void Leaderboard::Init() //defines what shader to use
 
 void Leaderboard::Update(double dt)
 {
-	delay += dt;
+	d_delay += dt;
 
 
 	if (Application::IsKeyPressed(VK_ESCAPE))
@@ -242,7 +242,7 @@ void Leaderboard::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	
-	fps = 1.0f / (float)dt;
+	f_fps = 1.0f / (float)dt;
 
 	camera.Update(dt, false);
 }
@@ -293,15 +293,15 @@ void Leaderboard::Render()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("First        " + std::to_string(first)), Color(1, 0, 0), 2, 18, 36);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("First        " + std::to_string(i_first)), Color(1, 0, 0), 2, 18, 36);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Second       " + std::to_string(second)), Color(1, 0, 0), 2, 18, 34);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Second       " + std::to_string(i_second)), Color(1, 0, 0), 2, 18, 34);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Third        " + std::to_string(third)), Color(1, 0, 0), 2, 18, 32);
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Third        " + std::to_string(i_third)), Color(1, 0, 0), 2, 18, 32);
 	modelStack.PopMatrix();
 
 
