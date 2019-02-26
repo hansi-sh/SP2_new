@@ -42,5 +42,6 @@ void Sound::setSoundVol(const float volume)
 
 void Sound::stopSound()
 {
+	// Bug not fixed yet
 	engine->stopAllSounds();
 }

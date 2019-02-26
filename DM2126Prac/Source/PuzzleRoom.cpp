@@ -60,22 +60,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	// testing irrklan
 	music::player.init();
 	music::player.setSoundVol(0.5);
-	// music::player.playSound("Sound//Scene1//PuzzleBGM1.wav", true);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
-
-	//<----for BMO body animation movement when running---->
-	//LeftLegX = 90.0f;
-	//RightLegX = 90.0f;
-	//ArmRotation = 0.0f;
-	//TranslateBodyX = 0.0f;
-	//TranslateBodyY = 15.0f;
-	//TranslateBodyZ = 0.0f;
-	//RotateBody = 0.0f;
-
-	//<--Music-->
-	/*b_musicSelected = false;
-	b_inPM = false;
-	b_inPC = false;*/
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -411,7 +396,7 @@ void PuzzleRoom::Update(double dt)
 		&& camera.position.z > 25 && camera.position.z < 45)
 	{ 
 		music::player.init();
-		music::player.setSoundVol(0.3);
+		music::player.setSoundVol(0.1);
 		music::player.playSound("Sound//Scene1//Static2.wav");
 	}
 
@@ -474,10 +459,6 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			lockeddoortext = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	
@@ -575,9 +556,6 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete = true;
 			safecracking = true;
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (safecracking == true)
@@ -659,18 +637,17 @@ void PuzzleRoom::Update(double dt)
 	{
 		if (Application::IsKeyPressed('E') && elapsedtime > 1)
 		{
+			elapsedtime = 0;
 			interactioncomplete = true;
 			havekey1 = true;
 			itemcollect = true;
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
 			uploadItem(27);
-			meshList[GEO_KEY1NOTE] = MeshBuilder::GenerateQuad("twst",Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_KEY1NOTE]->textureID = LoadTGA("Image//keyonewords.tga");
-			uploadItem(43);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
+			collectionkey1 = true;
 		}
 	}
 	//Patient
@@ -680,10 +657,6 @@ void PuzzleRoom::Update(double dt)
 		{
 			interactioncomplete =true;
 			patienthint = true;
-
-			music::player.init();
-			music::player.setSoundVol(0.5);
-			music::player.playSound("Sound//Scene1//MouseClick.wav");
 		}
 	}
 	if (havekey3 == true && patientint == true)
@@ -703,11 +676,14 @@ void PuzzleRoom::Update(double dt)
 		{
 			timeleft = true;
 			interactioncomplete = true;
+
+			music::player.stopSound();
 			Application app;
 			app.SetSceneNumber(2);
 			app.Run();
 		}
 	}
+
 	if (doorunlocked == false && finaldoorint == true)
 	{
 		if (Application::IsKeyPressed('E'))
@@ -850,7 +826,7 @@ void PuzzleRoom::Update(double dt)
 				break;
 			}
 			//Key1
-			if (AllObjs == 20)
+			if (AllObjs == 20 && collectionkey1 ==false)
 			{
 				key1int = true;
 				interaction = true;
@@ -987,6 +963,7 @@ void PuzzleRoom::Render()
 
 	RenderSkybox();
 	CreepyHouse();
+			
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
@@ -1105,15 +1082,16 @@ void PuzzleRoom::Render()
 			 interactioncomplete = true;
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Nice Painting"), Color(1, 1, 1), 2, 4, 42);
-		 modelStack.PopMatrix();}
+		 modelStack.PopMatrix();
+		 }
 	 }
 	 if (havekey1 == true)
 	 {
+		 modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Unlocks Door Perhaps"), Color(0, 0, 0), 2, 40, 30);
 		DrawHUD(meshList[GEO_KEY1NOTE], Color(0, 0, 1),false, 0.5, 40, 30);
-		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
-		meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
-		uploadItem(27);
+		rendertag();
+		modelStack.PopMatrix();
 	 }
 	 if (havekey2 == true)
 	 {
@@ -1511,6 +1489,8 @@ void PuzzleRoom::uploadItem(int newobject)
 		forward->prev = last;
 		last = forward;
 	}
+	itemcount = 1;
+	totalitem++;
 }
 void PuzzleRoom::printNext()
 {
@@ -1519,16 +1499,19 @@ void PuzzleRoom::printNext()
 	if (check != NULL)
 	{
 		current = check;
+		itemcount++;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		itemcount = 1;
 		rendertag();
 	}
 }
@@ -1539,21 +1522,25 @@ void PuzzleRoom::printPrev()
 	if (check != NULL)
 	{
 		current = check;
+		itemcount--;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		itemcount = 1;
 		rendertag();
 	}
 }
 void PuzzleRoom::rendertag()
 {
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(itemcount) + "/" + std::to_string(totalitem), Color(0, 0, 1), 2, 5, 5);
 	for (int i = 0; i < 34; i++)
 	{
 		if (current->data == i)
