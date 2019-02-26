@@ -22,6 +22,8 @@
 #include "WinScreen.h"
 #include "LoseScreen.h"
 
+#include "Sound.h"
+
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
 const unsigned int frameTime = 1000 / FPS; // time for each frame
@@ -122,7 +124,6 @@ int Application::SetSceneNumber(int number)
 
 void Application::Run()
 {
-
 	Scene *scene;
 	//Main Loop
 	if (GetSceneNumber()==1)
@@ -154,7 +155,6 @@ void Application::Run()
 	else if (GetSceneNumber() == 7)	//Win screen
 	{
 		scene = new WinScene();
-		//glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	else if (GetSceneNumber() == 8)	//Lose screen
 	{
@@ -165,7 +165,7 @@ void Application::Run()
 		scene = new Leaderboard();	
 	}
 	else // change back to PuzzleRoom when pushing 
-	{
+	{		
 		scene = new MainMenuScene();
 		//scene = new RaceScene();
 		//scene = new HospitalCutScene();

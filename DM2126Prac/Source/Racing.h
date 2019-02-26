@@ -142,6 +142,7 @@ private:
 		GEO_SPEEDMETER,
 		GEO_TIME,
 		GEO_PAUSE,
+		GEO_PAUSESELECT,
 
 		GEO_CAR1,
 		GEO_CAR2,
@@ -152,7 +153,6 @@ private:
 		
 		GEO_WARNING, // if car onto pavement
 		GEO_START,
-		GEO_PAUSESELECT,
 
 		GEO_TEXT,
 		NUM_GEOMETRY,

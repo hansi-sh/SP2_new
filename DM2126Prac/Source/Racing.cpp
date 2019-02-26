@@ -23,7 +23,7 @@ RaceScene::~RaceScene()
 
 void RaceScene::Init() //defines what shader to use
 {
-	
+
 	b_movement = true;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
@@ -40,7 +40,7 @@ void RaceScene::Init() //defines what shader to use
 
 	//<---Sound--->
 	music::player.init();
-	music::player.setSoundVol(0.4);
+	music::player.setSoundVol(0.2);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	// For pop up screen
@@ -89,7 +89,7 @@ void RaceScene::Init() //defines what shader to use
 		i_movechoice[i] = 0;
 		V_AIpos[i] = (Vector3(f_AIWalkX[i], f_AIWalkY[i], f_AIWalkZ[i]));
 	}
-	
+
 	//AIWALK
 	b_dead = false;
 	b_collideAI = true;
@@ -119,8 +119,6 @@ void RaceScene::Init() //defines what shader to use
 	}
 
 	f_TPCRotateBy = 0.0f;
-
-
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -266,14 +264,14 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
+
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage3.tga");
 
-	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
-	
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(35);
+		RaceTimer.v_SetRaceSceneTime(60);
 	}
 	else
 	{
@@ -292,10 +290,10 @@ void RaceScene::Update(double dt)
 	}
 
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
-	{		
+	{
 		ofstream saveFile("loli.txt", fstream::app);
-		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		saveFile << 9 << endl;
+		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
+		//saveFile << 9 << endl;
 
 		music::player.stopSound();
 
@@ -304,22 +302,22 @@ void RaceScene::Update(double dt)
 		app.SetSceneNumber(8);
 		app.Run();
 	}
-	if (timerunout == false)
+	if (timerunout == false && b_pause == false)
 	{
 		RaceTimer.v_UpdateTime(dt);
+		b_movement = true;
 	}
 	if (f_TranslateBodyZ >= 1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
-		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		saveFile << 9 << endl;
+		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
 		music::player.stopSound();
 
 		Application app;
 		app.SetSceneNumber(7);
 		app.Run();
 	}
-	if (b_movement ==true)
+	if (b_movement == true)
 	{
 		for (int i = 0; i < 10; i++)	//golden
 		{
@@ -355,49 +353,37 @@ void RaceScene::Update(double dt)
 			f_AIWalkZ[i];
 		}
 	}
-	
-	
-	if (Application::IsKeyPressed('1'))
-	{
-		b_movement = false;
-	}
-	if (Application::IsKeyPressed('2'))
-	{
-		b_movement = true;
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-	}
 
 	if (Application::IsKeyPressed('6'))
-	{	
+	{
 		glEnable(GL_CULL_FACE);
-	}	
+	}
 	if (Application::IsKeyPressed('7'))
-	{	
+	{
 		glDisable(GL_CULL_FACE);
 	}
 	if (Application::IsKeyPressed('8'))
-	{	
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 	if (Application::IsKeyPressed('9'))
-	{	
+	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
 	// d_Delay audio
 	d_Delay = d_Delay + 0.2;
 
+	if(b_movement)
+	{
 	if (Application::IsKeyPressed('W'))//forward
 	{
 		b_StepAccelerator = true;
 		b_StepBrakes = false;
 
-		if (d_Delay > 30) 
+		if (d_Delay > 30)
 		{
-			music::player.init();
-			music::player.setSoundVol(1);
+			music::player.setSoundVol(0.2);
 			music::player.playSound("Sound//Scene3//Accelerate1.wav");
 			d_Delay = 0;
 		}
@@ -459,7 +445,7 @@ void RaceScene::Update(double dt)
 	f_TranslateBodyX = V_UpdatedPlayerPos.x;
 	f_TranslateBodyY = V_UpdatedPlayerPos.y;
 	f_TranslateBodyZ = V_UpdatedPlayerPos.z;
-
+}
 	for (int i = 0; i < 30; i++)
 	{
 		for (int i = 0; i < 30; i++)
@@ -515,7 +501,7 @@ void RaceScene::Update(double dt)
 			f_enemyZ[i];
 		}
 	}
-	
+
 
 	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
 	Obj[OBJ_PLAYER]->setOBB(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
@@ -547,7 +533,7 @@ void RaceScene::Update(double dt)
 		b_collide = false;
 		b_collideAI = false;
 	}
-	//ISSUE:AI MOVING BACK,IF HIT AI WILL FLY ,SOLUTION:FIX AI DECELERATION 
+	//ISSUE:AI MOVING BACK,IF HIT AI WILL FLY ,SOLUTION:FIX AI DECELERATION
 	for (int AllObjs2 = 33; AllObjs2 < NUM_OBJ; ++AllObjs2)
 	{
 		for (int i = 33; i < NUM_OBJ; ++i)
@@ -608,23 +594,22 @@ void RaceScene::Update(double dt)
 			{
 				b_dead = true;
 				P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) * 0.5));
-				
+
 			}
 			else//rest
 			{
 				b_dead = true;
 				P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) *0.75));
-				
+
 			}
 
-			music::player.init();
 			music::player.setSoundVol(0.3);
 			music::player.playSound("Sound//Scene3//CrashHuman.wav");
 		}
 	}
 	if (b_collide)	//if it collides, what ever that was changed will be set to the previous frame
 	{
-		if (i_CollidedWith >= 33 && i_CollidedWith <= 48) 
+		if (i_CollidedWith >= 33 && i_CollidedWith <= 48)
 		{
 			if (f_TranslateBodyZ > f_enemyZ[i_CollidedWith - 33])
 			{
@@ -633,7 +618,6 @@ void RaceScene::Update(double dt)
 					P_PlayerCar.v_SetSpeed((fabs(P_PlayerCar.f_GetSpeed()) * 1.5));
 					e[i_CollidedWith - 33].v_SetEnemySpeed(-(fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.0)));
 
-					music::player.init();
 					music::player.setSoundVol(0.3);
 					music::player.playSound("Sound//Scene3//CrashCar.wav");
 				}
@@ -650,7 +634,6 @@ void RaceScene::Update(double dt)
 					P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 1.0)));
 					e[i_CollidedWith - 33].v_SetEnemySpeed((fabs(e[i_CollidedWith - 33].f_GetEnemySpeed() * 1.5)));
 
-					music::player.init();
 					music::player.setSoundVol(0.3);
 					music::player.playSound("Sound//Scene3//CrashCar.wav");
 				}
@@ -701,8 +684,6 @@ void RaceScene::Update(double dt)
 	{
 		f_TPCRotateBy = 1.0f;
 	}
-	
-
 	// Check if out of bound -> ask sihan tis part
 
 	if (f_TranslateBodyX > 20 || f_TranslateBodyX < -20) //fix rap
@@ -710,8 +691,7 @@ void RaceScene::Update(double dt)
 		b_Warning = true;
 		if (d_Delay > 10)
 		{
-			music::player.init();
-			music::player.setSoundVol(1);
+			music::player.setSoundVol(0.2);
 			music::player.playSound("Sound//Scene3//Warning.wav");
 			d_Delay = 0;
 		}
@@ -720,15 +700,6 @@ void RaceScene::Update(double dt)
 	{
 		b_Warning = false;
 	}
-
-	// Issue: audio v blurred out
-	//i_CountDown = RaceTimer.d_GetRaceSceneTime();
-	//if (i_CountDown < 40) // change time to 12
-	//{
-	//	music::player.init();
-	//	music::player.setSoundVol(0.5);
-	//	music::player.playSound("Sound//Scene3//HurryUp.wav");
-	//}
 
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime <0.0f)
 	{
@@ -741,28 +712,45 @@ void RaceScene::Update(double dt)
 
 	if (b_pause)
 	{
-		if (Application::IsKeyPressed(VK_UP))
+		b_movement = false;
+		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 		{
 			if (i_Selector > 0)
 				--i_Selector;
 			else
-			{
 				i_Selector = 2;
-			}
+
+			d_BounceTime = 0.25;
 		}
-		else if (Application::IsKeyPressed(VK_DOWN))
+		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 		{
 			if(i_Selector < 2)
 				++i_Selector;
 			else
-			{
 				i_Selector = 0;
+
+			d_BounceTime = 0.25;
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
+		{
+			if (i_Selector == 0)	//Resume
+				b_pause = false;
+			else if (i_Selector == 1)	//Restart
+			{
+				Application app;
+				app.SetSceneNumber(3);
+				app.Run();
 			}
+			else if (i_Selector == 2)	//Main menu
+			{
+				Application app;
+				app.SetSceneNumber(0);
+				app.Run();
+			}
+			d_BounceTime = 0.25;
 		}
 	}
-
-
-
 
 	//camera.Update(dt);
 	camera.Update(f_TPCRotateBy, f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ);
@@ -889,7 +877,7 @@ void RaceScene::Render()
 
 	modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
-		modelStack.PopMatrix();
+	modelStack.PopMatrix();
 
 		int timecount = RaceTimer.d_GetRaceSceneTime();
 
@@ -938,12 +926,23 @@ void RaceScene::Render()
 
 		if (b_pause)
 		{
-
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
 			modelStack.PopMatrix();
 
-			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+			if (i_Selector == 0)
+			{
+				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+			}
+			else if (i_Selector == 1)
+			{
+				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.5);
+			}
+			else
+			{
+				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 14);
+			}
+
 
 			modelStack.PushMatrix();
 			RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
@@ -1080,7 +1079,7 @@ void RaceScene::RenderText(Mesh* mesh, std::string text, Color color)
 		characterSpacing.SetToTranslation(i * 1.0f, 0, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
-	
+
 		mesh->Render((unsigned)text[i] * 6, 6);
 	}
 

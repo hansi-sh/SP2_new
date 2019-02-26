@@ -39,42 +39,6 @@ class Scene2 : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-		//U_LIGHT1_POSITION,
-		//U_LIGHT1_COLOR,
-		//U_LIGHT1_POWER,
-		//U_LIGHT1_KC,
-		//U_LIGHT1_KL,
-		//U_LIGHT1_KQ,
-		//U_LIGHT1NABLED,
-		//U_LIGHT1_TYPE,
-		//U_LIGHT1_SPOTDIRECTION,
-		//U_LIGHT1_COSCUTOFF,
-		//U_LIGHT1_COSINNER,
-		//U_LIGHT1_EXPONENT,
-		//U_LIGHT2_POSITION,
-		//U_LIGHT2_COLOR,
-		//U_LIGHT2_POWER,
-		//U_LIGHT2_KC,
-		//U_LIGHT2_KL,
-		//U_LIGHT2_KQ,
-		//U_LIGHT2NABLED,
-		//U_LIGHT2_TYPE,
-		//U_LIGHT2_SPOTDIRECTION,
-		//U_LIGHT2_COSCUTOFF,
-		//U_LIGHT2_COSINNER,
-		//U_LIGHT2_EXPONENT,
-		//U_LIGHT3_POSITION,
-		//U_LIGHT3_COLOR,
-		//U_LIGHT3_POWER,
-		//U_LIGHT3_KC,
-		//U_LIGHT3_KL,
-		//U_LIGHT3_KQ,
-		//U_LIGHT3NABLED,
-		//U_LIGHT3_TYPE,
-		//U_LIGHT3_SPOTDIRECTION,
-		//U_LIGHT3_COSCUTOFF,
-		//U_LIGHT3_COSINNER,
-		//U_LIGHT3_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -106,6 +70,10 @@ private:
 
 	void RenderSkybox();
 	bool b_viewStats;
+
+	//pausemenu
+	bool b_pause;
+	double d_BounceTime;
 
 	// For Box collision
 	bool b_collide;
@@ -160,6 +128,9 @@ private:
 		GEO_CROTCH,
 		GEO_TIME,
 
+		GEO_PAUSE,
+		GEO_PAUSESELECT,
+
 		NUM_GEOMETRY,
 	};
 
@@ -193,6 +164,7 @@ private:
 	ObjectBox* Obj[NUM_OBJ]; // for box collision
 
 	static Camera2 camera;
+	int i_Selector;
 
 	Light light[1];
 

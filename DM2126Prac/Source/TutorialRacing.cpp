@@ -28,10 +28,6 @@ void TutorialRaceScene::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
-	music::player.init();
-	music::player.setSoundVol(0.2);
-	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
-
 	b_Switch = false;
 	d_BounceTime = 0.25f;
 	f_TPCRotateBy = 0.0f;
@@ -294,6 +290,7 @@ void TutorialRaceScene::Update(double dt)
 			b_Switch = true;
 		else
 		{
+			music::player.stopSound();
 			Application app;
 			app.SetSceneNumber(4);
 			app.Run();
@@ -303,6 +300,7 @@ void TutorialRaceScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_ESCAPE))
 	{
+		music::player.stopSound();
 		Application app;
 		app.SetSceneNumber(0);
 		app.Run();
