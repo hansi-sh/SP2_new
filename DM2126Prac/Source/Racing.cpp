@@ -829,9 +829,18 @@ void RaceScene::Render()
 		}
 		else
 		{
-			modelStack.PushMatrix();
-			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
-			modelStack.PopMatrix();
+			if (timecount % 2)
+			{
+				modelStack.PushMatrix();
+				RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(0.9294f, 0.2156f, 0.1372f), 2.5, 40.8, 57.5);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.PushMatrix();
+				RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
+				modelStack.PopMatrix();
+			}
 		}
 
 		int speedcount = fabs(PlayerCar.f_GetSpeed());
