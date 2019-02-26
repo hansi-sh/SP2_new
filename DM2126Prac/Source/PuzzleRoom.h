@@ -158,13 +158,6 @@ private:
 	//final door
 	bool finaldoorint;
 	bool doorunlocked = false;
-	//<--Music-->
-	/*void PlayMusic();
-	bool b_musicSelected;
-	bool b_inPM;
-	bool b_checkinPM;
-	bool b_inPC;
-*/
 
 	bool showIntro = true; // Raphael Added
 	double score = 1.0; // Raphael Added
