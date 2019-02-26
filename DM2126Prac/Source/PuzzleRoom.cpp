@@ -52,17 +52,17 @@ void PuzzleRoom::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	PuzzleTimer = new StopWatchTimer;
-	checkmodelStack = false;
+	b_checkmodelStack = false;
 	
-	itemcollect = false;
+	b_itemcollect = false;
 	b_viewStats = false;
 
 	// testing irrklan
 	music::player.init();
 	music::player.setSoundVol(0.5);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
-	itemcount = 0;
-	totalitem = 0;
+	i_itemcount = 0;
+	i_totalitem = 0;
 	
 
 	glGenVertexArrays(1, &m_vertexArrayID);
@@ -74,13 +74,13 @@ void PuzzleRoom::Init() //defines what shader to use
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	LSPEED = 30.0f;
+	f_LSPEED = 30.0f;
 
 	camera.Init(Vector3(-67.99, 52.75, -6.7), Vector3(-67.99, 52.8, -6.016), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
-	getCurrentCam = true;
+	b_getCurrentCam = true;
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -276,7 +276,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_PILLOW] = MeshBuilder::GenerateOBJ("Book1", "OBJ//pillow.obj");
 	meshList[GEO_PILLOW]->textureID = LoadTGA("Image//Pillow.tga");
-	if (pillowmoved == false)
+	if (b_pillowmoved == false)
 	{
 		Obj[OBJ_PILLOW] = new ObjectBox(Vector3(21, 58.50, -86.03), 6, 65, 34.82);
 	}
@@ -286,7 +286,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 
 	meshList[GEO_SECRETWALL] = MeshBuilder::GenerateOBJ("Book1", "OBJ//secretwall.obj");
-	meshList[GEO_SECRETWALL]->textureID = LoadTGA("Image//SecretWall.tga");
+	meshList[GEO_SECRETWALL]->textureID = LoadTGA("Image//SecretWall2.tga");
 
 
 
@@ -397,7 +397,7 @@ void PuzzleRoom::Update(double dt)
 	score = score + 0.2;
 	if (score > 20)
 	{
-		showIntro = false;
+		b_showIntro = false;
 	}
 
 	// Raphael Added -> not working 
@@ -410,50 +410,50 @@ void PuzzleRoom::Update(double dt)
 	}
 
 
-	elapsedtime += dt;
+	f_elapsedtime += dt;
 	//Timer
 	//If timer reach 0
 	if (PuzzleTimer->d_GetPuzzleSceneTime() <= 0)
 	{
-		timerunout = true;
+		b_timerunout = true;
 	}
 	//Prevent time from going negative
-	if (timerunout == false)
+	if (b_timerunout == false)
 	{
 		PuzzleTimer->v_UpdateTime(dt);
 	}
-	if (timeleft == true)
+	if (b_timeleft == true)
 	{
 		//Application::timerh = PuzzleTimer->d_GetTimeLeftAfterPuzzle();
 	}
 	//Inventory
-	if (Application::IsKeyPressed(VK_LEFT)&& elapsedtime >1)
+	if (Application::IsKeyPressed(VK_LEFT)&& f_elapsedtime >1)
 	{
-		if (itemcollect ==true)
+		if (b_itemcollect ==true)
 		{
-			elapsedtime = 0;
-			printPrev();
+			f_elapsedtime = 0;
+			v_printPrev();
 		}
 	}
-	if(Application::IsKeyPressed(VK_RIGHT) && elapsedtime > 1)
+	if(Application::IsKeyPressed(VK_RIGHT) && f_elapsedtime > 1)
 	{
-		if (itemcollect == true)
+		if (b_itemcollect == true)
 		{
-			elapsedtime = 0;
-			printNext();
+			f_elapsedtime = 0;
+			v_printNext();
 		}
 	}
 	//DoorOpening
-	if (doorint == true && havekey1 == true)
+	if (b_doorint == true && b_havekey1 == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			
 			interactioncomplete = true;
-			if (elapsedtime > bouncetime)
+			if (f_elapsedtime > f_bouncetime)
 			{
-				door1open = !door1open;
-				bouncetime = elapsedtime + 0.4f;
+				b_door1open = !b_door1open;
+				f_bouncetime = f_elapsedtime + 0.4f;
 				music::player.init();
 				music::player.setSoundVol(0.5);
 				music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
@@ -461,34 +461,34 @@ void PuzzleRoom::Update(double dt)
 
 		}
 	}
-	if(doorint == true && havekey1 == false || drawerint == true && havekey2 == false)
+	if(b_doorint == true && b_havekey1 == false || b_drawerint == true && b_havekey2 == false)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
-			lockeddoortext = true;
+			b_lockeddoortext = true;
 		}
 	}
 	
-	if (door1open && RotateDoor1< 85)
+	if (b_door1open && f_RotateDoor1< 85)
 	{
 		Obj[OBJ_DOOR] = new ObjectBox(Vector3(55.7, 58.50, -16.5), 31.82, 65, 7);
-		RotateDoor1 += 35 * dt * 2;
+		f_RotateDoor1 += 35 * dt * 2;
 	}
-	else if (!door1open && RotateDoor1 > 0)
+	else if (!b_door1open && f_RotateDoor1 > 0)
 	{
 		Obj[OBJ_DOOR] = new ObjectBox(Vector3(69, 58.50, -32.28), 7, 65, 30);
-		RotateDoor1 -= 35 * dt * 2;
+		f_RotateDoor1 -= 35 * dt * 2;
 	}
 	//SecretDoorOpening
-	if (secretdoorint == true)
+	if (b_secretdoorint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			if (elapsedtime > bouncetime)
+			if (f_elapsedtime > f_bouncetime)
 			{
-				secretdooropen = !secretdooropen;
-				bouncetime = elapsedtime + 0.4f;
+				b_secretdooropen = !b_secretdooropen;
+				f_bouncetime = f_elapsedtime + 0.4f;
 
 				music::player.init();
 				music::player.setSoundVol(0.5);
@@ -497,84 +497,84 @@ void PuzzleRoom::Update(double dt)
 		}
 
 	}
-	if (secretdooropen && secretdoortranslation < 30)
+	if (b_secretdooropen && f_secretdoortranslation < 30)
 	{
 		Obj[OBJ_SECRETWALL] = new ObjectBox(Vector3(68.7, 58.50, 81.69), 83.5, 70, 2);
-		secretdoortranslation += 10 * dt * 2;
+		f_secretdoortranslation += 10 * dt * 2;
 	}
-	else if (!secretdooropen && secretdoortranslation> 0)
+	else if (!b_secretdooropen && f_secretdoortranslation> 0)
 	{
 		Obj[OBJ_SECRETWALL] = new ObjectBox(Vector3(68.7, 158.50, 81.69), 83.5, 70, 2);
-		secretdoortranslation -= 10 * dt * 2;
+		f_secretdoortranslation -= 10 * dt * 2;
 	}
 	
 	//Pillow
 	
-	if (pillowmoved == false && pillowint == true)
+	if (b_pillowmoved == false && b_pillowint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
 
 		}
-		if (pillowmoved == false && pillowtranslation <=3 && interactioncomplete == true)
+		if (b_pillowmoved == false && f_pillowtranslation <=3 && interactioncomplete == true)
 		{
-			pillowtranslation += 3 * dt ;
-			if (pillowtranslation >= 3)
+			f_pillowtranslation += 3 * dt ;
+			if (f_pillowtranslation >= 3)
 			{
-				pillowmoved = true;
+				b_pillowmoved = true;
 			}
 		}
 	}
-	if ( pillowmoved == true)
+	if ( b_pillowmoved == true)
 	{
 		Obj[OBJ_PILLOW] = new ObjectBox(Vector3(48, 58.50, -86.03), 6, 65, 34.82);
 	}
-	if (Application::IsKeyPressed('G')&& elapsedtime >1)
+	if (Application::IsKeyPressed('G')&& f_elapsedtime >1)
 	{
-		elapsedtime = 0;
-		havekey1 = true;
-		havekey2 = true; 
-		itemcollect = true;
+		f_elapsedtime = 0;
+		b_havekey1 = true;
+		b_havekey2 = true; 
+		b_itemcollect = true;
 		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
 		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyonewords");
-		uploadItem(27);
+		v_uploadItem(27);
 		std::cout << "0" << std::endl;
 	}
 	//safe
-	if (safeint == true && safeopen == false)
+	if (b_safeint == true && b_safeopen == false)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			safecracking = true;
+			b_safecracking = true;
 		}
 	}
-	if (safecracking == true)
+	if (b_safecracking == true)
 	{
-		other = false;
+		b_other = false;
 		if (Application::IsKeyPressed('8'))
 		{
-			eight = true;
-			other = false;
-			six = false;
-			one = false;
-			two = false;
+			b_eight = true;
+			b_other = false;
+			b_six = false;
+			b_one = false;
+			b_two = false;
 		}
-		else if (Application::IsKeyPressed('6') && eight == true)
+		else if (Application::IsKeyPressed('6') && b_eight == true)
 		{
-			six = true;
-			one = false;
-			two = false;
+			b_six = true;
+			b_one = false;
+			b_two = false;
 		}
-		else if (Application::IsKeyPressed('1') && six == true)
+		else if (Application::IsKeyPressed('1') && b_six == true)
 		{
-			one = true;
-			two = false;
+			b_one = true;
+			b_two = false;
 		}
-		else if (Application::IsKeyPressed('2') && one == true)
+		else if (Application::IsKeyPressed('2') && b_one == true)
 		{
-			two = true;
+			b_two = true;
 		}
 		else if (Application::IsKeyPressed('E'))
 		{
@@ -582,120 +582,120 @@ void PuzzleRoom::Update(double dt)
 		}
 		else if (Application::IsKeyPressed('3')&& Application::IsKeyPressed('4')&& Application::IsKeyPressed('5') && Application::IsKeyPressed('7') && Application::IsKeyPressed('9') && Application::IsKeyPressed('0'))
 		{
-			other = true;
-			eight = false;
-			six = false;
-			one = false;
-			two = false;
+			b_other = true;
+			b_eight = false;
+			b_six = false;
+			b_one = false;
+			b_two = false;
 		}
 
 	}
-	if (eight == true && six == true && one == true && two == true)
+	if (b_eight == true && b_six == true && b_one == true && b_two == true)
 	{
-		codecracked = true;
+		b_codecracked = true;
 	}
-	if (safeopen == false && safeint == true &&codecracked == true)
+	if (b_safeopen == false && b_safeint == true &&b_codecracked == true)
 	{
-			safeopen = true;
-			havekey3 = true;
+			b_safeopen = true;
+			b_havekey3 = true;
 	}
-	if (safeopen == true)
+	if (b_safeopen == true)
 	{
 
 	}
-	if (havekey3 == true)
+	if (b_havekey3 == true)
 	{
-		eight = false;
-		six = false;
-		one = false;
-		two = false;
+		b_eight = false;
+		b_six = false;
+		b_one = false;
+		b_two = false;
 
 	}
 	//drawer open
-	if (draweropen == false && havekey2 == true && drawerint == true)
+	if (b_draweropen == false && b_havekey2 == true && b_drawerint == true)
 	{
-		if (Application::IsKeyPressed('E') && elapsedtime >2)
+		if (Application::IsKeyPressed('E') && f_elapsedtime >2)
 		{
-			elapsedtime = 0;
+			f_elapsedtime = 0;
 			interactioncomplete = true;
-			itemcollect = true;
+			b_itemcollect = true;
 			meshList[GEO_NOTE] = MeshBuilder::GenerateQuad("note", Color(1, 1, 1), 1, 1, 0);
 			meshList[GEO_NOTE]->textureID = LoadTGA("Image//note.tga");
-			uploadItem(45);
+			v_uploadItem(45);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
 		}
-		if (draweropen == false && drawertranslation <= 1.5 && interactioncomplete == true)
+		if (b_draweropen == false && f_drawertranslation <= 1.5 && interactioncomplete == true)
 		{
-			drawertranslation += 0.5 * dt;
-			if (drawertranslation >=0.5)
+			f_drawertranslation += 0.5 * dt;
+			if (f_drawertranslation >=0.5)
 			{
-				draweropen = true;
+				b_draweropen = true;
 			}
 		}
 	}
 	//key2
-	if (key2int == true && pillowmoved == true)
+	if (b_key2int == true && b_pillowmoved == true)
 	{
-		if (Application::IsKeyPressed('E') && elapsedtime > 2)
+		if (Application::IsKeyPressed('E') && f_elapsedtime > 2)
 		{
-			elapsedtime = 0;
+			f_elapsedtime = 0;
 			interactioncomplete = true;
-			havekey2 = true;
-			itemcollect = true;
+			b_havekey2 = true;
+			b_itemcollect = true;
 			meshList[GEO_KEY2] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY2]->textureID = LoadTGA("Image//InvKey2.tga");
-			uploadItem(31);
+			v_uploadItem(31);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
 		}
 	}
 	//key1
-	if (key1int == true)
+	if (b_key1int == true)
 	{
-		if (Application::IsKeyPressed('E') && elapsedtime > 2)
+		if (Application::IsKeyPressed('E') && f_elapsedtime > 2)
 		{
-			elapsedtime = 0;
+			f_elapsedtime = 0;
 			interactioncomplete = true;
-			havekey1 = true;
-			itemcollect = true;
+			b_havekey1 = true;
+			b_itemcollect = true;
 			meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("twst", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_KEY1]->textureID = LoadTGA("Image//InvKey1.tga");
-			uploadItem(27);
+			v_uploadItem(27);
 			music::player.init();
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene1//PickUp.wav");
-			collectionkey1 = true;
+			b_collectionkey1 = true;
 		}
 	}
 	//Patient
-	if (patientint == true)
+	if (b_patientint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete =true;
-			patienthint = true;
+			b_patienthint = true;
 
 		}
 	}
-	if (havekey3 == true && patientint == true)
+	if (b_havekey3 == true && b_patientint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
-			havepatient = true;
+			b_havepatient = true;
 		}
 	}
-	if (havepatient == true)
+	if (b_havepatient == true)
 	{
-		doorunlocked = true;
+		b_doorunlocked = true;
 	}
-	if (doorunlocked == true && finaldoorint == true)
+	if (b_doorunlocked == true && b_finaldoorint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
-			timeleft = true;
+			b_timeleft = true;
 			interactioncomplete = true;
 
 			music::player.stopSound();
@@ -705,12 +705,12 @@ void PuzzleRoom::Update(double dt)
 		}
 	}
 
-	if (doorunlocked == false && finaldoorint == true)
+	if (b_doorunlocked == false && b_finaldoorint == true)
 	{
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
-			lockeddoortext = true;	
+			b_lockeddoortext = true;	
 		}
 	}
 	if (Application::IsKeyPressed('5'))
@@ -752,7 +752,7 @@ void PuzzleRoom::Update(double dt)
 	else
 		b_viewStats = false;
 
-	fps = 1.0f / (float)dt;
+	f_fps = 1.0f / (float)dt;
 
 	if (Application::IsKeyPressed('Z'))
 	{
@@ -781,14 +781,14 @@ void PuzzleRoom::Update(double dt)
 			//Doorint
 			if (AllObjs == 19)
 			{
-				doorint = true;
+				b_doorint = true;
 				interaction = true;
 				break;
 			}
 			//Key1
 			if (AllObjs == 20 )
 			{
-				key1int = true;
+				b_key1int = true;
 				interaction = true;
 				break;
 			}
@@ -796,7 +796,7 @@ void PuzzleRoom::Update(double dt)
 			if (AllObjs == 22)
 			{
 				
-				secretdoorint = true;
+				b_secretdoorint = true;
 				interaction = true;
 				break;
 			}
@@ -810,81 +810,81 @@ void PuzzleRoom::Update(double dt)
 			//LightSwitchone
 			if(AllObjs ==27)
 			{
-				switchoneint = true;
+				b_switchoneint = true;
 				interaction = true;
 				break;
 			}
 			//LightSwitchtwo
 			if (AllObjs == 28)
 			{
-				switchtwoint =true;
+				b_switchtwoint =true;
 				interaction = true;
 				break;
 			}
 			//Pillow
 			if (AllObjs == 29)
 			{
-				pillowint = true;
+				b_pillowint = true;
 				interaction = true;
 				break;
 			}
 			//Key2
 			if (AllObjs == 30)
 			{
-				key2int = true;
+				b_key2int = true;
 				interaction = true;
 				break;
 			}
 			//TableDrawer
 			if (AllObjs == 31)
 			{
-				drawerint = true;
+				b_drawerint = true;
 				interaction = true;
 				break;
 			}
 			//Safe
 			if (AllObjs == 32)
 			{
-				safeint = true;
+				b_safeint = true;
 				interaction = true;
 				break;
 			}
 			//PatientInteraction
 			if (AllObjs == 34)
 			{
-				patientint = true;
+				b_patientint = true;
 				interaction = true;
 				break;
 			}
 			//FinalDoor
 			if (AllObjs == 35)
 			{
-				finaldoorint = true;
+				b_finaldoorint = true;
 				interaction = true;
 				break;
 			}
 			if (AllObjs == NUM_OBJ-1)
 			{
-				finaldoorint = false;
-				safeint = false;
-				patienthint = false;
-				patientint = false;
-				drawerint = false;
-				key2int = false;
-				pillowint = false;
-				switchoneint = false;
-				switchtwoint = false;
+				b_finaldoorint = false;
+				b_safeint = false;
+				b_patienthint = false;
+				b_patientint = false;
+				b_drawerint = false;
+				b_key2int = false;
+				b_pillowint = false;
+				b_switchoneint = false;
+				b_switchtwoint = false;
 				paintingint = false;
-				lockeddoortext = false;
-				doorint = false;
-				key1int = false;
-				secretdoorint =false;
+				b_lockeddoortext = false;
+				b_doorint = false;
+				b_key1int = false;
+				b_secretdoorint =false;
 				interaction = false;
 				interactioncomplete = false;
-				other = false;
+				b_other = false;
 				break;
 			}
-			collide = true;
+			b_collide = true;
 			//camera.position = currentCamPos;
 			//camera.target = currentCamTarget;
 			camera.position.x = currentCamPos.x;
@@ -892,10 +892,10 @@ void PuzzleRoom::Update(double dt)
 			camera.target = currentCamTarget;
 			break;
 		}
-		collide = false;
+		b_collide = false;
 	}
 	
-	if (!collide)
+	if (!b_collide)
 	{
 		//currentCamPos = camera.position;
 		//currentCamTarget = camera.target;
@@ -903,7 +903,7 @@ void PuzzleRoom::Update(double dt)
 		currentCamPos = camera.position.z;
 		currentCamTarget = camera.target;
 	}
-	if (getCurrentCam)
+	if (b_getCurrentCam)
 	{
 		currentCamPos = camera.position;
 		currentCamTarget = camera.target;
@@ -921,8 +921,8 @@ void PuzzleRoom::Render()
 
 	modelStack.LoadIdentity();
 
-	RenderSkybox();
-	CreepyHouse();
+	v_RenderSkybox();
+	v_CreepyHouse();
 			
 
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
@@ -1006,7 +1006,7 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("interact"), Color(0, 1, 0), 2, 2, 46);
 		 modelStack.PopMatrix();
 	 }
-	 if (lockeddoortext == true )
+	 if (b_lockeddoortext == true )
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("DoorIsLocked"), Color(1,0,0),2,2,44);
@@ -1022,7 +1022,7 @@ void PuzzleRoom::Render()
 		 modelStack.PopMatrix();
 		 }
 	 }
-	 if (havekey1 == true)
+	 if (b_havekey1 == true)
 	 {
 		 modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1),false, 1, 11, 30);
@@ -1031,11 +1031,11 @@ void PuzzleRoom::Render()
 		//rendertag();
 		modelStack.PopMatrix();
 	 }
-	 if (itemcollect==true)
+	 if (b_itemcollect==true)
 	 {
-		 rendertag();
+		 v_rendertag();
 	 }
-	 if (havekey2 == true)
+	 if (b_havekey2 == true)
 	 {
 		 modelStack.PushMatrix();
 		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 11, 20);
@@ -1043,17 +1043,17 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Drawer"), Color(0, 0, 0), 2, 2, 18);
 		 modelStack.PopMatrix();
 	 }
-	 if (havekey3 == true)
+	 if (b_havekey3 == true)
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Final Key "), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (draweropen == true)
+	 if (b_draweropen == true)
 	 {
 		 
 	 }
-	 if (patienthint == true && havekey3 == false)
+	 if (b_patienthint == true && b_havekey3 == false)
 	 {
 		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 2.5, 14, 12);
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("4Keys,1In A ThousandWords"), Color(0,0,0), 2.5, 5, 35);
@@ -1061,44 +1061,44 @@ void PuzzleRoom::Render()
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("  ,1UnderWhatYouWatch"), Color(0,0,0), 2.5, 5, 31);
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("  ,1WhereYouCloseYourEyes"), Color(0,0,0),2.5, 5,29);
 	 }
-	 if(other == true)
+	 if(b_other == true)
 	 { 
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("Wrong Code Try Again "), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (eight == true)
+	 if (b_eight == true)
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("8"), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (six == true)
+	 if (b_six == true)
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], (" 6"), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (one == true)
+	 if (b_one == true)
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("  1"), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (two == true)
+	 if (b_two == true)
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("   2"), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
-	 if (safeint == true && eight == false && havekey3== false )
+	 if (b_safeint == true && b_eight == false && b_havekey3== false )
 	 {
 		 modelStack.PushMatrix();
 		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
 		 modelStack.PopMatrix();
 	 }
 
-	 if (showIntro) // Raphael Added
+	 if (b_showIntro) // Raphael Added
 	 {
 		 modelStack.PushMatrix();
 		 DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
@@ -1184,12 +1184,12 @@ void PuzzleRoom::RenderMesh(Mesh *mesh, bool enableLight)
 
 static const float SKYBOXSIZE = 300.f;
 
-void PuzzleRoom::RenderSkybox()
+void PuzzleRoom::v_RenderSkybox()
 {
 
 }
 
-void PuzzleRoom::CreepyHouse()
+void PuzzleRoom::v_CreepyHouse()
 {
 	//ALL MUST BE BELOW THIS
 	//Scale
@@ -1197,7 +1197,7 @@ void PuzzleRoom::CreepyHouse()
 	modelStack.Scale(10.f,10.f,10.f);
 	modelStack.PushMatrix();
 	//RenderMesh(meshList[GEO_NOTE], true);
-	if (havepatient == false)
+	if (b_havepatient == false)
 	{
 		modelStack.Translate(5.5, 2.8, 5.5);
 		modelStack.Scale(0.7, 0.7, 0.7);
@@ -1217,7 +1217,7 @@ void PuzzleRoom::CreepyHouse()
 		modelStack.PopMatrix();
 	}
 	//Key2
-	if (havekey2 == false)
+	if (b_havekey2 == false)
 	{
 		RenderMesh(meshList[GEO_KEY2], true);
 	}
@@ -1228,7 +1228,7 @@ void PuzzleRoom::CreepyHouse()
 	//TablePainting
 	RenderMesh(meshList[GEO_TABLEPAINTING], true);
 	//key
-	if (havekey1 == false)
+	if (b_havekey1 == false)
 	{
 		RenderMesh(meshList[GEO_KEY1], true);
 	}
@@ -1237,7 +1237,7 @@ void PuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_SAFEDOOR], true);
 	//SecretWall
 	modelStack.PushMatrix();
-	modelStack.Translate(0,-30+secretdoortranslation,0);
+	modelStack.Translate(0,-30+f_secretdoortranslation,0);
 	RenderMesh(meshList[GEO_SECRETWALL], true);
 	modelStack.PopMatrix();
 
@@ -1247,7 +1247,7 @@ void PuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_BEDFRAME], true);
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0 + pillowtranslation,0,0);
+	modelStack.Translate(0 + f_pillowtranslation,0,0);
 	RenderMesh(meshList[GEO_PILLOW], true);
 	modelStack.PopMatrix();
 
@@ -1282,7 +1282,7 @@ void PuzzleRoom::CreepyHouse()
 	RenderMesh(meshList[GEO_TV], true);
 	//TvTableDrawer
 	modelStack.PushMatrix();
-	modelStack.Translate(0-drawertranslation,0,0);
+	modelStack.Translate(0-f_drawertranslation,0,0);
 	RenderMesh(meshList[GEO_TVTABLEDRAWER], true);
 	modelStack.PopMatrix();
 	//Tvtable
@@ -1304,7 +1304,7 @@ void PuzzleRoom::CreepyHouse()
 	modelStack.PushMatrix(); 
 	modelStack.Translate(7.93, 5, -2.08);
 	modelStack.Rotate(-90, 0.f, 1.f, 0.f);
-	modelStack.Rotate(RotateDoor1, 0, 1, 0);
+	modelStack.Rotate(f_RotateDoor1, 0, 1, 0);
 	modelStack.Translate(-7.93, -5, 2.08);
 	RenderMesh(meshList[GEO_DOORTOROOM1],true);
 	modelStack.PopMatrix();
@@ -1320,7 +1320,7 @@ void PuzzleRoom::CreepyHouse()
 
 }
 
-void PuzzleRoom::RenderButton(int geo_circle, int geo_cylinder)
+void PuzzleRoom::v_RenderButton(int geo_circle, int geo_cylinder)
 {
 	
 }
@@ -1451,7 +1451,7 @@ void PuzzleRoom::DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, 
 
 	glEnable(GL_DEPTH_TEST);
 }
-void PuzzleRoom::uploadItem(int newobject)
+void PuzzleRoom::v_uploadItem(int newobject)
 {
 	forward = new Item(newobject);
 	if (first == NULL)
@@ -1465,58 +1465,58 @@ void PuzzleRoom::uploadItem(int newobject)
 		forward->prev = last;
 		last = forward;
 	}
-	itemcount = 1;
-	totalitem++;
+	i_itemcount = 1;
+	i_totalitem++;
 }
-void PuzzleRoom::printNext()
+void PuzzleRoom::v_printNext()
 {
 	Item *check;
 	check = current->next;
 	if (check != NULL)
 	{
 		current = check;
-		itemcount++;
-		rendertag();
+		i_itemcount++;
+		v_rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
-		itemcount = 1;
-		rendertag();
+		i_itemcount = 1;
+		v_rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
-		itemcount = 1;
-		rendertag();
+		i_itemcount = 1;
+		v_rendertag();
 	}
 }
-void PuzzleRoom::printPrev()
+void PuzzleRoom::v_printPrev()
 {
 	Item *check;
 	check = current->prev;
 	if (check != NULL)
 	{
 		current = check;
-		itemcount--;
-		rendertag();
+		i_itemcount--;
+		v_rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
-		itemcount = 1;
-		rendertag();
+		i_itemcount = 1;
+		v_rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
-		itemcount = 1;
-		rendertag();
+		i_itemcount = 1;
+		v_rendertag();
 	}
 }
-void PuzzleRoom::rendertag()
+void PuzzleRoom::v_rendertag()
 {
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(itemcount) + "/" + std::to_string(totalitem), Color(0, 0, 1), 2, 5, 5);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(i_itemcount) + "/" + std::to_string(i_totalitem), Color(0, 0, 1), 2, 5, 5);
 	for (int i = 0; i <= NUM_GEOMETRY; i++)
 	{
 		if (current->data == i)
