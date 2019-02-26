@@ -821,14 +821,27 @@ void RaceScene::Render()
 
 		int timecount = RaceTimer.d_GetRaceSceneTime();
 
-	if (warning)
-	{
-		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
-	}
-
-	modelStack.PushMatrix();
-	DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
-	modelStack.PopMatrix();
+		if (timecount >= 10 && timecount < 100)
+		{
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
+			modelStack.PopMatrix();
+		}
+		else
+		{
+			if (timecount % 2)
+			{
+				modelStack.PushMatrix();
+				RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(0.9294f, 0.2156f, 0.1372f), 2.5, 40.8, 57.5);
+				modelStack.PopMatrix();
+			}
+			else
+			{
+				modelStack.PushMatrix();
+				RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
+				modelStack.PopMatrix();
+			}
+		}
 
 		int speedcount = fabs(PlayerCar.f_GetSpeed());
 
