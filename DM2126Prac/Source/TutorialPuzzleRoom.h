@@ -60,7 +60,7 @@ public:
 	TutorialPuzzleRoom();
 	~TutorialPuzzleRoom();
 
-	static float lastX, lastY;
+	static float f_lastX, f_lastY;
 
 	virtual void Init();
 	void Update(double dt);
@@ -74,73 +74,73 @@ private:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	float LSPEED;
-	float fps;
+	float f_LSPEED;
+	float f_fps;
 
 	void RenderSkybox();
 	void CreepyHouse();
 	
 	//Light
-	bool switchoneint;
-	bool lightoneon;
-	bool switchtwoint;
-	bool lighttwoon;
+	bool b_switchoneint;
+	bool b_lightoneon;
+	bool b_switchtwoint;
+	bool b_lighttwoon;
 	
 	
 	//For Running Animation
-	bool checkmodelStack;
+	bool b_checkmodelStack;
 	//TV Drawer
-	float drawertranslation = 0;
-	bool drawerint;
-	bool draweropen = false;
+	float f_drawertranslation = 0;
+	bool b_drawerint;
+	bool b_draweropen = false;
 	//secret door
-	float secretdoortranslation = 0;
-	bool secretdooropen;
-	bool secretdoorint ;
-	bool lockeddoortext;
+	float f_secretdoortranslation = 0;
+	bool b_secretdooropen;
+	bool b_secretdoorint ;
+	bool b_lockeddoortext;
 	//Pillow
-	float pillowtranslation = 0;
-	bool pillowint;
-	bool pillowmoved = false;
+	float f_pillowtranslation = 0;
+	bool b_pillowint;
+	bool b_pillowmoved = false;
 	//door1
-	float RotateDoor1=0;
-	bool door1open;
-	bool doorint ;
+	float f_RotateDoor1=0;
+	bool b_door1open;
+	bool b_doorint ;
 	//key1
 	bool key1int;
 	bool havekey1 = false;
 	//key2
-	bool key2int;
-	bool havekey2 = false;
+	bool b_key2int;
+	bool b_havekey2 = false;
 	//key3
 	bool havekey3;
 	//Patient
-	bool patientint;
-	bool patienthint;
-	bool havepatient = false;
+	bool b_patientint;
+	bool b_patienthint;
+	bool b_havepatient = false;
 	//safe
-	float rotatesafedoor;
-	bool safeint = false;
-	bool safeopen = false;
-	bool safecracking = false;
-	bool codecracked = false;
-	bool wrongcode;
+	float f_rotatesafedoor;
+	bool b_safeint = false;
+	bool b_safeopen = false;
+	bool b_safecracking = false;
+	bool b_codecracked = false;
+	bool b_wrongcode;
 	//Promtp on screen
-	bool interaction;
-	bool interactioncomplete = false;
-	bool paintingint;
+	bool b_interaction;
+	bool b_interactioncomplete = false;
+	bool b_paintingint;
 	//codepress
-	bool eight = false;
-	bool   six = false;
-	bool   one = false;
-	bool   two = false;
-	bool other = false;
+	bool b_eight = false;
+	bool   b_six = false;
+	bool   b_one = false;
+	bool   b_two = false;
+	bool b_other = false;
 	//final door
-	bool finaldoorint;
-	bool doorunlocked = false;
+	bool b_finaldoorint;
+	bool b_doorunlocked = false;
 
-	bool showIntro = true; // Raphael Added
-	double score = 1.0; // Raphael Added
+	bool b_showIntro = true; // Raphael Added
+	double d_score = 1.0; // Raphael Added
 
 	enum GEOMETRY_TYPE
 	{

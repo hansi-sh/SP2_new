@@ -54,9 +54,9 @@ void Scene2::Init() //defines what shader to use
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	AmbulanceTimer = new StopWatchTimer;
 
-	speed = 0;
+	f_speed = 0;
 
-	delay = 0;
+	d_delay = 0;
 
 	// testing irrklan
 	music::player.init();
@@ -64,34 +64,34 @@ void Scene2::Init() //defines what shader to use
 	music::player.playSound("Sound//Scene2//AmbulanceBGM.wav", true);
 
 	//<collison class>
-	collide = false;
-	rotationangle = 0;
-	updatedangle = 0;
+	b_collide = false;
+	f_rotationangle = 0;
+	f_updatedangle = 0;
+
+	// init the variables
+	b_setTrueFalse = false;
+	i_instruction;
+	b_collectDefi = false;
+	b_collectKit = false;
+	b_notification1 = false;
+	b_notification2 = false;
+	b_useDefi = false;
+	b_useKit = false;
+	b_nextStage = false;
+	d_score = 1.0;
+	b_showIntro = true;
+	b_useSound = true;
+	b_timerunout = false;
+
+	b_itemcollect = false;
+	i_itemcount = 0;
+	i_totalItem = 0;
+	b_defiCollected = false;
+	b_firstAidKitCollected = false;
 
 	//<----for randomizing the instructions for player--->
 	srand(time(NULL));
-	instruction = rand() % 2;
-
-	// init the variables
-	setTrueFalse = false;
-	instruction;
-	collectDefi = false;
-	collectKit = false;
-	notification1 = false;
-	notification2 = false;
-	useDefi = false;
-	useKit = false;
-	nextStage = false;
-	score = 1.0;
-	showIntro = true;
-	useSound = true;
-	timerunout = false;
-
-	itemcollect = false;
-	itemcount = 0;
-	totalItem = 0;
-	defiCollected = false;
-	firstAidKitCollected = false;
+	i_instruction = rand() % 2;
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -102,14 +102,14 @@ void Scene2::Init() //defines what shader to use
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	LSPEED = 30.0f;
+	f_LSPEED = 30.0f;
 
 	// Change here for camera initial position
 	camera.Init(Vector3(0, 20, 6), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	currentCamPos = camera.position;
 	currentCamTarget = camera.target;
-	getCurrentCam = true;
+	b_getCurrentCam = true;
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -299,48 +299,48 @@ void Scene2::Init() //defines what shader to use
 
 void Scene2::Update(double dt)
 {
-	delay += dt;
+	d_delay += dt;
 	// Timer-> aorion added
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
-		timerunout = true;
+		b_timerunout = true;
 		Application app;
 		app.SetSceneNumber(8);
 		app.Run();
 	}
-	if (timerunout == false)
+	if (b_timerunout == false)
 	{
 		AmbulanceTimer->v_UpdateTime(dt);
 	}
 	//^ aorion added
 
-	score = score + 0.2;
+	d_score = d_score + 0.2;
 
-	if (score > 20)
+	if (d_score > 20)
 	{
-		showIntro = false;
+		b_showIntro = false;
 	}
 
 	if (Application::IsKeyPressed(VK_RIGHT))
 	{
-		if (itemcollect)
+		if (b_itemcollect)
 		{
 			printNext();
 		}
 	}
 	if (Application::IsKeyPressed(VK_LEFT))
 	{
-		if (itemcollect)
+		if (b_itemcollect)
 		{
 			printPrev();
 		}
 	}
-	if (nextStage || Application::IsKeyPressed('3'))
+	if (b_nextStage || Application::IsKeyPressed('3'))
 	{
 		music::player.stopSound(); // end all music
 		// leaderboard thingy
 		ofstream saveToFile("loli.txt", fstream::app);
-		saveToFile << score << endl;
+		saveToFile << d_score << endl;
 
 		Application app;
 		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
@@ -370,13 +370,13 @@ void Scene2::Update(double dt)
 
 	if (camera.position.x > 10 && camera.position.x < 13)
 	{
-		if (Application::IsKeyPressed('C') && (delay > 0.3) && defiCollected==false) // Get key delay from sihan
+		if (Application::IsKeyPressed('C') && (d_delay > 0.3) && b_defiCollected==false) // Get key delay from sihan
 		{
-			delay = 0;
-			collectDefi = true;
-			notification1 = true;
+			d_delay = 0;
+			b_collectDefi = true;
+			b_notification1 = true;
 
-			itemcollect = true;
+			b_itemcollect = true;
 			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("defi", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 			uploadItem(8);
@@ -385,26 +385,26 @@ void Scene2::Update(double dt)
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene2//PickUp.wav");
 			
-			defiCollected = true;
+			b_defiCollected = true;
 		}
 
-		if (Application::IsKeyPressed('V') && (delay>0.3)) 
+		if (Application::IsKeyPressed('V') && (d_delay>0.3)) 
 		{
-			delay = 0;
-			collectDefi = false;
+			d_delay = 0;
+			b_collectDefi = false;
 		}
 	}
 
 	if (camera.position.x > -3 && camera.position.x < 3 && 
 		camera.position.z > -8 && camera.position.z < -5)
 	{ 
-		if (Application::IsKeyPressed('C') && (delay > 0.3) && firstAidKitCollected==false)
+		if (Application::IsKeyPressed('C') && (d_delay > 0.3) && b_firstAidKitCollected==false)
 		{
-			delay = 0;
-			collectKit = true;
-			notification2 = true;
+			d_delay = 0;
+			b_collectKit = true;
+			b_notification2 = true;
 
-			itemcollect = true;
+			b_itemcollect = true;
 			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("FAK", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
 			uploadItem(9);
@@ -413,33 +413,33 @@ void Scene2::Update(double dt)
 			music::player.setSoundVol(0.5);
 			music::player.playSound("Sound//Scene2//PickUp.wav");
 
-			firstAidKitCollected = true;
+			b_firstAidKitCollected = true;
 		}
 		if (Application::IsKeyPressed('V'))
 		{
-			collectKit = false;
+			b_collectKit = false;
 		}
 	}
 
 	if (Application::IsKeyPressed('M')) // Defi
 	{
-		notification1 = false;
+		b_notification1 = false;
 	}
 
 	if (Application::IsKeyPressed('N')) // Kit
 	{
-		notification2 = false;
+		b_notification2 = false;
 	}
 	
 	if (camera.position.x > 0 && camera.position.x < 5)
 	{
-		if (Application::IsKeyPressed('U') && collectDefi)
+		if (Application::IsKeyPressed('U') && b_collectDefi)
 		{
-			useDefi = true;
+			b_useDefi = true;
 		}
-		if (Application::IsKeyPressed('I') && collectKit)
+		if (Application::IsKeyPressed('I') && b_collectKit)
 		{
-			useKit = true;
+			b_useKit = true;
 		}
 	}
 	
@@ -450,21 +450,21 @@ void Scene2::Update(double dt)
 	{
 		if (ObjectBox::checkCollision(*Obj[OBJ_PLAYER], *Obj[AllObjs]))
 		{
-			collide = true;
+			b_collide = true;
 			camera.position = currentCamPos;
 			camera.target = currentCamTarget;
 			break;
 		}
-		collide = false;
+		b_collide = false;
 	}
 
-	if (!collide)
+	if (!b_collide)
 	{
 		currentCamPos = camera.position;
 		currentCamTarget = camera.target;
 	}
 
-	if (collide)
+	if (b_collide)
 	{
 		//music::player.init();
 		//music::player.setSoundVol(0.5);
@@ -475,9 +475,9 @@ void Scene2::Update(double dt)
 	// When the player moves, check which keypress is selected and if detected
 	// , set previous position to current
 
-	fps = 1.0f / (float)dt;
+	f_fps = 1.0f / (float)dt;
 
-	if (getCurrentCam)
+	if (b_getCurrentCam)
 	{
 		currentCamPos = camera.position;
 		currentCamTarget = camera.target;
@@ -550,16 +550,16 @@ void Scene2::Render()
 	modelStack.Scale(3, 3, 3);
 	modelStack.Rotate(270, 0, 0, 1);
 	modelStack.Rotate(270, 0, 1, 0);
-	RenderMesh(meshList[GEO_HAIR], setTrueFalse);
-	RenderMesh(meshList[GEO_FACE], setTrueFalse);
-	RenderMesh(meshList[GEO_BODY], setTrueFalse);
-	RenderMesh(meshList[GEO_RARM], setTrueFalse);
-	RenderMesh(meshList[GEO_LARM], setTrueFalse);
-	RenderMesh(meshList[GEO_RHAND], setTrueFalse);
-	RenderMesh(meshList[GEO_LHAND], setTrueFalse);
-	RenderMesh(meshList[GEO_RLEG], setTrueFalse);
-	RenderMesh(meshList[GEO_LLEG], setTrueFalse);
-	RenderMesh(meshList[GEO_CROTCH], setTrueFalse);
+	RenderMesh(meshList[GEO_HAIR], b_setTrueFalse);
+	RenderMesh(meshList[GEO_FACE], b_setTrueFalse);
+	RenderMesh(meshList[GEO_BODY], b_setTrueFalse);
+	RenderMesh(meshList[GEO_RARM], b_setTrueFalse);
+	RenderMesh(meshList[GEO_LARM], b_setTrueFalse);
+	RenderMesh(meshList[GEO_RHAND], b_setTrueFalse);
+	RenderMesh(meshList[GEO_LHAND], b_setTrueFalse);
+	RenderMesh(meshList[GEO_RLEG], b_setTrueFalse);
+	RenderMesh(meshList[GEO_LLEG], b_setTrueFalse);
+	RenderMesh(meshList[GEO_CROTCH], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	//<--Stuff in Ambulance Scene-->
@@ -567,25 +567,25 @@ void Scene2::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 6);
 	modelStack.Scale(1.5, 1, 1.5);
-	RenderMesh(meshList[GEO_STRETCHER], setTrueFalse);
+	RenderMesh(meshList[GEO_STRETCHER], b_setTrueFalse);
 	modelStack.PopMatrix();
 
-	if (!collectDefi)
+	if (!b_collectDefi)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(20, 21, 0);
 		modelStack.Scale(2, 2, 2);
-		RenderMesh(meshList[GEO_DEFIBRILLATOR], setTrueFalse);
+		RenderMesh(meshList[GEO_DEFIBRILLATOR], b_setTrueFalse);
 		modelStack.PopMatrix();
 	}	
 
-	if (!collectKit)
+	if (!b_collectKit)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 7, -15);
 		modelStack.Scale(2, 2, 2);
 		modelStack.Rotate(90, 1, 0, 0);
-		RenderMesh(meshList[GEO_FIRSTAIDKIT], setTrueFalse);
+		RenderMesh(meshList[GEO_FIRSTAIDKIT], b_setTrueFalse);
 		modelStack.PopMatrix();
 	}
 
@@ -593,46 +593,46 @@ void Scene2::Render()
 	modelStack.PushMatrix();
 	modelStack.Translate(-18, 0, -15);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_CABINET], setTrueFalse);
+	RenderMesh(meshList[GEO_CABINET], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-23, 0, 15);
 	modelStack.Scale(1.5, 1.5, 1.5);
-	RenderMesh(meshList[GEO_CABINET2], setTrueFalse);
+	RenderMesh(meshList[GEO_CABINET2], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(20, 0, 13);
 	modelStack.Rotate(270, 0, 1, 0);
 	modelStack.Scale(1.5, 1.5, 1.5);
-	RenderMesh(meshList[GEO_CHAIR], setTrueFalse);
+	RenderMesh(meshList[GEO_CHAIR], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(3, 23, -15);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE1], setTrueFalse); // same side as cabinet
+	RenderMesh(meshList[GEO_TOPSHELVE1], b_setTrueFalse); // same side as cabinet
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-10, 23, 15);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE2], setTrueFalse); // diff side as cabinet
+	RenderMesh(meshList[GEO_TOPSHELVE2], b_setTrueFalse); // diff side as cabinet
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(10, 23, 15);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(2, 2, 2);
-	RenderMesh(meshList[GEO_TOPSHELVE3], setTrueFalse); // diff side as cabinet
+	RenderMesh(meshList[GEO_TOPSHELVE3], b_setTrueFalse); // diff side as cabinet
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(2, 2, 2);
 	modelStack.Translate(10, 0, -3);
-	RenderMesh(meshList[GEO_METALSHELVE], setTrueFalse);
+	RenderMesh(meshList[GEO_METALSHELVE], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	if (b_viewStats)
@@ -648,7 +648,7 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	int speedct = abs(speed); // no idea what this does
+	int speedct = abs(f_speed); // no idea what this does
 
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(speedct), Color(1, 1, 1), 3, 2, 55);
@@ -663,7 +663,7 @@ void Scene2::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
 	modelStack.PopMatrix();
 
-	if (collectDefi && notification1)
+	if (b_collectDefi && b_notification1)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
@@ -673,7 +673,7 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	if (collectKit && notification2)
+	if (b_collectKit && b_notification2)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
@@ -683,7 +683,7 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	if (showIntro)
+	if (b_showIntro)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
@@ -697,7 +697,7 @@ void Scene2::Render()
 
 	EndMission();
 
-	if (collectDefi || collectKit)
+	if (b_collectDefi || b_collectKit)
 	{
 		rendertag();
 	}
@@ -732,7 +732,7 @@ void Scene2::Render()
 
 void Scene2::RenderMission() // has transparent box now
 {
-	if (instruction == 0)
+	if (i_instruction == 0)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_FRAME], Color(1, 1, 0), false, 1, 40, 30);
@@ -741,7 +741,7 @@ void Scene2::RenderMission() // has transparent box now
 		RenderTextOnScreen(meshList[GEO_TEXT], ("3. Use it on Patient[U]"), Color(0, 0, 1), 2, 19, 18);
 		modelStack.PopMatrix();
 	}
-	else if (instruction == 1)
+	else if (i_instruction == 1)
 	{
 		modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_FRAME], Color(1, 1, 0), false, 1, 40, 30);
@@ -754,9 +754,9 @@ void Scene2::RenderMission() // has transparent box now
 
 void Scene2::EndMission()
 {
-	if (instruction == 0) // use defi
+	if (i_instruction == 0) // use defi
 	{
-		if (useDefi) // which is correct
+		if (b_useDefi) // which is correct
 		{
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
@@ -764,25 +764,25 @@ void Scene2::EndMission()
 			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
 			Application::timerh = 40;
-			nextStage = true;
+			b_nextStage = true;
 
 		} 
 
-		if (useKit) // which is wrong
+		if (b_useKit) // which is wrong
 		{
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
 			Application::timerh = 30;
-			nextStage = true;
+			b_nextStage = true;
 		}
 		
 	}
 
-	if (instruction == 1) // use kit
+	if (i_instruction == 1) // use kit
 	{
-		if (useKit) // which is correct
+		if (b_useKit) // which is correct
 		{
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
@@ -790,18 +790,18 @@ void Scene2::EndMission()
 			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
 			Application::timerh = 40;
-			nextStage = true;
+			b_nextStage = true;
 
 		}
 
-		if (useDefi) // which is wrong
+		if (b_useDefi) // which is wrong
 		{
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
 			Application::timerh = 30;
-			nextStage = true;
+			b_nextStage = true;
 		}
 	}
 
@@ -859,7 +859,7 @@ void Scene2::RenderSkybox()
 	modelStack.Scale(SKYBOXSIZE, 15.0f, 20.0f);
 	modelStack.Translate(0.0f, 1.0f, -1.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_BACK], setTrueFalse);
+	RenderMesh(meshList[GEO_BACK], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -867,7 +867,7 @@ void Scene2::RenderSkybox()
 	modelStack.Translate(0.0f, 1.0f, 1.0f);
 	modelStack.Rotate(180, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_FRONT], setTrueFalse);
+	RenderMesh(meshList[GEO_FRONT], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -875,14 +875,14 @@ void Scene2::RenderSkybox()
 	modelStack.Translate(0.0f, 1.0f, 0.0f); // y ori 2
 	modelStack.Rotate(180, 0.0f, 0.0f, 1.0f);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
-	RenderMesh(meshList[GEO_TOP], setTrueFalse);
+	RenderMesh(meshList[GEO_TOP], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Scale(SKYBOXSIZE, SKYBOXSIZE, 20.0f);
 	modelStack.Rotate(270, 0.0f, 1.0f, 0.0f);
 	modelStack.Translate(0.0f, -0.00f, 0.0f);
-	RenderMesh(meshList[GEO_BOTTOM], setTrueFalse);
+	RenderMesh(meshList[GEO_BOTTOM], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -890,7 +890,7 @@ void Scene2::RenderSkybox()
 	modelStack.Translate(-1.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_LEFT], setTrueFalse);
+	RenderMesh(meshList[GEO_LEFT], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -898,7 +898,7 @@ void Scene2::RenderSkybox()
 	modelStack.Translate(0.98f, 0.96f, 0.0f);
 	modelStack.Rotate(-90, 0.0f, 1.0f, 0.0f);
 	modelStack.Rotate(90, 1.0f, 0.0f, 0.0f);
-	RenderMesh(meshList[GEO_RIGHT], setTrueFalse);
+	RenderMesh(meshList[GEO_RIGHT], b_setTrueFalse);
 	modelStack.PopMatrix();
 
 }

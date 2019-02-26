@@ -10,7 +10,6 @@
 #include "LoadTGA.h"
 #include "item.h"
 #include <Windows.h>
-
 #include <fstream>
 using namespace std;
 
@@ -57,8 +56,8 @@ private:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	float LSPEED;
-	float fps;
+	float f_LSPEED;
+	float f_fps;
 
 	void RenderSkybox();
 
@@ -125,7 +124,7 @@ private:
 
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
 
-	bool setTrueFalse;
+	bool b_SetTrueFalse;
 };
 
 #endif

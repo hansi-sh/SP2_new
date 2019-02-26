@@ -48,7 +48,6 @@ public:
 	RaceScene();
 	~RaceScene();
 
-	//static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 	static float lastX, lastY;
 
 	virtual void Init();

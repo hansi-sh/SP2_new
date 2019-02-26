@@ -98,26 +98,25 @@ private:
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	float LSPEED;
-	float fps;
-	bool getCurrentCam;
-	float speed;
-	double delay;
+	float f_LSPEED;
+	float f_fps;
+	bool b_getCurrentCam;
+	float f_speed;
+	double d_delay;
 
 	void RenderSkybox();
-
 	bool b_viewStats;
 
 	// For Box collision
-	bool collide;
+	bool b_collide;
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
 
-	float rotationangle; // not needed but jus leave here
-	float updatedangle; // not needed but jus leave here
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
+	float f_rotationangle; // not needed but jus leave here
+	float f_updatedangle; // not needed but jus leave here
+	float f_prevBodyX;
+	float f_prevBodyZ;
+	float f_prevAngle;
 
 	enum GEOMETRY_TYPE
 	{
@@ -204,18 +203,18 @@ private:
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	// Stuff Added
-	bool setTrueFalse;
-	int instruction;
-	bool collectDefi;
-	bool collectKit;
-	bool notification1;
-	bool notification2;
-	bool useDefi; 
-	bool useKit;
-	bool nextStage;
-	double score;
-	bool showIntro;
-	bool useSound;
+	bool b_setTrueFalse;
+	int i_instruction;
+	bool b_collectDefi;
+	bool b_collectKit;
+	bool b_notification1;
+	bool b_notification2;
+	bool b_useDefi; 
+	bool b_useKit;
+	bool b_nextStage;
+	double d_score;
+	bool b_showIntro;
+	bool b_useSound;
 
 	void RenderMission();
 	void EndMission();
@@ -226,16 +225,16 @@ private:
 	void printPrev();
 	void rendertag();
 
-	bool itemcollect;
-	int itemcount;
-	int totalItem;
+	bool b_itemcollect;
+	int i_itemcount;
+	int i_totalItem;
 
 	Item *first, *last, *forward, *current, *backward;
 	//Timer
 	StopWatchTimer* AmbulanceTimer;
-	bool timerunout;
-	bool defiCollected;
-	bool firstAidKitCollected;
+	bool b_timerunout;
+	bool b_defiCollected;
+	bool b_firstAidKitCollected;
 };
 
 #endif
