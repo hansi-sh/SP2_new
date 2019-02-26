@@ -10,9 +10,6 @@ public:
 	int data;
 	Item* next;
 	Item* prev;
-
-private:
-
 };
 #endif
 
