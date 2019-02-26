@@ -259,6 +259,9 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_WARNING] = MeshBuilder::GenerateQuad("Out Of Bound", Color(0, 0, 1), 22, 22, 0);
 	meshList[GEO_WARNING]->textureID = LoadTGA("Image//OutOfBound.tga");
 
+	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
+
 	if (Application::timerh == 0)
 	{
 		RaceTimer.v_SetRaceSceneTime(60);
@@ -723,6 +726,14 @@ void RaceScene::Update(double dt)
 	//	music::player.playSound("Sound//Scene3//HurryUp.wav");
 	//}
 
+	if (Application::IsKeyPressed('M'))
+	{
+		b_pause = false;
+	}
+	if (Application::IsKeyPressed('N'))
+	{
+		b_pause = true;
+	}
 }
 
 void RaceScene::Render()
@@ -844,7 +855,28 @@ void RaceScene::Render()
 		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
 		modelStack.PopMatrix();
 
+	if (b_pause)
+	{
 		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
+
+
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(RaceTimer.d_GetRaceSceneTime())), Color(0, 1, 0), 2, 1, 25);
+	modelStack.PopMatrix();
+
+	if (warning)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
+	}
+	modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
 		modelStack.PopMatrix();
 
