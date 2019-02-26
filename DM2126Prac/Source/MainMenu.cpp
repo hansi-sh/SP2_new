@@ -276,9 +276,9 @@ void MainMenuScene::Update(double dt)
 		}
 		else if (i_Selector == 2)	//LeaderBoard
 		{
-			//Application app;
-			//app.SetSceneNumber(1);
-			//app.Run();
+			Application app;
+			app.SetSceneNumber(9);
+			app.Run();
 		}
 		else if (i_Selector == 3)	//Exit
 		{

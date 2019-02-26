@@ -149,6 +149,10 @@ void Application::Run()
 	{
 		scene = new LoseScene();	
 	}
+	else if (GetSceneNumber() == 9)	//Leaderboard screen
+	{
+		scene = new Leaderboard();	
+	}
 	else // change back to PuzzleRoom when pushing 
 	{
 		scene = new MainMenuScene();

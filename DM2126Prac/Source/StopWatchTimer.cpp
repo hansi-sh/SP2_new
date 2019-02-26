@@ -4,7 +4,7 @@
 
 StopWatchTimer::StopWatchTimer()
 {
-	d_StartTime = 120 ;
+	d_StartTime = 180 ;
 	d_ambulancetimer = 30;
 	d_RaceTimer = 0;
 	d_TotalTimeAfterAmbulance = 0;
