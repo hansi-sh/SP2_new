@@ -821,15 +821,6 @@ void RaceScene::Render()
 
 		int timecount = RaceTimer.d_GetRaceSceneTime();
 
-	if (warning)
-	{
-		DrawHUD(meshList[GEO_WARNING], Color(0, 0, 1), false, 1, 40, 30);
-	}
-
-	modelStack.PushMatrix();
-	DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
-	modelStack.PopMatrix();
-	int speedcount = fabs(PlayerCar.f_GetSpeed());
 		if (timecount >= 10 && timecount < 100)
 		{
 			modelStack.PushMatrix();
