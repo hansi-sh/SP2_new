@@ -517,8 +517,6 @@ void Scene2::Render()
 
 	RenderSkybox();
 
-
-
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
 		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
@@ -648,20 +646,16 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-	int speedct = abs(f_speed); // no idea what this does
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(speedct), Color(1, 1, 1), 3, 2, 55);
-	modelStack.PopMatrix();
-
 	//<--Get cameras position-->
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	modelStack.PopMatrix();
-	
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	modelStack.PopMatrix();
+	// Delete when submitting
+	// Keeping first in case of any bug fix
+	//modelStack.PushMatrix();
+	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x)+", Y:"+ std::to_string(camera.position.y) +" , Z:"+ std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
+	//modelStack.PopMatrix();
+	//
+	//modelStack.PushMatrix();
+	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x)+", Y:"+ std::to_string(camera.target.y) +" , Z:"+ std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
+	//modelStack.PopMatrix();
 
 	if (b_collectDefi && b_notification1)
 	{
@@ -689,11 +683,6 @@ void Scene2::Render()
 		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 		modelStack.PopMatrix();
 	}
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Time" + std::to_string(AmbulanceTimer
-	->d_GetAmbulanceTimer())), Color(0, 1, 0), 2, 1, 25);
-	modelStack.PopMatrix();
 
 	EndMission();
 
