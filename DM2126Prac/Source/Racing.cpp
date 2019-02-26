@@ -210,8 +210,11 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(TranslateBodyX, TranslateBodyY, TranslateBodyZ), 9, 14, 12);//For Player
 
-	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 8, 8, 0);
+	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("speed", Color(0, 0, 1), 8, 8, 0);
 	meshList[GEO_SPEEDMETER]->textureID = LoadTGA("Image//speedmeter.tga");
+
+	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
+	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front3.tga");
@@ -812,6 +815,11 @@ void RaceScene::Render()
 	modelStack.PushMatrix();
 		DrawHUD(meshList[GEO_SPEEDMETER], Color(1, 1, 0), false, 1, 70, 10);
 	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
+	modelStack.PopMatrix();
+
 	int speedcount = fabs(PlayerCar.f_GetSpeed());
 
 	if (speedcount <= 9)
@@ -832,6 +840,12 @@ void RaceScene::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(speedcount)), Color(0.9294f, 0.2156f, 0.1372f), 3.3, 67, 10);
 		modelStack.PopMatrix();
 	}
+
+
+	int timecount = RaceTimer.d_GetRaceSceneTime();
+	modelStack.PushMatrix();
+	RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 39.6, 57.5);
+	modelStack.PopMatrix();
 }
 
 void RaceScene::RenderMesh(Mesh *mesh, bool enableLight)

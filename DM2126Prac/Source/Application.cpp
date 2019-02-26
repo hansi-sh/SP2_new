@@ -165,7 +165,8 @@ void Application::Run()
 	}
 	else // change back to PuzzleRoom when pushing 
 	{
-		scene = new MainMenuScene();
+		//scene = new MainMenuScene();
+		scene = new RaceScene();
 	}
 	
 	//Main menu scene = 0 no cam
