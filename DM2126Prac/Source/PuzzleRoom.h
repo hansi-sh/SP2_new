@@ -133,7 +133,7 @@ private:
 	bool key2int;
 	bool havekey2 = false;
 	//key3
-	bool havekey3;
+	bool havekey3 = false;
 	//Patient
 	bool patientint;
 	bool patienthint;
@@ -209,8 +209,9 @@ private:
 		GEO_LLEG,
 		GEO_CROTCH,
 		GEO_START, // Raphael Added
-		GEO_KEY1NOTE,
+		GEO_FRAME,
 		GEO_TIME,
+		GEO_NOTE,
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
