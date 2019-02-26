@@ -119,6 +119,7 @@ private:
 
 	//pausemenu
 	bool b_pause;
+	double d_BounceTime;
 
 	enum GEOMETRY_TYPE
 	{
@@ -151,6 +152,7 @@ private:
 		
 		GEO_WARNING, // if car onto pavement
 		GEO_START,
+		GEO_PAUSESELECT,
 
 		GEO_TEXT,
 		NUM_GEOMETRY,
@@ -218,6 +220,7 @@ private:
 
 	Camera3 camera;
 	float f_TPCRotateBy;
+	int i_Selector;
 
 	Light light[1];
 

@@ -211,6 +211,7 @@ private:
 		GEO_START, // Raphael Added
 		GEO_FRAME,
 		GEO_TIME,
+		GEO_Centre,//sihan added
 		GEO_NOTE,
 		NUM_GEOMETRY,
 	};

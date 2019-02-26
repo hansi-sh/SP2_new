@@ -324,6 +324,9 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_KEY2]->textureID = LoadTGA("Image//Key1.tga");
 	Obj[OBJ_KEY2] = new ObjectBox(Vector3(21, 58.50, -86.03), 6, 65, 34.82);
 
+	meshList[GEO_Centre] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1, 1, 1);
+	meshList[GEO_Centre]->textureID = LoadTGA("Image//selection.tga");
+
 	// Patient Obj
 	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
 	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");

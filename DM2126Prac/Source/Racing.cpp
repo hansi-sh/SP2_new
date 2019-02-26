@@ -34,6 +34,9 @@ void RaceScene::Init() //defines what shader to use
 	i_collider1 = 0;
 	i_collider2 = 0;
 	timerunout = false;
+	d_BounceTime = 0.0f;
+	i_Selector = 0;
+	b_pause = false;
 
 	//<---Sound--->
 	music::player.init();
@@ -266,9 +269,11 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage3.tga");
 
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
+	
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(60);
+		RaceTimer.v_SetRaceSceneTime(35);
 	}
 	else
 	{
@@ -279,6 +284,7 @@ void RaceScene::Init() //defines what shader to use
 void RaceScene::Update(double dt)
 {
 	d_score = d_score + 0.2;
+	d_BounceTime -= dt;
 
 	if (d_score > 20)
 	{
@@ -682,22 +688,18 @@ void RaceScene::Update(double dt)
 		f_TPCRotateBy = 1.0f;
 	}
 	
-	if (f_TranslateBodyZ>=1400)
+	if (f_TranslateBodyZ >= 1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
-		 saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
+		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
 		//saveFile << 9 << endl;
 
 		music::player.stopSound(); // end all music at the des of scene
-		
+
 		Application app;
 		app.SetSceneNumber(7);
 		app.Run();
 	}
-
-	//camera.Update(dt);
-	camera.Update(f_TPCRotateBy, f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ);
-	f_TPCRotateBy = 0.0f;
 
 	// Check if out of bound -> ask sihan tis part
 
@@ -726,14 +728,43 @@ void RaceScene::Update(double dt)
 	//	music::player.playSound("Sound//Scene3//HurryUp.wav");
 	//}
 
-	if (Application::IsKeyPressed('M'))
+	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime <0.0f)
 	{
-		b_pause = false;
+		if (b_pause)
+			b_pause = false;
+		else
+			b_pause = true;
+		d_BounceTime = 0.3;
 	}
-	if (Application::IsKeyPressed('N'))
+
+	if (b_pause)
 	{
-		b_pause = true;
+		if (Application::IsKeyPressed(VK_UP))
+		{
+			if (i_Selector > 0)
+				--i_Selector;
+			else
+			{
+				i_Selector = 2;
+			}
+		}
+		else if (Application::IsKeyPressed(VK_DOWN))
+		{
+			if(i_Selector < 2)
+				++i_Selector;
+			else
+			{
+				i_Selector = 0;
+			}
+		}
 	}
+
+
+
+
+	//camera.Update(dt);
+	camera.Update(f_TPCRotateBy, f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ);
+	f_TPCRotateBy = 0.0f;
 }
 
 void RaceScene::Render()
@@ -905,8 +936,30 @@ void RaceScene::Render()
 
 		if (b_pause)
 		{
+
 			modelStack.PushMatrix();
 			DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+			modelStack.PopMatrix();
+
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.3);
+			modelStack.PopMatrix();
+
+			modelStack.PushMatrix();
+			RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
+			modelStack.PopMatrix();
+		}
+
+		if (b_showIntro)
+		{
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 			modelStack.PopMatrix();
 		}
 }
