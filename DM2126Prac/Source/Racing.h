@@ -108,7 +108,7 @@ private:
 	int i_movechoice[30];
 
 	bool b_movement;
-
+	bool b_loading;
 	// stuff for sound:
 	bool b_Warning; // print the out of bound
 	bool b_AlertSound; // for warning sound
@@ -155,6 +155,7 @@ private:
 		GEO_START,
 
 		GEO_TEXT,
+		GEO_LOADING,
 		NUM_GEOMETRY,
 	};
 

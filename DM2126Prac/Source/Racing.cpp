@@ -24,6 +24,7 @@ RaceScene::~RaceScene()
 void RaceScene::Init() //defines what shader to use
 {
 	b_movement = true;
+	b_loading = false;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
@@ -223,6 +224,9 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("speed", Color(0, 0, 1), 8, 8, 0);
 	meshList[GEO_SPEEDMETER]->textureID = LoadTGA("Image//speedmeter.tga");
 
+	meshList[GEO_LOADING] = MeshBuilder::GenerateQuad("loading", Color(0, 0, 1), 8, 8, 8);
+	meshList[GEO_LOADING]->textureID = LoadTGA("Image//loading.tga");
+
 	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
 	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
 
@@ -302,6 +306,10 @@ void RaceScene::Update(double dt)
 	{
 		RaceTimer.v_UpdateTime(dt);
 		b_movement = true;
+	}
+	if (f_TranslateBodyZ >= 1395)
+	{
+		b_loading = true;
 	}
 	if (f_TranslateBodyZ >= 1400)
 	{
@@ -831,7 +839,6 @@ void RaceScene::Render()
 		RenderMesh(meshList[GEO_CAR3], false);
 		modelStack.PopMatrix();
 	}
-
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
 		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
@@ -960,6 +967,12 @@ void RaceScene::Render()
 
 			modelStack.PushMatrix();
 			RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
+			modelStack.PopMatrix();
+		}
+		if (b_loading==true)
+		{
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_LOADING], Color(1, 1, 1), false, 3, 13, 10);
 			modelStack.PopMatrix();
 		}
 
