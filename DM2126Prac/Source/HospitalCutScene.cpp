@@ -34,30 +34,32 @@ void HospitalCutScene::Init() //defines what shader to use
 	b_Switch = false;
 	d_BounceTime = 0.25f;
 	f_TPCRotateBy = 0.0f;
-
+	//delayed
+	d_delayed = 0;
 	//<collison class>
-	b_collide = false;
 	//player
-	f_playerX = 10;
+	b_parking = false;
+	b_out = false;
+	f_playerX = 10.5;
 	f_playerY = 64;
-	f_playerZ = 1450;
+	f_playerZ = 1398;
+	f_playerX2 = 9;
+	f_playerY2 = 64;
+	f_playerZ2 = 1400;
+	//bed (14,64,1390)
+	f_bedX = 14;
+	f_bedY = 64;
+	f_bedZ = 1410;
+	//paient(10,70,1385)
+	f_paientX = 10;
+	f_paientY = 70;
+	f_paientZ = 1405;
+
 	//<----For player car---->
 	f_TranslateBodyX = 10.0f;
 	f_TranslateBodyY = 64.0f;
 	f_TranslateBodyZ = 1300.0f;
 	f_RotateBody = 0.0f;
-
-	PlayerCar.v_SetPos(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
-
-	V_UpdatedPlayerPos = Vector3(0, 0, 0);
-	b_StepAccelerator = false;
-	b_StepBrakes = false;
-	b_Steer = false;
-	f_RotateAmt = 0.0f;
-	f_UpdatedAngle = 0.0f;
-
-	i_CollidedWith = 0;
-	i_CollidedWith2 = 0;
 
 	f_HeightAIP = 3.25f + 3.0f;	//Player , AI
 
@@ -147,27 +149,47 @@ void HospitalCutScene::Init() //defines what shader to use
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
 
 	//Guide lines - Turn on if need
-	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
-	//meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 0, 0), 4.5, 7, 6.5);
 
-	meshList[GEO_CAR1] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
-	meshList[GEO_CAR1]->textureID = LoadTGA("Image//cartexture.tga");
-	meshList[GEO_CAR2] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
-	meshList[GEO_CAR2]->textureID = LoadTGA("Image//cartexture2.tga");
-	meshList[GEO_CAR3] = MeshBuilder::GenerateOBJ("Car", "OBJ//enemyredcar.obj");
-	meshList[GEO_CAR3]->textureID = LoadTGA("Image//cartexture3.tga");
-	meshList[GEO_AICUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 4.5, 7, 6);
+	meshList[GEO_NURSE] = MeshBuilder::GenerateOBJ("Car", "OBJ//nurse.obj");
+	meshList[GEO_NURSE]->textureID = LoadTGA("Image//nurse.tga");
+	
+	// Patient Obj
+	meshList[GEO_HAIR] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Hair.obj");
+	meshList[GEO_HAIR]->textureID = LoadTGA("Image//Hair.tga");
+
+	meshList[GEO_FACE] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Face.obj");
+	meshList[GEO_FACE]->textureID = LoadTGA("Image//Face.tga");
+
+	meshList[GEO_BODY] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Body.obj");
+	meshList[GEO_BODY]->textureID = LoadTGA("Image//Chest.tga");
+
+	meshList[GEO_RARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RArm.obj");
+	meshList[GEO_RARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LARM] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LArm.obj");
+	meshList[GEO_LARM]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_RHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RHand.obj");
+	meshList[GEO_RHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_LHAND] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LHand.obj");
+	meshList[GEO_LHAND]->textureID = LoadTGA("Image//Hand.tga");
+
+	meshList[GEO_RLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//RLeg.obj");
+	meshList[GEO_RLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_LLEG] = MeshBuilder::GenerateOBJ("Patient", "OBJ//LLeg.obj");
+	meshList[GEO_LLEG]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_CROTCH] = MeshBuilder::GenerateOBJ("Patient", "OBJ//Crotch.obj");
+	meshList[GEO_CROTCH]->textureID = LoadTGA("Image//Body.tga");
+
+	meshList[GEO_STRETCHER] = MeshBuilder::GenerateOBJ("Stretcher", "OBJ//Stretcher.obj");
+	meshList[GEO_STRETCHER]->textureID = LoadTGA("Image//Stretcher.tga");
 	for (int i = 3; i < NUM_OBJ; i++)
 	{
 		Obj[i] = new ObjectBox(Vector3(0.0f, 0.0f, 0.0f), 9, 14, 12);
 	}
-	meshList[GEO_Pedestrains1] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//Pedestrains2.obj");
-	meshList[GEO_Pedestrains1]->textureID = LoadTGA("Image//powerful_kinoko.tga");
-
-	meshList[GEO_Pedestrains2] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//Pedestrains1.obj");
-	meshList[GEO_Pedestrains2]->textureID = LoadTGA("Image//betamush.tga");
-	meshList[GEO_Pedestrains3] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//Pedestrains1.obj");
-	meshList[GEO_Pedestrains3]->textureID = LoadTGA("Image//oneup.tga");
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ), 9, 14, 12);//For Player
@@ -198,22 +220,11 @@ void HospitalCutScene::Init() //defines what shader to use
 
 	meshList[GEO_RACETRACK] = MeshBuilder::GenerateOBJ("racetrack", "OBJ//racetrack.obj");
 	meshList[GEO_RACETRACK]->textureID = LoadTGA("Image//racetrack.tga");
-
-	// Switching Stage
-	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START]->textureID = LoadTGA("Image//T3P1.tga");
-
-	meshList[GEO_START2] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START2]->textureID = LoadTGA("Image//T3P2.tga");
-
-	/*meshList[GEO_BOX1] = MeshBuilder::GenerateCube("Blue Box", Color(0, 0, 1), 10.0f, 20.0f, 1415.0f);*/
-	Obj[OBJ_BOX1] = new ObjectBox(Vector3(52.0f, /*636.0f*/77, 20.0f), 20.0f, 40.0f, 2830.0f);
-	/*meshList[GEO_BOX2] = MeshBuilder::GenerateCube("Red Box", Color(1, 0, 0), 10.0f, 25.0f, 568.0f);*/
-	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, /*639.0f*/77, 20.0f), 20.0f, 50.0f, 2830.0f);
 }
 
 void HospitalCutScene::Update(double dt)
 {
+	d_delayed += dt;
 	if (Application::IsKeyPressed(VK_LEFT))
 	{
 	}
@@ -224,9 +235,9 @@ void HospitalCutScene::Update(double dt)
 	if (Application::IsKeyPressed(VK_ESCAPE))
 	{
 	}
-
+	
 	camera.Update(f_TPCRotateBy, f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ);
-
+	
 	if (Application::IsKeyPressed('1'))
 	{
 	}
@@ -255,58 +266,54 @@ void HospitalCutScene::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 
-	b_StepAccelerator = false;
-	b_StepBrakes = false;
-
 	if (f_TranslateBodyZ <1410)
 	{
 		f_TranslateBodyZ++;
 		if (f_TranslateBodyZ >=1410)
 		{
-			
-			camera.Update(f_TPCRotateBy, f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ);
+			b_parking = true;
 		}
 	}
-	if (Application::IsKeyPressed('Q'))
+	if (f_playerZ2 >= 1378&&b_parking==true&&b_out==false)
 	{
-		f_TPCRotateBy = -1.0f;//180
+		f_playerZ2-=0.3;
 	}
-	else if (Application::IsKeyPressed('E'))
+	if (f_paientZ>=1383&&b_parking==true && b_out == false)
 	{
-		f_TPCRotateBy = 1.0f;
+		f_paientZ-=0.3;
 	}
-	///////////////////////rotation
-	if (!b_collide)
+	if  (f_bedZ >= 1388 && b_parking == true && b_out == false)
 	{
-		PlayerCar.v_UpdateCarDirection(f_RotateBody);
+		f_bedZ -= 0.3;
+		if (f_bedZ<=1388)
+		{
+			d_delayed = 0;
+			b_out = true;
+		}
 	}
-	//PlayerCar.v_UpdateCarSpeed(b_StepAccelerator, b_StepBrakes, b_Steer, dt);
-	//V_UpdatedPlayerPos = PlayerCar.V_UpdateCarPos(dt);
-
-	//f_TranslateBodyX = V_UpdatedPlayerPos.x;
-	//f_TranslateBodyY = V_UpdatedPlayerPos.y;
-	//f_TranslateBodyZ = V_UpdatedPlayerPos.z;
-
-	Obj[OBJ_PLAYER]->setRotatingAxis(f_UpdatedAngle, 0.0f, 1.0f, 0.0f);
-	Obj[OBJ_PLAYER]->setOBB(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ));
-	if (b_collide)
+	if (b_out == true&&d_delayed>0.5)
 	{
+		if (f_playerX>=-5)
+		{
+			f_playerX -= 0.2;
+			f_playerX2 -= 0.2;
+			f_bedX -= 0.2;
+			f_paientX -= 0.2;
+		}
+		if (f_playerX<=-5 && f_playerZ<1450)
+		{
+			f_playerZ += 0.2;
+			f_playerZ2 += 0.2;
+			f_bedZ += 0.2;
+			f_paientZ += 0.2;
+		}
 		
 	}
-	else
+	if (f_playerZ >= 1450)
 	{
-
-	}
-
-	f_UpdatedAngle = 0.0f;
-	if (b_getCurrentCam)
-	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
-	}
-
-	if (f_TranslateBodyZ >= 1400)
-	{
+		Application app;
+		app.SetSceneNumber(7);
+		app.Run();
 		//music::player.stopSound(); // end all music at the des of scene
 	}
 }
@@ -329,8 +336,50 @@ void HospitalCutScene::Render()
 	modelStack.Translate(0, 0, -4);
 	RenderMesh(meshList[GEO_AMBULANCE], false);
 	modelStack.PopMatrix();
+	if (b_out==true)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(f_playerX, f_playerY, f_playerZ);//10,64,1400
+		modelStack.Scale(2.5, 2.5, 2.5);
+		modelStack.Rotate(-180, 0, 1, 0);
+		RenderMesh(meshList[GEO_NURSE], false);
+		modelStack.PopMatrix();
+	}
+	
+	if (b_parking==true)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(f_playerX2, f_playerY2, f_playerZ2);//10,64,1400
+		modelStack.Scale(2.5, 2.5, 2.5);
+		RenderMesh(meshList[GEO_NURSE], false);
+		modelStack.PopMatrix();
 
+		modelStack.PushMatrix();
+		modelStack.Translate(f_paientX, f_paientY, f_paientZ);
+		modelStack.Scale(3, 3, 3);
+		modelStack.Rotate(270, 0, 1, 0);
+		modelStack.Rotate(270, 0, 0, 1);
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(meshList[GEO_HAIR], false);
+		RenderMesh(meshList[GEO_FACE], false);
+		RenderMesh(meshList[GEO_BODY], false);
+		RenderMesh(meshList[GEO_RARM], false);
+		RenderMesh(meshList[GEO_LARM], false);
+		RenderMesh(meshList[GEO_RHAND], false);
+		RenderMesh(meshList[GEO_LHAND], false);
+		RenderMesh(meshList[GEO_RLEG], false);
+		RenderMesh(meshList[GEO_LLEG], false);
+		RenderMesh(meshList[GEO_CROTCH], false);
+		modelStack.PopMatrix();
 
+		modelStack.PushMatrix();
+		modelStack.Translate(f_bedX, f_bedY, f_bedZ);
+		modelStack.Scale(1, 0.5, 1);
+		modelStack.Rotate(-90, 0, 1, 0);
+		RenderMesh(meshList[GEO_STRETCHER], false);
+		modelStack.PopMatrix();
+	}
+	
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
 		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);

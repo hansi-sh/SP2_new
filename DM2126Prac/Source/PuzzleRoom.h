@@ -116,11 +116,13 @@ private:
 	float f_drawertranslation = 0;
 	bool b_drawerint;
 	bool b_draweropen = false;
+	bool b_note = false;
 	//secret door
 	float f_secretdoortranslation = 0;
 	bool b_secretdooropen;
 	bool b_secretdoorint ;
 	bool b_lockeddoortext;
+	bool b_secretdooropentext = false;
 	//Pillow
 	float f_pillowtranslation = 0;
 	bool b_pillowint;

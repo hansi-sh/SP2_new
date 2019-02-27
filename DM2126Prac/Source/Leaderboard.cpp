@@ -126,8 +126,8 @@ void Leaderboard::Init() //defines what shader to use
 	meshList[GEO_BACKGROUND] = MeshBuilder::GenerateQuad("Bg", Color(0, 0, 1), 45, 30, 0);
 	meshList[GEO_BACKGROUND]->textureID = LoadTGA("Image//Leaderboard.tga");
 
-	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Bg", Color(0, 0, 1), 27, 20, 0);
-	meshList[GEO_BORDER]->textureID = LoadTGA("Image//LeaderboardBorder.tga");
+	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("Bg", Color(0, 0, 1), 30, 30, 0);
+	meshList[GEO_BORDER]->textureID = LoadTGA("Image//LeaderboardUI.tga");
 
 	// <<---Leaderboard stuff--->>
 
@@ -285,23 +285,15 @@ void Leaderboard::Render()
 	DrawHUD(meshList[GEO_BORDER], Color(0, 0, 1), false, 1, 40, 30);
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("<<---Top Life Savers--->>"), Color(1, 0, 0), 2, 17, 42);
+	RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(i_first)), Color(0, 0, 0), 2, 47, 34);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Position     Time Left/s"), Color(1, 0, 0), 2, 18, 38);
+	RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(i_second)), Color(0, 0, 0), 2, 47, 26);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("First        " + std::to_string(i_first)), Color(1, 0, 0), 2, 18, 36);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Second       " + std::to_string(i_second)), Color(1, 0, 0), 2, 18, 34);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	RenderTextOnScreen(meshList[GEO_TEXT], ("Third        " + std::to_string(i_third)), Color(1, 0, 0), 2, 18, 32);
+	RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(i_third)), Color(0, 0, 0), 2, 47, 17);
 	modelStack.PopMatrix();
 }
 
