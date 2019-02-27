@@ -823,7 +823,7 @@ void Scene2::EndMission()
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
-			Application::timerh = 40;
+			Application::timerh = 41;
 			b_nextStage = true;
 
 		} 
@@ -834,7 +834,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
-			Application::timerh = 35;
+			Application::timerh = 36;
 			b_nextStage = true;
 		}
 		
@@ -849,7 +849,7 @@ void Scene2::EndMission()
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION"), Color(0, 0, 1), 2, 34, 32);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("SUCCESS"), Color(0, 0, 1), 2, 34, 28);
 			modelStack.PopMatrix();
-			Application::timerh = 40;
+			Application::timerh = 41;
 			b_nextStage = true;
 
 		}
@@ -860,7 +860,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
-			Application::timerh = 35;
+			Application::timerh = 36;
 			b_nextStage = true;
 		}
 	}

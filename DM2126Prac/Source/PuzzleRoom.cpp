@@ -390,7 +390,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
 	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
-	PuzzleTimer->v_SetPuzzleSceneTime(185);
+	PuzzleTimer->v_SetPuzzleSceneTime(181);
 }
 
 void PuzzleRoom::Update(double dt)

@@ -253,7 +253,7 @@ void TutorialRaceScene::Init() //defines what shader to use
 	Obj[OBJ_BOX2] = new ObjectBox(Vector3(-52.0f, /*639.0f*/77, 20.0f), 20.0f, 50.0f, 2830.0f);
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(40);
+		RaceTimer.v_SetRaceSceneTime(36);
 	}
 	else
 	{
