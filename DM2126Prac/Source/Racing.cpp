@@ -287,10 +287,6 @@ void RaceScene::Update(double dt)
 
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{		
-		ofstream saveFile("loli.txt", fstream::app);
-		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		saveFile << 9 << endl;
-
 		music::player.stopSound();
 
 		timerunout = true;
@@ -305,8 +301,8 @@ void RaceScene::Update(double dt)
 	if (f_TranslateBodyZ >= 1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
-		// saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		saveFile << 9 << endl;
+		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
+
 		music::player.stopSound();
 
 		Application app;

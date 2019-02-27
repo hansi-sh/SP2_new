@@ -303,8 +303,6 @@ void Leaderboard::Render()
 	modelStack.PushMatrix();
 	RenderTextOnScreen(meshList[GEO_TEXT], ("Third        " + std::to_string(i_third)), Color(1, 0, 0), 2, 18, 32);
 	modelStack.PopMatrix();
-
-
 }
 
 void Leaderboard::RenderMesh(Mesh *mesh, bool enableLight)
