@@ -311,10 +311,11 @@ void HospitalCutScene::Update(double dt)
 	}
 	if (f_playerZ >= 1450)
 	{
+		music::player.stopSound();
+		
 		Application app;
 		app.SetSceneNumber(7);
 		app.Run();
-		//music::player.stopSound(); // end all music at the des of scene
 	}
 }
 
