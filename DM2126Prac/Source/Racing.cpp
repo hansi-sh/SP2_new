@@ -650,7 +650,7 @@ void RaceScene::Update(double dt)
 		}
 		else if(i_CollidedWith >= 1 && i_CollidedWith <= 2)
 		{
-			P_PlayerCar.v_SetSpeed(-(fabs(P_PlayerCar.f_GetSpeed() * 0.5)));
+			P_PlayerCar.v_SetSpeed((-(P_PlayerCar.f_GetSpeed() * 0.5)));
 		}
 		f_RotateBody = f_prevAngle;
 
