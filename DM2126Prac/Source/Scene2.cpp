@@ -388,7 +388,7 @@ void Scene2::Update(double dt)
 
 			b_itemcollect = true;
 			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("Defi", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
+			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//I_Defibrillator.tga");
 			uploadItem(8);
 
 			music::player.setSoundVol(0.2);
@@ -415,7 +415,7 @@ void Scene2::Update(double dt)
 
 			b_itemcollect = true;
 			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("fak", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
+			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//I_FirstAidKit.tga");
 			uploadItem(9);
 
 			music::player.setSoundVol(0.2);
