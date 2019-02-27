@@ -65,6 +65,8 @@ void MainMenuScene::Init() //defines what shader to use
 	f_TLeaderBoard = 22.0f;
 	f_TExit = 22.0f;
 
+	d_BounceTime = 0.3f;
+
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_BLEND);

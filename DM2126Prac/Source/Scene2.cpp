@@ -356,22 +356,6 @@ void Scene2::Update(double dt)
 		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
 		app.Run();
 	}
-	if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
 
 	if (Application::IsKeyPressed('P'))
 		b_viewStats = true;
@@ -388,7 +372,7 @@ void Scene2::Update(double dt)
 
 			b_itemcollect = true;
 			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("Defi", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
+			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//I_Defibrillator.tga");
 			uploadItem(8);
 
 			music::player.setSoundVol(0.2);
@@ -415,7 +399,7 @@ void Scene2::Update(double dt)
 
 			b_itemcollect = true;
 			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("fak", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
+			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//I_FirstAidKit.tga");
 			uploadItem(9);
 
 			music::player.setSoundVol(0.2);

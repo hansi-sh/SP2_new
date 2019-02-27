@@ -406,7 +406,11 @@ void PuzzleRoom::Update(double dt)
 	//If timer reach 0
 	if (PuzzleTimer->d_GetPuzzleSceneTime() <= 0)
 	{
+		music::player.stopSound();
 		b_timerunout = true;
+		Application app;
+		app.SetSceneNumber(8);
+		app.Run();
 	}
 	//Prevent time from going negative
 	if (b_timerunout == false && b_pause == false)
@@ -696,38 +700,7 @@ void PuzzleRoom::Update(double dt)
 			b_lockeddoortext = true;	
 		}
 	}
-	if (Application::IsKeyPressed('5'))
-	{
-		music::player.stopSound(); // end all music at the des of scene
 
-		Application app;
-		app.SetSceneNumber(2);
-		app.Run();
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-
-	}
-	if (Application::IsKeyPressed('4'))
-	{
-
-	}
-	/*if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}*/
 	
 
 	if (Application::IsKeyPressed('P'))
@@ -940,7 +913,7 @@ void PuzzleRoom::Update(double dt)
 			{
 				music::player.stopSound();
 				Application app;
-				app.SetSceneNumber(2);
+				app.SetSceneNumber(1);
 				app.Run();
 			}
 			else if (i_Selector == 2)	//Main menu
