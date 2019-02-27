@@ -219,7 +219,12 @@ void Scene2::Init() //defines what shader to use
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
 	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
-	// Obj[OBJ_FIRSTAIDKIT] = new ObjectBox(Vector3(20, 20, -5), 3, 1, 3);
+
+	meshList[GEO_INVENTORY1] = MeshBuilder::GenerateOBJ("Inventory1", "OBJ//Defibrillator2.obj");
+	meshList[GEO_INVENTORY1]->textureID = LoadTGA("Image//Inventory_Defi.tga");
+
+	meshList[GEO_INVENTORY2] = MeshBuilder::GenerateOBJ("Inventory2", "OBJ//FirstAidKit.obj");
+	meshList[GEO_INVENTORY2]->textureID = LoadTGA("Image//Inventory_FirstAidKit.tga");
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
 	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
@@ -386,8 +391,8 @@ void Scene2::Update(double dt)
 			b_notification1 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("defi", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
+			meshList[GEO_INVENTORY1] = MeshBuilder::GenerateQuad("Inventory1", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_INVENTORY1]->textureID = LoadTGA("Image//Inventory_Defi.tga");
 			uploadItem(8);
 
 			music::player.setSoundVol(0.2);
@@ -413,8 +418,8 @@ void Scene2::Update(double dt)
 			b_notification2 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("FAK", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
+			meshList[GEO_INVENTORY2] = MeshBuilder::GenerateQuad("Inventory2", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_INVENTORY2]->textureID = LoadTGA("Image//Inventory_FirstAidKit.tga");
 			uploadItem(9);
 
 			music::player.setSoundVol(0.2);
@@ -640,7 +645,6 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-
 	modelStack.PushMatrix();
 	modelStack.Translate(-18, 0, -15);
 	modelStack.Scale(2, 2, 2);
@@ -715,7 +719,7 @@ void Scene2::Render()
 		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("First Aid Kit added to"), Color(0, 0, 1), 2, 20, 35);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Inventory"), Color(0, 0, 1), 2, 33, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("[M] to close"), Color(0, 0, 1), 2, 29, 25);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("[N] to close"), Color(0, 0, 1), 2, 29, 25);
 		modelStack.PopMatrix();
 	}
 
@@ -792,7 +796,6 @@ void Scene2::Render()
 		RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
 		modelStack.PopMatrix();
 	}
-
 }
 
 void Scene2::RenderMission() // has transparent box now
@@ -869,8 +872,6 @@ void Scene2::EndMission()
 			b_nextStage = true;
 		}
 	}
-
-
 }
 
 void Scene2::RenderMesh(Mesh *mesh, bool enableLight)

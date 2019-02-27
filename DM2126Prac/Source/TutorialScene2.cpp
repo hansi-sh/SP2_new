@@ -209,7 +209,7 @@ void TutorialScene2::Init() //defines what shader to use
 	meshList[GEO_START]->textureID = LoadTGA("Image//T2P1.tga");
 
 	meshList[GEO_START2] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START2]->textureID = LoadTGA("Image//T2P2.tga");
+	meshList[GEO_START2]->textureID = LoadTGA("Image//T2P2redo.tga");
 }
 
 

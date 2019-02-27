@@ -23,7 +23,6 @@ RaceScene::~RaceScene()
 
 void RaceScene::Init() //defines what shader to use
 {
-
 	b_movement = true;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
@@ -40,7 +39,7 @@ void RaceScene::Init() //defines what shader to use
 
 	//<---Sound--->
 	music::player.init();
-	music::player.setSoundVol(0.2);
+	music::player.setSoundVol(0.6);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	// For pop up screen

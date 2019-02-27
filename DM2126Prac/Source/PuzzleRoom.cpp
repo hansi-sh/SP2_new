@@ -61,7 +61,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	// testing irrklan
 	music::player.init();
-	music::player.setSoundVol(0.2);
+	music::player.setSoundVol(0.4);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
 	i_itemcount = 0;
 	i_totalitem = 0;
@@ -445,7 +445,7 @@ void PuzzleRoom::Update(double dt)
 			{
 				b_door1open = !b_door1open;
 				f_bouncetime = f_elapsedtime + 0.4f;
-				music::player.setSoundVol(0.2);
+				music::player.setSoundVol(0.4);
 				music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
 			}
 

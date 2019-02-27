@@ -96,10 +96,11 @@ private:
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-
 		GEO_STRETCHER,
 		GEO_DEFIBRILLATOR, // jus a cube
 		GEO_FIRSTAIDKIT,
+		GEO_INVENTORY1, // defi
+		GEO_INVENTORY2, // First Aid
 		GEO_CABINET,
 		GEO_CABINET2,
 		GEO_CHAIR,
@@ -107,30 +108,24 @@ private:
 		GEO_TOPSHELVE2,
 		GEO_TOPSHELVE3,
 		GEO_METALSHELVE, 
-
 		GEO_PLAYER,
 		GEO_TEXT,
-
 		GEO_HELP, // the top right panel
 		GEO_FRAME, // the frame to contain text
 		GEO_START, // ambulance
-
 		GEO_HAIR, // patient
 		GEO_FACE,
 		GEO_BODY,
 		GEO_RARM,
 		GEO_LARM,
-
 		GEO_RHAND,
 		GEO_LHAND,
 		GEO_RLEG,
 		GEO_LLEG,
 		GEO_CROTCH,
 		GEO_TIME,
-
 		GEO_PAUSE,
 		GEO_PAUSESELECT,
-
 		NUM_GEOMETRY,
 	};
 
