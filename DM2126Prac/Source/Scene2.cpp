@@ -317,6 +317,7 @@ void Scene2::Update(double dt)
 	// Timer-> aorion added
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
+		music::player.stopSound();
 		b_timerunout = true;
 		Application app;
 		app.SetSceneNumber(8);
@@ -509,6 +510,8 @@ void Scene2::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (b_pause)
 			b_pause = false;
 		else
@@ -520,6 +523,8 @@ void Scene2::Update(double dt)
 	{
 		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector > 0)
 				--i_Selector;
 			else
@@ -529,6 +534,8 @@ void Scene2::Update(double dt)
 		}
 		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector < 2)
 				++i_Selector;
 			else
@@ -539,16 +546,20 @@ void Scene2::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector == 0)	//Resume
 				b_pause = false;
 			else if (i_Selector == 1)	//Restart
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(2);
 				app.Run();
 			}
 			else if (i_Selector == 2)	//Main menu
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(0);
 				app.Run();

@@ -208,6 +208,8 @@ void MainMenuScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (i_Selector == 0)
 			i_Selector = 3;
 		else
@@ -217,6 +219,8 @@ void MainMenuScene::Update(double dt)
 	}
 	else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (i_Selector == 3)
 			i_Selector = 0;
 		else
