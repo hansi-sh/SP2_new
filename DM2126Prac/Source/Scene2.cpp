@@ -58,7 +58,6 @@ void Scene2::Init() //defines what shader to use
 	b_pause = false;
 
 	f_speed = 0;
-
 	d_delay = 0;
 
 	// testing irrklan
@@ -300,6 +299,9 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
+	meshList[GEO_Centre] = MeshBuilder::GenerateQuad("quad", Color(1, 1, 1), 1, 1, 1);
+	meshList[GEO_Centre]->textureID = LoadTGA("Image//selection.tga");
+
 	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
 	AmbulanceTimer->v_SetAmbulanceTime(30);
 }
@@ -331,15 +333,17 @@ void Scene2::Update(double dt)
 		b_showIntro = false;
 	}
 
-	if (Application::IsKeyPressed(VK_RIGHT))
+	if (Application::IsKeyPressed(VK_RIGHT)&& d_delay>1)
 	{
+		d_delay = 0;
 		if (b_itemcollect)
 		{
 			printNext();
 		}
 	}
-	if (Application::IsKeyPressed(VK_LEFT))
+	if (Application::IsKeyPressed(VK_LEFT)&& d_delay >1)
 	{
+		d_delay = 0;
 		if (b_itemcollect)
 		{
 			printPrev();
@@ -1099,6 +1103,8 @@ void Scene2::uploadItem(int newobject)
 		forward->prev = last;
 		last = forward;
 	}
+	i_itemcount = 1;
+	i_totalItem++;
 }
 
 void Scene2::printNext()
@@ -1108,16 +1114,19 @@ void Scene2::printNext()
 	if (check != NULL)
 	{
 		current = check;
+		i_itemcount++;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		i_itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		i_itemcount = 1;
 		rendertag();
 	}
 }
@@ -1129,23 +1138,28 @@ void Scene2::printPrev()
 	if (check != NULL)
 	{
 		current = check;
+		i_itemcount--;
 		rendertag();
 	}
 	else if (check == NULL && current == first)
 	{
 		current = last;
+		i_itemcount = 1;
 		rendertag();
 	}
 	else if (check == NULL && current == last)
 	{
 		current = first;
+		i_itemcount = 1;
 		rendertag();
 	}
 }
 
 void Scene2::rendertag()
 {
-	for (int i = 0; i < 34; i++)
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(i_itemcount) + "/" + std::to_string(i_totalItem), Color(0, 1, 0), 2, 45, 17);
+	DrawHUD(meshList[GEO_Centre], Color(1, 1, 1), false, 1, 40, 17);
+	for (int i = 0; i < NUM_GEOMETRY; i++)
 	{
 		if (current->data == i)
 		{

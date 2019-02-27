@@ -71,6 +71,8 @@ private:
 	void RenderSkybox();
 	bool b_viewStats;
 
+	int i_itemcount;
+	int i_totalItem;
 	//pausemenu
 	bool b_pause;
 	double d_BounceTime;
@@ -124,6 +126,7 @@ private:
 		GEO_TIME,
 		GEO_PAUSE,
 		GEO_PAUSESELECT,
+		GEO_Centre,
 		NUM_GEOMETRY,
 	};
 
@@ -191,8 +194,6 @@ private:
 	void rendertag();
 
 	bool b_itemcollect;
-	int i_itemcount;
-	int i_totalItem;
 
 	Item *first, *last, *forward, *current, *backward;
 	//Timer

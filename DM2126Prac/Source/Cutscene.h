@@ -2,7 +2,7 @@
 #define CUTSCENE_H
 
 #include "Scene.h"
-#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Light.h"
@@ -48,9 +48,6 @@ public:
 	CutScene();
 	~CutScene();
 
-	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	static float lastX, lastY;
-
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Render();
@@ -61,38 +58,11 @@ private:
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
 	float LSPEED;
-	float fps;
-	bool getCurrentCam;
-	float speed;
-	double delay;
 
 	void RenderSkybox();
 
-	bool b_BMO;
-	bool b_viewStats;
-
 	// For Box collision
 	bool collide;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
-
-	float rotationangle; // not needed but jus leave here
-	float updatedangle; // not needed but jus leave here
-	float prevBodyX;
-	float prevBodyZ;
-	float prevAngle;
-
-	//For Running Animation
-	bool checkmodelStack;
-	float RotateBody;
-	bool running;
-	bool bodyMovement;
-	float LeftLegX;
-	float RightLegX;
-	float ArmRotation;
-	float TranslateBodyX;
-	float TranslateBodyY;
-	float TranslateBodyZ;
 
 	bool b_movemodel;
 	float f_translatemodel = 0;
@@ -100,21 +70,6 @@ private:
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
-		//GEO_CUBE,
-		GEO_AICUBE,
-		GEO_Pedestrains1,
-		GEO_Pedestrains2,
-		GEO_Pedestrains3,
-		/*GEO_USB,
-		GEO_YELLOWBUTTONCUBOID,
-		GEO_BLUEBUTTONCIRCLE,
-		GEO_BLUEBUTTONCYLINDER,
-		GEO_GREENBUTTONCIRCLE,
-		GEO_GREENBUTTONCYLINDER,
-		GEO_REDBUTTONCIRCLE,
-		GEO_REDBUTTONCYLINDER,
-		GEO_TRIPRISM,*/
-		GEO_AXES,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -162,8 +117,7 @@ private:
 	ObjectBox* Obj[NUM_OBJ];
 
 	//static Camera2 camera;
-	static Camera2 camera;
-	float f_TPCRotateBy;
+	Camera3 camera;
 
 	Light light[1];
 
@@ -174,9 +128,6 @@ private:
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	void DrawHUD(Mesh* mesh, bool enableLight, float size, float x, float y);
-
-	StopWatchTimer RaceTimer;
-	bool timerunout = false;
 };
 
 #endif

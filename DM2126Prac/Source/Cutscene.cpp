@@ -10,10 +10,6 @@
 #include <string>
 #include "Sound.h"
 
-float CutScene::lastX = 0.0f;
-float CutScene::lastY = 0.0f;
-Camera2 CutScene::camera = Camera2();
-
 CutScene::CutScene()
 {
 }
@@ -22,52 +18,16 @@ CutScene::~CutScene()
 {
 }
 
-void CutScene::mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	float xoffset = (float)xpos - lastX;
-	float yoffset = (float)ypos - lastY;
-	float sensitivity = 0.05f;
-
-	lastX = (float)xpos;
-	lastY = (float)ypos;
-
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	Vector3 view = camera.target - camera.position;
-	Mtx44 rotate;
-	rotate.SetToRotation(-xoffset, 0.0f, 1.0f, 0.0f);
-	view = rotate * view;
-
-	Vector3 rightVector = view.Cross(camera.up);
-	rotate.SetToRotation(-yoffset, rightVector.x, rightVector.y, rightVector.z);
-	view = rotate * view;
-
-	camera.target = camera.position + view;
-}
-
 void CutScene::Init() //defines what shader to use
 {
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
 	// testing irrklan
-
+	f_translatemodel = 0.0f;
 
 	//<collison class>
 	collide = false;
-	rotationangle = 0;
-	updatedangle = 0;
-
-	//<----for BMO body animation movement when running---->
-	TranslateBodyX = 0.0f;
-	TranslateBodyY = 0.0f;
-	TranslateBodyZ = 0.0f;
-	RotateBody = 0.0f;
-
-	//<----for randomizing the instructions for player--->
-
-	//<--Music-->
 
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
@@ -81,11 +41,7 @@ void CutScene::Init() //defines what shader to use
 	LSPEED = 30.0f;
 
 	// Change here for camera initial position
-	camera.Init(Vector3(0, 20, -65), Vector3(0, 10, 0), Vector3(0, 1, 0));
-
-	currentCamPos = camera.position;
-	currentCamTarget = camera.target;
-	getCurrentCam = true;
+	camera.Init(Vector3(0, 100, -180), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -154,9 +110,6 @@ void CutScene::Init() //defines what shader to use
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);//if you add lights, add number here
 
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("Light Sphere", Color(1.0f, 1.0f, 1.0f), 18, 36, 1.0f, 360.0f);
-
-	//Guide lines - Turn on if need
-	//meshList[GEO_AXES] = MeshBuilder::GenerateAxes("Reference", 1000.0f, 1000.0f, 1000.0f);
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.0f, 0.0f, 1.0f);
 	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front3.tga");
@@ -232,47 +185,9 @@ void CutScene::Init() //defines what shader to use
 
 void CutScene::Update(double dt)
 {
-	if (Application::IsKeyPressed('1'))
-	{
-	}
-	if (Application::IsKeyPressed('2'))
-	{
-
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-		Application app;
-		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
-		app.Run();
-
-
-
-	}
-	if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
 
 	// Collision Box
 	Obj[OBJ_PLAYER]->setOBB(Vector3(camera.position.x, camera.position.y, camera.position.z));
-
-	// If collision is true, disable player movement,
-	// When the player moves, check which keypress is selected and if detected
-	// , set previous position to current
-
-	fps = 1.0f / (float)dt;
 
 	// Light movement
 	if (Application::IsKeyPressed('I')) // backward
@@ -288,10 +203,6 @@ void CutScene::Update(double dt)
 	if (Application::IsKeyPressed('O')) // up
 		light[0].position.y += (float)(LSPEED * dt);
 
-	//if (Application::IsKeyPressed('E'))
-	//{
-	//	b_movemodel = true;
-	//}
 	if (b_movemodel == true)
 	{
 		f_translatemodel += (float)(10 * dt);
@@ -301,10 +212,11 @@ void CutScene::Update(double dt)
 		}
 	}
 
-	if (getCurrentCam)
+	if (f_translatemodel == 27)
 	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
+		Application app;
+		app.SetSceneNumber(2); // go to RaceScene when done here -> double check isit 4
+		app.Run();
 	}
 
 	if (Application::IsKeyPressed('Z'))
@@ -326,8 +238,7 @@ void CutScene::Update(double dt)
 		//to do: switch light type to SPOT and pass the information to shader
 	}
 
-	// PlayMusic();
-	camera.Update(dt, true);
+	camera.Update(0.0, 0.0, 0.0, f_translatemodel);
 }
 
 void CutScene::Render()
@@ -364,25 +275,6 @@ void CutScene::Render()
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1,
 			&lightPosition_cameraspace.x);
 	}
-
-	////<-----------Axes----------->
-	//modelStack.PushMatrix();
-	//RenderMesh(meshList[GEO_AXES], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Light ball Sphere lighting 1----------->
-	//modelStack.PushMatrix();
-	//modelStack.Translate(light[0].position.x, light[0].position.y, light[0].position.z);
-	//RenderMesh(meshList[GEO_LIGHTBALL], false);
-	//modelStack.PopMatrix();
-
-	//<-----------Collision Box-------------->
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(TranslateBodyX, TranslateBodyY, TranslateBodyZ);
-	//modelStack.Rotate(rotationangle, 0, 1, 0);
-	//RenderMesh(meshList[GEO_PLAYER], false);
-	//modelStack.PopMatrix();
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -433,29 +325,6 @@ void CutScene::Render()
 	modelStack.PushMatrix();
 	DrawHUD(meshList[GEO_LOADING], false, 1, 40, 30);
 	modelStack.PopMatrix();
-
-	//if (collide)
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("Collide"), Color(1, 1, 0), 2, 66, 54);
-	//	modelStack.PopMatrix();
-	//}
-
-	//else
-	//{
-	//	modelStack.PushMatrix();
-	//	RenderTextOnScreen(meshList[GEO_TEXT], ("No Collide"), Color(1, 1, 0), 2, 60, 54);
-	//	modelStack.PopMatrix();
-	//}
-
-	//<--Get cameras position-->
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Pos X:" + std::to_string(camera.position.x) + ", Y:" + std::to_string(camera.position.y) + " , Z:" + std::to_string(camera.position.z)), Color(0, 1, 0), 2, 2, 5);
-	//modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//RenderTextOnScreen(meshList[GEO_TEXT], ("Tar X:" + std::to_string(camera.target.x) + ", Y:" + std::to_string(camera.target.y) + " , Z:" + std::to_string(camera.target.z)), Color(1, 0, 0), 2, 2, 7);
-	//modelStack.PopMatrix();
 }
 
 void CutScene::RenderMesh(Mesh *mesh, bool enableLight)

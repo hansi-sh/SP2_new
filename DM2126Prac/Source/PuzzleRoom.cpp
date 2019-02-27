@@ -691,7 +691,7 @@ void PuzzleRoom::Update(double dt)
 
 			music::player.stopSound();
 			Application app;
-			app.SetSceneNumber(2);
+			app.SetSceneNumber(11);
 			app.Run();
 		}
 	}

@@ -121,10 +121,6 @@ void TutorialRaceScene::Init() //defines what shader to use
 
 	camera.Init(Vector3(0, 100, -180), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	currentCamPos = camera.position;
-	currentCamTarget = camera.target;
-	b_getCurrentCam = true;
-
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -591,20 +587,8 @@ void TutorialRaceScene::Update(double dt)
 			f_AIWalkY[i_CollidedWith2 - 3] = AIpos[i_CollidedWith2 - 3].y;
 		}
 	}
-	if (b_getCurrentCam)
-	{
-		currentCamPos = camera.position;
-		currentCamTarget = camera.target;
-	}
 
-	if (f_TranslateBodyZ>=1400)
-	{
-		//music::player.stopSound(); // end all music at the des of scene
-		
-		Application app;
-		app.SetSceneNumber(9);
-		app.Run();
-	}
+
 }
 
 void TutorialRaceScene::Render()
