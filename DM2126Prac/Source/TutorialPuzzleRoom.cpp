@@ -276,7 +276,7 @@ void TutorialPuzzleRoom::Init() //defines what shader to use
 
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
-	meshList[GEO_START]->textureID = LoadTGA("Image//T1P1.tga");
+	meshList[GEO_START]->textureID = LoadTGA("Image//T1P1redo.tga");
 }
 
 void TutorialPuzzleRoom::Update(double dt)
