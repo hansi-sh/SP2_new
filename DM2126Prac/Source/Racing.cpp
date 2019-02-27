@@ -24,6 +24,7 @@ RaceScene::~RaceScene()
 void RaceScene::Init() //defines what shader to use
 {
 	b_movement = true;
+	b_loading = false;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
@@ -217,10 +218,14 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_Pedestrains3]->textureID = LoadTGA("Image//oneup.tga");
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
+
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ), 9, 14, 12);//For Player
 
 	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("speed", Color(0, 0, 1), 8, 8, 0);
 	meshList[GEO_SPEEDMETER]->textureID = LoadTGA("Image//speedmeter.tga");
+
+	meshList[GEO_LOADING] = MeshBuilder::GenerateQuad("loading", Color(0, 0, 1), 8, 8, 8);
+	meshList[GEO_LOADING]->textureID = LoadTGA("Image//loading.tga");
 
 	meshList[GEO_TIME] = MeshBuilder::GenerateQuad("timer", Color(0, 0, 1), 20, 20, 0);
 	meshList[GEO_TIME]->textureID = LoadTGA("Image//timer.tga");
@@ -302,6 +307,10 @@ void RaceScene::Update(double dt)
 		RaceTimer.v_UpdateTime(dt);
 		b_movement = true;
 	}
+	if (f_TranslateBodyZ >= 1395)
+	{
+		b_loading = true;
+	}
 	if (f_TranslateBodyZ >= 1400)
 	{
 		ofstream saveFile("loli.txt", fstream::app);
@@ -309,7 +318,7 @@ void RaceScene::Update(double dt)
 		music::player.stopSound();
 
 		Application app;
-		app.SetSceneNumber(7);
+		app.SetSceneNumber(10);
 		app.Run();
 	}
 	if (b_movement == true)
@@ -698,6 +707,8 @@ void RaceScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime <0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (b_pause)
 			b_pause = false;
 		else
@@ -710,6 +721,8 @@ void RaceScene::Update(double dt)
 		b_movement = false;
 		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector > 0)
 				--i_Selector;
 			else
@@ -719,6 +732,8 @@ void RaceScene::Update(double dt)
 		}
 		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if(i_Selector < 2)
 				++i_Selector;
 			else
@@ -729,16 +744,20 @@ void RaceScene::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector == 0)	//Resume
 				b_pause = false;
 			else if (i_Selector == 1)	//Restart
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(3);
 				app.Run();
 			}
 			else if (i_Selector == 2)	//Main menu
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(0);
 				app.Run();
@@ -820,7 +839,6 @@ void RaceScene::Render()
 		RenderMesh(meshList[GEO_CAR3], false);
 		modelStack.PopMatrix();
 	}
-
 	if (light[0].type == Light::LIGHT_DIRECTIONAL)
 	{
 		Vector3 lightDir(light[0].position.x, light[0].position.y, light[0].position.z);
@@ -949,6 +967,12 @@ void RaceScene::Render()
 
 			modelStack.PushMatrix();
 			RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
+			modelStack.PopMatrix();
+		}
+		if (b_loading==true)
+		{
+			modelStack.PushMatrix();
+			DrawHUD(meshList[GEO_LOADING], Color(1, 1, 1), false, 3, 13, 10);
 			modelStack.PopMatrix();
 		}
 

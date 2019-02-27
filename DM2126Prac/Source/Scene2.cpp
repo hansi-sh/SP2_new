@@ -218,13 +218,7 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
-	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
-
-	meshList[GEO_INVENTORY1] = MeshBuilder::GenerateOBJ("Inventory1", "OBJ//Defibrillator2.obj");
-	meshList[GEO_INVENTORY1]->textureID = LoadTGA("Image//Inventory_Defi.tga");
-
-	meshList[GEO_INVENTORY2] = MeshBuilder::GenerateOBJ("Inventory2", "OBJ//FirstAidKit.obj");
-	meshList[GEO_INVENTORY2]->textureID = LoadTGA("Image//Inventory_FirstAidKit.tga");
+	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");;
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
 	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
@@ -307,6 +301,7 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
 	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
+
 }
 
 
@@ -317,6 +312,7 @@ void Scene2::Update(double dt)
 	// Timer-> aorion added
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
+		music::player.stopSound();
 		b_timerunout = true;
 		Application app;
 		app.SetSceneNumber(8);
@@ -391,8 +387,8 @@ void Scene2::Update(double dt)
 			b_notification1 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_INVENTORY1] = MeshBuilder::GenerateQuad("Inventory1", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_INVENTORY1]->textureID = LoadTGA("Image//Inventory_Defi.tga");
+			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("Defi", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 			uploadItem(8);
 
 			music::player.setSoundVol(0.2);
@@ -418,8 +414,8 @@ void Scene2::Update(double dt)
 			b_notification2 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_INVENTORY2] = MeshBuilder::GenerateQuad("Inventory2", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_INVENTORY2]->textureID = LoadTGA("Image//Inventory_FirstAidKit.tga");
+			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("fak", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
 			uploadItem(9);
 
 			music::player.setSoundVol(0.2);
@@ -506,9 +502,10 @@ void Scene2::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to SPOT and pass the information to shader
 	}
-
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (b_pause)
 			b_pause = false;
 		else
@@ -520,6 +517,8 @@ void Scene2::Update(double dt)
 	{
 		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector > 0)
 				--i_Selector;
 			else
@@ -529,6 +528,8 @@ void Scene2::Update(double dt)
 		}
 		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector < 2)
 				++i_Selector;
 			else
@@ -539,16 +540,20 @@ void Scene2::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector == 0)	//Resume
 				b_pause = false;
 			else if (i_Selector == 1)	//Restart
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(2);
 				app.Run();
 			}
 			else if (i_Selector == 2)	//Main menu
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(0);
 				app.Run();
@@ -561,7 +566,6 @@ void Scene2::Update(double dt)
 		camera.Update(dt, false);
 	else
 		camera.Update(dt, true);
-
 }
 
 void Scene2::Render()
