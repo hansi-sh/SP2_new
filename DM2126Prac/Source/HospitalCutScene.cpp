@@ -32,7 +32,6 @@ void HospitalCutScene::Init() //defines what shader to use
 	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
 
 	b_Switch = false;
-	d_BounceTime = 0.25f;
 	f_TPCRotateBy = 0.0f;
 	//delayed
 	d_delayed = 0;
@@ -228,7 +227,7 @@ void HospitalCutScene::Update(double dt)
 	if (Application::IsKeyPressed(VK_LEFT))
 	{
 	}
-	else if (Application::IsKeyPressed(VK_RIGHT) && d_BounceTime < 0.0f)
+	else if (Application::IsKeyPressed(VK_RIGHT))
 	{
 	}
 
