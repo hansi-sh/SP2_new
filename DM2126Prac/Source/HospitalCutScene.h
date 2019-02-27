@@ -191,7 +191,6 @@ private:
 	Camera3 camera;
 	float f_TPCRotateBy;
 	bool b_Switch;
-	double d_BounceTime;
 
 	Light light[1];
 
