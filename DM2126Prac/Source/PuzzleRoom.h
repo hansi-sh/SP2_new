@@ -263,6 +263,8 @@ private:
 		OBJ_PATIENT,
 		OBJ_PATIENTINT,
 		OBJ_LASTDOOR,
+		OBJ_HOLE1,
+		OBJ_HOLE2,
 		OBJ_ALL,//when adding add directly above 
 		NUM_OBJ
 	};

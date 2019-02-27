@@ -275,7 +275,7 @@ void RaceScene::Init() //defines what shader to use
 
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(35);
+		RaceTimer.v_SetRaceSceneTime(30);
 	}
 	else
 	{
