@@ -452,15 +452,16 @@ void RaceScene::Update(double dt)
 }
 	for (int i = 0; i < 30; i++)
 	{
-		for (int i = 0; i < 30; i++)
+		for (int j = 0; j < 30; j++)
 		{
-			if (i == i)
+			if (i == j)
 			{
 				break;
 			}
-			else if (f_enemyZ[i] == f_enemyZ[i])
+			else if (f_enemyZ[i] == f_enemyZ[j])
 			{
 				f_enemyZ[i] = ((rand() % 2750) - 1300);
+				f_enemyZ[j] = ((rand() % 2750) - 1300);
 			}
 		}
 	}
