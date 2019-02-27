@@ -1,4 +1,4 @@
-#include "GL\glew.h"
+﻿#include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
 #include "Application.h"
@@ -475,10 +475,11 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
+			b_secretdooropentext = true;
 			if (f_elapsedtime > f_bouncetime)
 			{
 				b_secretdooropen = !b_secretdooropen;
-				f_bouncetime = f_elapsedtime + 0.4f;
+				f_bouncetime = f_elapsedtime + 2.0f;
 			}
 		}
 
@@ -607,7 +608,8 @@ void PuzzleRoom::Update(double dt)
 			b_itemcollect = true;
 			meshList[GEO_NOTE] = MeshBuilder::GenerateQuad("note", Color(1, 1, 1), 1, 1, 0);
 			meshList[GEO_NOTE]->textureID = LoadTGA("Image//note.tga");
-			v_uploadItem(45);
+			v_uploadItem(46);
+			b_note = true;
 		}
 		if (b_draweropen == false && f_drawertranslation <= 1.5 && interactioncomplete == true)
 		{
@@ -846,6 +848,8 @@ void PuzzleRoom::Update(double dt)
 			}
 			if (AllObjs == NUM_OBJ-1)
 			{
+				b_secretdooropentext = false;
+				b_note = false;
 				b_finaldoorint = false;
 				b_safeint = false;
 				b_patienthint = false;
@@ -1091,12 +1095,13 @@ void PuzzleRoom::Render()
 	 if (b_havekey3 == true)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Final Key "), Color(1, 1, 1), 2, 4, 44);
+		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 13, 10);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("GetThePatient"), Color(0, 0, 0), 2, 2, 10);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("GetOut"), Color(0, 0, 0), 2, 2, 8);
 		 modelStack.PopMatrix();
 	 }
 	 if (b_draweropen == true)
 	 {
-		 
 	 }
 	 if (b_patienthint == true && b_havekey3 == false)
 	 {
@@ -1109,7 +1114,7 @@ void PuzzleRoom::Render()
 	 if(b_other == true)
 	 { 
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Wrong Code Try Again "), Color(1, 1, 1), 2, 4, 44);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("WrongCodeTryAgain "), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
 	 if (b_eight == true)
@@ -1139,7 +1144,7 @@ void PuzzleRoom::Render()
 	 if (b_safeint == true && b_eight == false && b_havekey3== false )
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("EnterThePasscode"), Color(1, 1, 1), 2, 1, 44);
 		 modelStack.PopMatrix();
 	 }
 
@@ -1149,7 +1154,18 @@ void PuzzleRoom::Render()
 		 DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 		 modelStack.PopMatrix();
 	 }
-
+	 if (b_note == true)
+	 {
+		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 11, 46);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("YouFound"), Color(0, 1, 0), 2, 2, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("A Note"), Color(0, 1, 0), 2, 2, 46);
+	 }
+	 if (b_secretdooropentext == true)
+	 {
+		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 11, 46);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("SecretDoor"), Color(0, 1, 0), 2, 2, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Opens"), Color(0, 1, 0), 2, 2, 46);
+	 }
 	 modelStack.PushMatrix();
 	 DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
 	 modelStack.PopMatrix();
@@ -1593,7 +1609,8 @@ void PuzzleRoom::v_printPrev()
 }
 void PuzzleRoom::v_rendertag()
 {
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(i_itemcount) + "/" + std::to_string(i_totalitem), Color(0, 0, 1), 2, 5, 5);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(i_itemcount) + "/" + std::to_string(i_totalitem), Color(0, 1, 0), 2,45 , 17);
+	DrawHUD(meshList[GEO_Centre], Color(1, 1, 1), false, 1, 40, 17);
 	for (int i = 0; i <= NUM_GEOMETRY; i++)
 	{
 		if (current->data == i)
