@@ -218,13 +218,7 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
-	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
-
-	meshList[GEO_INVENTORY1] = MeshBuilder::GenerateOBJ("Inventory1", "OBJ//Defibrillator2.obj");
-	meshList[GEO_INVENTORY1]->textureID = LoadTGA("Image//Inventory_Defi.tga");
-
-	meshList[GEO_INVENTORY2] = MeshBuilder::GenerateOBJ("Inventory2", "OBJ//FirstAidKit.obj");
-	meshList[GEO_INVENTORY2]->textureID = LoadTGA("Image//Inventory_FirstAidKit.tga");
+	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");;
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
 	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
@@ -307,6 +301,7 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
 	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
+
 }
 
 
@@ -392,8 +387,8 @@ void Scene2::Update(double dt)
 			b_notification1 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_INVENTORY1] = MeshBuilder::GenerateQuad("Inventory1", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_INVENTORY1]->textureID = LoadTGA("Image//Inventory_Defi.tga");
+			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("Defi", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 			uploadItem(8);
 
 			music::player.setSoundVol(0.2);
@@ -419,8 +414,8 @@ void Scene2::Update(double dt)
 			b_notification2 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_INVENTORY2] = MeshBuilder::GenerateQuad("Inventory2", Color(1, 1, 1), 1, 1, 1);
-			meshList[GEO_INVENTORY2]->textureID = LoadTGA("Image//Inventory_FirstAidKit.tga");
+			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("fak", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
 			uploadItem(9);
 
 			music::player.setSoundVol(0.2);
