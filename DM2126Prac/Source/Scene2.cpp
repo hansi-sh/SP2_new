@@ -301,7 +301,7 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
 	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
-
+	AmbulanceTimer->v_SetAmbulanceTime(30);
 }
 
 
@@ -856,7 +856,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
-			Application::timerh = 30;
+			Application::timerh = 35;
 			b_nextStage = true;
 		}
 	}

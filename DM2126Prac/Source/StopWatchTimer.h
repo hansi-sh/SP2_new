@@ -4,21 +4,17 @@
 class StopWatchTimer
 {
 private:
-	double d_StartTime;
-	double d_ambulancetimer;
-	double d_RaceTimer;
-	double d_TotalTimeAfterAmbulance;
-	double d_TimeLeftAfterPuzzle;
+	double d_timer;
 public:
 	StopWatchTimer();
 	~StopWatchTimer();
-	double d_GetAmbulanceTimer();
-	double d_GetPuzzleSceneTime();
-	double d_GetRaceSceneTime();
-	double d_GetTimeLeftAfterPuzzle();
-	void v_UpdateTime(double dt);
 	void v_SetPuzzleSceneTime(float time);
+	double d_GetPuzzleSceneTime();
+	void v_SetAmbulanceTime(float time);
+	double d_GetAmbulanceTimer();
 	void v_SetRaceSceneTime(float time);
+	double d_GetRaceSceneTime();
+	void v_UpdateTime(double dt);
 };
 
 #endif

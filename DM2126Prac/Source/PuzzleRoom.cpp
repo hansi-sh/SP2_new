@@ -244,7 +244,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_TVTABLEDRAWER] = MeshBuilder::GenerateOBJ("TVTableDrawer", "OBJ//tvtabledrawer.obj");
 	meshList[GEO_TVTABLEDRAWER]->textureID = LoadTGA("Image//TVTableDrawerTextures.tga");
-	Obj[OBJ_TVTABLEDRAWERINT] = new ObjectBox(Vector3(80.5, 58.50, 35.7), 7, 65, 19.1);
+	Obj[OBJ_TVTABLEDRAWERINT] = new ObjectBox(Vector3(90.5, 58.50, 35.7), 9, 65, 30.1);
 
 
 	meshList[GEO_BOOKSHELF] = MeshBuilder::GenerateOBJ("BookShelve", "OBJ//bookshelf.obj");
@@ -361,8 +361,10 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	//Final Door
 	Obj[OBJ_LASTDOOR] = new ObjectBox(Vector3(-59.5, 46.50, -11.48), 25, 20, 5);
-
-
+	//Hol1
+	Obj[OBJ_HOLE1] = new ObjectBox(Vector3(-84, 47, -15.5), 25, 60, 2);
+	//hole2
+	Obj[OBJ_HOLE2] = new ObjectBox(Vector3(15, 47, -25), 29, 11, 11);
 	//InteractCheck
 	Obj[OBJ_ALL] = new ObjectBox(Vector3(0,0,0), 1000, 1000, 1000);
 
@@ -388,6 +390,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
 	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
+	PuzzleTimer->v_SetPuzzleSceneTime(185);
 }
 
 void PuzzleRoom::Update(double dt)
@@ -526,6 +529,7 @@ void PuzzleRoom::Update(double dt)
 		f_elapsedtime = 0;
 		b_havekey1 = true;
 		b_havekey2 = true; 
+		b_havekey3 = true;
 		b_itemcollect = true;
 		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
 		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyonewords");
@@ -617,7 +621,6 @@ void PuzzleRoom::Update(double dt)
 		}
 		if (b_draweropen == false && f_drawertranslation <= 1.5 && interactioncomplete == true)
 		{
-			b_draweropen = true;
 			f_drawertranslation += 0.5 * dt;
 			if (f_drawertranslation >=0.5)
 			{
@@ -1378,7 +1381,6 @@ void PuzzleRoom::v_CreepyHouse()
 	
 	//RoomWall1
 	RenderMesh(meshList[GEO_ROOM1WALL], true);
-
 
 	//house
 	RenderMesh(meshList[GEO_HOUSE], true);
