@@ -65,6 +65,8 @@ void MainMenuScene::Init() //defines what shader to use
 	f_TLeaderBoard = 22.0f;
 	f_TExit = 22.0f;
 
+	d_BounceTime = 0.3f;
+
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_BLEND);
@@ -208,6 +210,8 @@ void MainMenuScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (i_Selector == 0)
 			i_Selector = 3;
 		else
@@ -217,6 +221,8 @@ void MainMenuScene::Update(double dt)
 	}
 	else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (i_Selector == 3)
 			i_Selector = 0;
 		else
@@ -291,9 +297,6 @@ void MainMenuScene::Update(double dt)
 		{
 			music::player.stopSound(); // End all sound when switch stage
 
-			//Application app;
-			//app.SetSceneNumber(1);
-			//app.Run();
 			Application app;
 			app.SetSceneNumber(9);
 			app.Run();

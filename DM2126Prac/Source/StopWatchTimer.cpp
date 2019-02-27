@@ -4,11 +4,7 @@
 
 StopWatchTimer::StopWatchTimer()
 {
-	d_StartTime = 180 ;
-	d_ambulancetimer = 30;
-	d_RaceTimer = 0;
-	d_TotalTimeAfterAmbulance = 0;
-	d_TimeLeftAfterPuzzle;
+	d_timer = 0;
 }
 
 
@@ -17,33 +13,31 @@ StopWatchTimer::~StopWatchTimer()
 
 }
 
+void StopWatchTimer::v_SetPuzzleSceneTime(float time)
+{
+	d_timer = time;
+}
 double StopWatchTimer::d_GetPuzzleSceneTime()
 {
-	return d_StartTime;
+	return 	d_timer;
+}
+void StopWatchTimer::v_SetAmbulanceTime(float time)
+{
+	d_timer = time;
 }
 double StopWatchTimer::d_GetAmbulanceTimer()
 {
-	return d_ambulancetimer;
-}
-double StopWatchTimer::d_GetRaceSceneTime()
-{
-	return d_RaceTimer;
-}
-double StopWatchTimer::d_GetTimeLeftAfterPuzzle()
-{
-	return d_TimeLeftAfterPuzzle;
-}
-void StopWatchTimer::v_SetPuzzleSceneTime(float time)
-{
-	d_StartTime = time;
+	return 	d_timer;
 }
 void StopWatchTimer::v_SetRaceSceneTime(float time) 
 {
-	d_RaceTimer = time;
+	d_timer = time;
+}
+double StopWatchTimer::d_GetRaceSceneTime()
+{
+	return d_timer;
 }
 void StopWatchTimer::v_UpdateTime(double dt)
 {
-	d_StartTime -= 1 * dt ;
-	d_ambulancetimer -= 1 * dt;
-	d_RaceTimer -= 1 * dt;
+	d_timer -= dt;
 }

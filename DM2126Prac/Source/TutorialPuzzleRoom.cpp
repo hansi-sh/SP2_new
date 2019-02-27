@@ -277,6 +277,9 @@ void TutorialPuzzleRoom::Init() //defines what shader to use
 	// Switching Stage
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 22, 22, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//T1P1.tga");
+
+	meshList[GEO_START2] = MeshBuilder::GenerateQuad("Stage1", Color(0, 0, 1), 22, 22, 0);
+	meshList[GEO_START2]->textureID = LoadTGA("Image//T1P2.tga");
 }
 
 void TutorialPuzzleRoom::Update(double dt)
@@ -304,11 +307,30 @@ void TutorialPuzzleRoom::Update(double dt)
 
 	d_BounceTime -= dt;
 
-	if (Application::IsKeyPressed(VK_RIGHT) && d_BounceTime < 0.0f)
+	if (Application::IsKeyPressed(VK_LEFT) && d_BounceTime < 0.0f)
 	{
-		Application app;
-		app.SetSceneNumber(5);
-		app.Run();
+		if (b_Switch)
+			b_Switch = false;
+		else
+		{
+			Application app;
+			app.SetSceneNumber(6);
+			app.Run();
+		}
+
+		d_BounceTime = 0.25f;
+	}
+	else if (Application::IsKeyPressed(VK_RIGHT) && d_BounceTime < 0.0f)
+	{
+		if (!b_Switch)
+			b_Switch = true;
+		else
+		{
+			music::player.stopSound();
+			Application app;
+			app.SetSceneNumber(5);
+			app.Run();
+		}
 		d_BounceTime = 0.25f;
 	}
 
@@ -398,9 +420,18 @@ void TutorialPuzzleRoom::Render()
 	RenderMesh(meshList[GEO_LIGHTBALL2], false);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
-	modelStack.PopMatrix();
+	if (!b_Switch)
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
+	else
+	{
+		modelStack.PushMatrix();
+		DrawHUD(meshList[GEO_START2], Color(0, 0, 1), false, 1, 40, 30);
+		modelStack.PopMatrix();
+	}
 
 }
 

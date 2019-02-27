@@ -1,4 +1,4 @@
-#include "GL\glew.h"
+﻿#include "GL\glew.h"
 #include "Mtx44.h"
 #include "shader.hpp"
 #include "Application.h"
@@ -52,14 +52,16 @@ void PuzzleRoom::Init() //defines what shader to use
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 	PuzzleTimer = new StopWatchTimer;
-	b_checkmodelStack = false;
+	d_BounceTime = 0.0f;
+	i_Selector = 0;
+	b_pause = false;
 	
 	b_itemcollect = false;
 	b_viewStats = false;
 
 	// testing irrklan
 	music::player.init();
-	music::player.setSoundVol(0.2);
+	music::player.setSoundVol(0.4);
 	music::player.playSound("Sound//Scene1//PuzzleBGM2.wav", true);
 	i_itemcount = 0;
 	i_totalitem = 0;
@@ -242,7 +244,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	meshList[GEO_TVTABLEDRAWER] = MeshBuilder::GenerateOBJ("TVTableDrawer", "OBJ//tvtabledrawer.obj");
 	meshList[GEO_TVTABLEDRAWER]->textureID = LoadTGA("Image//TVTableDrawerTextures.tga");
-	Obj[OBJ_TVTABLEDRAWERINT] = new ObjectBox(Vector3(80.5, 58.50, 35.7), 7, 65, 19.1);
+	Obj[OBJ_TVTABLEDRAWERINT] = new ObjectBox(Vector3(90.5, 58.50, 35.7), 9, 65, 30.1);
 
 
 	meshList[GEO_BOOKSHELF] = MeshBuilder::GenerateOBJ("BookShelve", "OBJ//bookshelf.obj");
@@ -359,8 +361,10 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	//Final Door
 	Obj[OBJ_LASTDOOR] = new ObjectBox(Vector3(-59.5, 46.50, -11.48), 25, 20, 5);
-
-
+	//Hol1
+	Obj[OBJ_HOLE1] = new ObjectBox(Vector3(-84, 47, -15.5), 25, 60, 2);
+	//hole2
+	Obj[OBJ_HOLE2] = new ObjectBox(Vector3(15, 47, -25), 29, 11, 11);
 	//InteractCheck
 	Obj[OBJ_ALL] = new ObjectBox(Vector3(0,0,0), 1000, 1000, 1000);
 
@@ -373,7 +377,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	// User Interface -> Raphael Added
 
-	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 40, 30, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage1.tga"); 
 
 	meshList[GEO_FRAME] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1),14, 5, 0);
@@ -382,6 +386,11 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_NOTE] = MeshBuilder::GenerateQuad("note", Color(1, 1, 1), 14, 5, 0);
 	meshList[GEO_NOTE]->textureID = LoadTGA("Image//note.tga");
 
+	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
+	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
+
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
+	PuzzleTimer->v_SetPuzzleSceneTime(181);
 }
 
 void PuzzleRoom::Update(double dt)
@@ -389,6 +398,7 @@ void PuzzleRoom::Update(double dt)
 	
 	// Raphael Added
 	score = score + 0.2;
+	d_BounceTime -= dt;
 	if (score > 20)
 	{
 		b_showIntro = false;
@@ -399,10 +409,14 @@ void PuzzleRoom::Update(double dt)
 	//If timer reach 0
 	if (PuzzleTimer->d_GetPuzzleSceneTime() <= 0)
 	{
+		music::player.stopSound();
 		b_timerunout = true;
+		Application app;
+		app.SetSceneNumber(8);
+		app.Run();
 	}
 	//Prevent time from going negative
-	if (b_timerunout == false)
+	if (b_timerunout == false && b_pause == false)
 	{
 		PuzzleTimer->v_UpdateTime(dt);
 	}
@@ -438,7 +452,7 @@ void PuzzleRoom::Update(double dt)
 			{
 				b_door1open = !b_door1open;
 				f_bouncetime = f_elapsedtime + 0.4f;
-				music::player.setSoundVol(0.2);
+				music::player.setSoundVol(0.4);
 				music::player.playSound("Sound//Scene1//UnlockDoor2.wav");
 			}
 
@@ -468,10 +482,11 @@ void PuzzleRoom::Update(double dt)
 		if (Application::IsKeyPressed('E'))
 		{
 			interactioncomplete = true;
+			b_secretdooropentext = true;
 			if (f_elapsedtime > f_bouncetime)
 			{
 				b_secretdooropen = !b_secretdooropen;
-				f_bouncetime = f_elapsedtime + 0.4f;
+				f_bouncetime = f_elapsedtime + 2.0f;
 			}
 		}
 
@@ -514,6 +529,7 @@ void PuzzleRoom::Update(double dt)
 		f_elapsedtime = 0;
 		b_havekey1 = true;
 		b_havekey2 = true; 
+		b_havekey3 = true;
 		b_itemcollect = true;
 		meshList[GEO_KEY1] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1), 1, 1, 0);
 		meshList[GEO_KEY1]->textureID = LoadTGA("Image//keyonewords");
@@ -600,7 +616,8 @@ void PuzzleRoom::Update(double dt)
 			b_itemcollect = true;
 			meshList[GEO_NOTE] = MeshBuilder::GenerateQuad("note", Color(1, 1, 1), 1, 1, 0);
 			meshList[GEO_NOTE]->textureID = LoadTGA("Image//note.tga");
-			v_uploadItem(45);
+			v_uploadItem(46);
+			b_note = true;
 		}
 		if (b_draweropen == false && f_drawertranslation <= 1.5 && interactioncomplete == true)
 		{
@@ -674,7 +691,7 @@ void PuzzleRoom::Update(double dt)
 
 			music::player.stopSound();
 			Application app;
-			app.SetSceneNumber(2);
+			app.SetSceneNumber(11);
 			app.Run();
 		}
 	}
@@ -687,38 +704,7 @@ void PuzzleRoom::Update(double dt)
 			b_lockeddoortext = true;	
 		}
 	}
-	if (Application::IsKeyPressed('5'))
-	{
-		music::player.stopSound(); // end all music at the des of scene
 
-		Application app;
-		app.SetSceneNumber(2);
-		app.Run();
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-
-	}
-	if (Application::IsKeyPressed('4'))
-	{
-
-	}
-	/*if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}*/
 	
 
 	if (Application::IsKeyPressed('P'))
@@ -839,6 +825,8 @@ void PuzzleRoom::Update(double dt)
 			}
 			if (AllObjs == NUM_OBJ-1)
 			{
+				b_secretdooropentext = false;
+				b_note = false;
 				b_finaldoorint = false;
 				b_safeint = false;
 				b_patienthint = false;
@@ -882,8 +870,72 @@ void PuzzleRoom::Update(double dt)
 		currentCamPos = camera.position;
 		currentCamTarget = camera.target;
 	}
-	//PlayMusic();
-	camera.Update(dt,true);
+
+	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
+	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
+		if (b_pause)
+			b_pause = false;
+		else
+			b_pause = true;
+		d_BounceTime = 0.3;
+	}
+
+	if (b_pause)
+	{
+		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
+		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
+			if (i_Selector > 0)
+				--i_Selector;
+			else
+				i_Selector = 2;
+
+			d_BounceTime = 0.25;
+		}
+		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
+		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
+			if (i_Selector < 2)
+				++i_Selector;
+			else
+				i_Selector = 0;
+
+			d_BounceTime = 0.25;
+		}
+
+		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
+		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
+			if (i_Selector == 0)	//Resume
+				b_pause = false;
+			else if (i_Selector == 1)	//Restart
+			{
+				music::player.stopSound();
+				Application app;
+				app.SetSceneNumber(1);
+				app.Run();
+			}
+			else if (i_Selector == 2)	//Main menu
+			{
+				music::player.stopSound();
+				Application app;
+				app.SetSceneNumber(0);
+				app.Run();
+			}
+			d_BounceTime = 0.25;
+		}
+	}
+
+	if (b_pause)
+		camera.Update(dt, false);
+	else
+		camera.Update(dt, true);
+
 }
 
 void PuzzleRoom::Render()
@@ -1020,12 +1072,13 @@ void PuzzleRoom::Render()
 	 if (b_havekey3 == true)
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("You Have Final Key "), Color(1, 1, 1), 2, 4, 44);
+		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 13, 10);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("GetThePatient"), Color(0, 0, 0), 2, 2, 10);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("GetOut"), Color(0, 0, 0), 2, 2, 8);
 		 modelStack.PopMatrix();
 	 }
 	 if (b_draweropen == true)
 	 {
-		 
 	 }
 	 if (b_patienthint == true && b_havekey3 == false)
 	 {
@@ -1038,7 +1091,7 @@ void PuzzleRoom::Render()
 	 if(b_other == true)
 	 { 
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("Wrong Code Try Again "), Color(1, 1, 1), 2, 4, 44);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("WrongCodeTryAgain "), Color(1, 1, 1), 2, 4, 44);
 		 modelStack.PopMatrix();
 	 }
 	 if (b_eight == true)
@@ -1068,7 +1121,7 @@ void PuzzleRoom::Render()
 	 if (b_safeint == true && b_eight == false && b_havekey3== false )
 	 {
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], ("ENTER THE PASSCODE"), Color(1, 1, 1), 2, 1, 44);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("EnterThePasscode"), Color(1, 1, 1), 2, 1, 44);
 		 modelStack.PopMatrix();
 	 }
 
@@ -1078,7 +1131,18 @@ void PuzzleRoom::Render()
 		 DrawHUD(meshList[GEO_START], Color(0, 0, 1), false, 1, 40, 30);
 		 modelStack.PopMatrix();
 	 }
-
+	 if (b_note == true)
+	 {
+		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 11, 46);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("YouFound"), Color(0, 1, 0), 2, 2, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("A Note"), Color(0, 1, 0), 2, 2, 46);
+	 }
+	 if (b_secretdooropentext == true)
+	 {
+		 DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 11, 46);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("SecretDoor"), Color(0, 1, 0), 2, 2, 48);
+		 RenderTextOnScreen(meshList[GEO_TEXT], ("Opens"), Color(0, 1, 0), 2, 2, 46);
+	 }
 	 modelStack.PushMatrix();
 	 DrawHUD(meshList[GEO_TIME], Color(1, 1, 0), false, 1, 40, 40);
 	 modelStack.PopMatrix();
@@ -1110,6 +1174,38 @@ void PuzzleRoom::Render()
 			 RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(timecount)), Color(1, 1, 1), 2.5, 40.8, 57.5);
 			 modelStack.PopMatrix();
 		 }
+	 }
+
+	 if (b_pause)
+	 {
+		 modelStack.PushMatrix();
+		 DrawHUD(meshList[GEO_PAUSE], Color(0, 0, 0), false, 1, 40, 30);
+		 modelStack.PopMatrix();
+
+		 if (i_Selector == 0)
+		 {
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29.5);
+		 }
+		 else if (i_Selector == 1)
+		 {
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.8);
+		 }
+		 else
+		 {
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 14);
+		 }
+
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29.5);
+		 modelStack.PopMatrix();
+
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.7);
+		 modelStack.PopMatrix();
+
+		 modelStack.PushMatrix();
+		 RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
+		 modelStack.PopMatrix();
 	 }
 }
 
@@ -1285,7 +1381,6 @@ void PuzzleRoom::v_CreepyHouse()
 	
 	//RoomWall1
 	RenderMesh(meshList[GEO_ROOM1WALL], true);
-
 
 	//house
 	RenderMesh(meshList[GEO_HOUSE], true);
@@ -1490,7 +1585,8 @@ void PuzzleRoom::v_printPrev()
 }
 void PuzzleRoom::v_rendertag()
 {
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(i_itemcount) + "/" + std::to_string(i_totalitem), Color(0, 0, 1), 2, 5, 5);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(i_itemcount) + "/" + std::to_string(i_totalitem), Color(0, 1, 0), 2,45 , 17);
+	DrawHUD(meshList[GEO_Centre], Color(1, 1, 1), false, 1, 40, 17);
 	for (int i = 0; i <= NUM_GEOMETRY; i++)
 	{
 		if (current->data == i)

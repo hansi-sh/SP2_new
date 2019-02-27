@@ -39,42 +39,6 @@ class Scene2 : public Scene
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-		//U_LIGHT1_POSITION,
-		//U_LIGHT1_COLOR,
-		//U_LIGHT1_POWER,
-		//U_LIGHT1_KC,
-		//U_LIGHT1_KL,
-		//U_LIGHT1_KQ,
-		//U_LIGHT1NABLED,
-		//U_LIGHT1_TYPE,
-		//U_LIGHT1_SPOTDIRECTION,
-		//U_LIGHT1_COSCUTOFF,
-		//U_LIGHT1_COSINNER,
-		//U_LIGHT1_EXPONENT,
-		//U_LIGHT2_POSITION,
-		//U_LIGHT2_COLOR,
-		//U_LIGHT2_POWER,
-		//U_LIGHT2_KC,
-		//U_LIGHT2_KL,
-		//U_LIGHT2_KQ,
-		//U_LIGHT2NABLED,
-		//U_LIGHT2_TYPE,
-		//U_LIGHT2_SPOTDIRECTION,
-		//U_LIGHT2_COSCUTOFF,
-		//U_LIGHT2_COSINNER,
-		//U_LIGHT2_EXPONENT,
-		//U_LIGHT3_POSITION,
-		//U_LIGHT3_COLOR,
-		//U_LIGHT3_POWER,
-		//U_LIGHT3_KC,
-		//U_LIGHT3_KL,
-		//U_LIGHT3_KQ,
-		//U_LIGHT3NABLED,
-		//U_LIGHT3_TYPE,
-		//U_LIGHT3_SPOTDIRECTION,
-		//U_LIGHT3_COSCUTOFF,
-		//U_LIGHT3_COSINNER,
-		//U_LIGHT3_EXPONENT,
 		U_COLOR_TEXTURE_ENABLED,
 		U_COLOR_TEXTURE,
 		U_NUMLIGHTS,
@@ -107,6 +71,12 @@ private:
 	void RenderSkybox();
 	bool b_viewStats;
 
+	int i_itemcount;
+	int i_totalItem;
+	//pausemenu
+	bool b_pause;
+	double d_BounceTime;
+
 	// For Box collision
 	bool b_collide;
 	Vector3 currentCamPos;
@@ -128,7 +98,6 @@ private:
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-
 		GEO_STRETCHER,
 		GEO_DEFIBRILLATOR, // jus a cube
 		GEO_FIRSTAIDKIT,
@@ -139,27 +108,25 @@ private:
 		GEO_TOPSHELVE2,
 		GEO_TOPSHELVE3,
 		GEO_METALSHELVE, 
-
 		GEO_PLAYER,
 		GEO_TEXT,
-
 		GEO_HELP, // the top right panel
 		GEO_FRAME, // the frame to contain text
 		GEO_START, // ambulance
-
 		GEO_HAIR, // patient
 		GEO_FACE,
 		GEO_BODY,
 		GEO_RARM,
 		GEO_LARM,
-
 		GEO_RHAND,
 		GEO_LHAND,
 		GEO_RLEG,
 		GEO_LLEG,
 		GEO_CROTCH,
 		GEO_TIME,
-
+		GEO_PAUSE,
+		GEO_PAUSESELECT,
+		GEO_Centre,
 		NUM_GEOMETRY,
 	};
 
@@ -193,6 +160,7 @@ private:
 	ObjectBox* Obj[NUM_OBJ]; // for box collision
 
 	static Camera2 camera;
+	int i_Selector;
 
 	Light light[1];
 
@@ -226,8 +194,6 @@ private:
 	void rendertag();
 
 	bool b_itemcollect;
-	int i_itemcount;
-	int i_totalItem;
 
 	Item *first, *last, *forward, *current, *backward;
 	//Timer

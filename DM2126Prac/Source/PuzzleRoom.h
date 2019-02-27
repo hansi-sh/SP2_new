@@ -95,6 +95,10 @@ private:
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
 	
+	//pausemenu
+	bool b_pause;
+	double d_BounceTime;
+
 	//Light
 	bool b_switchoneint;
 	bool b_lightoneon;
@@ -112,11 +116,13 @@ private:
 	float f_drawertranslation = 0;
 	bool b_drawerint;
 	bool b_draweropen = false;
+	bool b_note = false;
 	//secret door
 	float f_secretdoortranslation = 0;
 	bool b_secretdooropen;
 	bool b_secretdoorint ;
 	bool b_lockeddoortext;
+	bool b_secretdooropentext = false;
 	//Pillow
 	float f_pillowtranslation = 0;
 	bool b_pillowint;
@@ -213,6 +219,10 @@ private:
 		GEO_TIME,
 		GEO_Centre,//sihan added
 		GEO_NOTE,
+
+		GEO_PAUSE,
+		GEO_PAUSESELECT,
+
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
@@ -253,6 +263,8 @@ private:
 		OBJ_PATIENT,
 		OBJ_PATIENTINT,
 		OBJ_LASTDOOR,
+		OBJ_HOLE1,
+		OBJ_HOLE2,
 		OBJ_ALL,//when adding add directly above 
 		NUM_OBJ
 	};
@@ -263,6 +275,7 @@ private:
 	ObjectBox* Obj[NUM_OBJ];
 
 	static Camera2 camera;
+	int i_Selector;
 
 	Light light[2];
 
