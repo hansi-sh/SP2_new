@@ -387,7 +387,7 @@ void PuzzleRoom::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
-	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
 }
 
 void PuzzleRoom::Update(double dt)
@@ -1181,24 +1181,23 @@ void PuzzleRoom::Render()
 
 		 if (i_Selector == 0)
 		 {
-			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29.5);
 		 }
 		 else if (i_Selector == 1)
 		 {
-			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.5);
+			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.8);
 		 }
 		 else
 		 {
 			 DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 14);
 		 }
 
-
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
+		 RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29.5);
 		 modelStack.PopMatrix();
 
 		 modelStack.PushMatrix();
-		 RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.3);
+		 RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.7);
 		 modelStack.PopMatrix();
 
 		 modelStack.PushMatrix();

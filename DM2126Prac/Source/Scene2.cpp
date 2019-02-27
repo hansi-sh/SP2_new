@@ -768,7 +768,7 @@ void Scene2::Render()
 
 		if (i_Selector == 0)
 		{
-			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 30);
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29.5);
 		}
 		else if (i_Selector == 1)
 		{
@@ -839,7 +839,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
-			Application::timerh = 30;
+			Application::timerh = 35;
 			b_nextStage = true;
 		}
 		
