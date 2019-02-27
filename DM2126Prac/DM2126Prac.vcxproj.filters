@@ -35,6 +35,12 @@
     <ClCompile Include="Source\TutorialPuzzleRoom.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\HospitalCutScene.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Cutscene.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -63,9 +69,6 @@
     <ClInclude Include="Source\Vertex.h" />
     <ClInclude Include="Source\WinScreen.h" />
     <ClCompile Include="Source\Application.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\AssignmentScene.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera.cpp">
@@ -152,12 +155,15 @@
     <ClInclude Include="Source\TutorialPuzzleRoom.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Source\HospitalCutScene.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cutscene.h">
+      <Filter>Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
-      <Filter>Header</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\AssignmentScene.h">
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera2.h">

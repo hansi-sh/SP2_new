@@ -149,7 +149,9 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
+    <ClCompile Include="Source\Cutscene.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
+    <ClCompile Include="Source\HospitalCutScene.cpp" />
     <ClCompile Include="Source\Leaderboard.cpp" />
     <ClCompile Include="Source\enemy2.cpp" />
     <ClCompile Include="Source\LoseScreen.cpp" />
@@ -180,7 +182,9 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\Camera3.h" />
+    <ClInclude Include="Source\Cutscene.h" />
     <ClInclude Include="Source\Enemy.h" />
+    <ClInclude Include="Source\HospitalCutScene.h" />
     <ClInclude Include="Source\Leaderboard.h" />
     <ClInclude Include="Source\enemy2.h" />
     <ClInclude Include="Source\LoseScreen.h" />

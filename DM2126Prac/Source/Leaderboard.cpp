@@ -29,7 +29,7 @@ void Leaderboard::Init() //defines what shader to use
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
 
 	music::player.init();
-	music::player.setSoundVol(0.5);
+	music::player.setSoundVol(0.1);
 	music::player.playSound("Sound//Other//InstructionBGM.wav", true);
 
 	f_speed = 0;

@@ -69,97 +69,101 @@ public:
 	virtual void Exit();
 	//item
 	void DrawHUD(Mesh* mesh, Color color, bool enableLight, float size, float x, float y);
-	void uploadItem(int);
-	void printNext();
-	void printPrev();
-	void rendertag();
+	void v_uploadItem(int);
+	void v_printNext();
+	void v_printPrev();
+	void v_rendertag();
 	Item *first, *last, *forward, *current, *backward;
 private:
-	void RenderButton(int, int);
+	void v_RenderButton(int, int);
 	unsigned m_vertexArrayID;
 	unsigned m_programID;
 	unsigned m_parameters[U_TOTAL];
-	float LSPEED;
-	float fps;
-	bool getCurrentCam;
+	float f_LSPEED;
+	float f_fps;
+	bool b_getCurrentCam;
 
-	void RenderSkybox();
-	void CreepyHouse();
+	void v_RenderSkybox();
+	void v_CreepyHouse();
 
-	bool itemcollect;
-	int itemcount;
-	int totalitem;
+	bool b_itemcollect;
+	int i_itemcount;
+	int i_totalitem;
 	bool b_viewStats;
 	//For collision
-	bool collide;
+	bool b_collide;
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
 	
+	//pausemenu
+	bool b_pause;
+	double d_BounceTime;
+
 	//Light
-	bool switchoneint;
-	bool lightoneon;
-	bool switchtwoint;
-	bool lighttwoon;
+	bool b_switchoneint;
+	bool b_lightoneon;
+	bool b_switchtwoint;
+	bool b_lighttwoon;
 	//time
-	float elapsedtime = 0;
-	float bouncetime = 0;
-	bool timerunout = false;
-	bool timeleft = false;
+	float f_elapsedtime = 0;
+	float f_bouncetime = 0;
+	bool b_timerunout = false;
+	bool b_timeleft = false;
 	
 	//For Running Animation
-	bool checkmodelStack;
+	bool b_checkmodelStack;
 	//TV Drawer
-	float drawertranslation = 0;
-	bool drawerint;
-	bool draweropen = false;
+	float f_drawertranslation = 0;
+	bool b_drawerint;
+	bool b_draweropen = false;
 	//secret door
-	float secretdoortranslation = 0;
-	bool secretdooropen;
-	bool secretdoorint ;
-	bool lockeddoortext;
+	float f_secretdoortranslation = 0;
+	bool b_secretdooropen;
+	bool b_secretdoorint ;
+	bool b_lockeddoortext;
 	//Pillow
-	float pillowtranslation = 0;
-	bool pillowint;
-	bool pillowmoved = false;
+	float f_pillowtranslation = 0;
+	bool b_pillowint;
+	bool b_pillowmoved = false;
 	//door1
-	float RotateDoor1=0;
-	bool door1open;
-	bool doorint ;
+	float f_RotateDoor1=0;
+	bool b_door1open;
+	bool b_doorint ;
 	//key1
-	bool key1int;
-	bool havekey1 = false;
-	bool collectionkey1 = false;
+	bool b_key1int;
+	bool b_havekey1 = false;
+	bool b_collectionkey1 = false;
 	//key2
-	bool key2int;
-	bool havekey2 = false;
+	bool b_key2int;
+	bool b_havekey2 = false;
 	//key3
-	bool havekey3 = false;
+	bool b_havekey3 = false;
 	//Patient
-	bool patientint;
-	bool patienthint;
-	bool havepatient = false;
+	bool b_patientint;
+	bool b_patienthint;
+	bool b_havepatient = false;
 	//safe
 	float rotatesafedoor;
-	bool safeint = false;
-	bool safeopen = false;
-	bool safecracking = false;
-	bool codecracked = false;
-	bool wrongcode;
+	bool b_safeint = false;
+	bool b_safeopen = false;
+	bool b_safecracking = false;
+	bool b_codecracked = false;
+	bool b_wrongcode;
 	//Promtp on screen
 	bool interaction;
 	bool interactioncomplete = false;
 	bool paintingint;
 	//codepress
-	bool eight = false;
-	bool   six = false;
-	bool   one = false;
-	bool   two = false;
-	bool other = false;
+	bool b_eight = false;
+	bool   b_six = false;
+	bool   b_one = false;
+	bool   b_two = false;
+	bool b_other = false;
 	//final door
-	bool finaldoorint;
-	bool doorunlocked = false;
+	bool b_finaldoorint;
+	bool b_doorunlocked = false;
 
-	bool showIntro = true; // Raphael Added
+	bool b_showIntro = true; // Raphael Added
 	double score = 1.0; // Raphael Added
 
 	enum GEOMETRY_TYPE
@@ -211,7 +215,12 @@ private:
 		GEO_START, // Raphael Added
 		GEO_FRAME,
 		GEO_TIME,
+		GEO_Centre,//sihan added
 		GEO_NOTE,
+
+		GEO_PAUSE,
+		GEO_PAUSESELECT,
+
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
@@ -262,6 +271,7 @@ private:
 	ObjectBox* Obj[NUM_OBJ];
 
 	static Camera2 camera;
+	int i_Selector;
 
 	Light light[2];
 

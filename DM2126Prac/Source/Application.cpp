@@ -15,11 +15,15 @@
 #include "TutorialPuzzleRoom.h"
 #include "TutorialScene2.h"
 #include "TutorialRacing.h"
+#include "HospitalCutScene.h"
 
 #include "Sound.h"
 #include "MainMenu.h"
 #include "WinScreen.h"
 #include "LoseScreen.h"
+#include "Cutscene.h"
+
+#include "Sound.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -121,7 +125,6 @@ int Application::SetSceneNumber(int number)
 
 void Application::Run()
 {
-
 	Scene *scene;
 	//Main Loop
 	if (GetSceneNumber()==1)
@@ -153,7 +156,6 @@ void Application::Run()
 	else if (GetSceneNumber() == 7)	//Win screen
 	{
 		scene = new WinScene();
-		//glfwSetCursorPosCallback(m_window, PuzzleRoom::mouse_callback);// when ever the cursor moves, this function will be called
 	}
 	else if (GetSceneNumber() == 8)	//Lose screen
 	{
@@ -164,10 +166,10 @@ void Application::Run()
 		scene = new Leaderboard();	
 	}
 	else // change back to PuzzleRoom when pushing 
-	{
-		scene = new RaceScene();
-		//glfwSetCursorPosCallback(m_window, Scene2::mouse_callback);// when ever the cursor moves, this function will be called
-
+	{		
+		scene = new MainMenuScene();
+		//scene = new RaceScene();
+		//scene = new HospitalCutScene();
 	}
 	
 	//Main menu scene = 0 no cam

@@ -119,6 +119,7 @@ private:
 
 	//pausemenu
 	bool b_pause;
+	double d_BounceTime;
 
 	enum GEOMETRY_TYPE
 	{
@@ -141,6 +142,7 @@ private:
 		GEO_SPEEDMETER,
 		GEO_TIME,
 		GEO_PAUSE,
+		GEO_PAUSESELECT,
 
 		GEO_CAR1,
 		GEO_CAR2,
@@ -218,6 +220,7 @@ private:
 
 	Camera3 camera;
 	float f_TPCRotateBy;
+	int i_Selector;
 
 	Light light[1];
 
