@@ -291,10 +291,6 @@ void RaceScene::Update(double dt)
 
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{
-		ofstream saveFile("loli.txt", fstream::app);
-		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		//saveFile << 9 << endl;
-
 		music::player.stopSound();
 
 		timerunout = true;
