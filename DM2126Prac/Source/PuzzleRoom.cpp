@@ -375,7 +375,7 @@ void PuzzleRoom::Init() //defines what shader to use
 
 	// User Interface -> Raphael Added
 
-	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
+	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 40, 30, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage1.tga"); 
 
 	meshList[GEO_FRAME] = MeshBuilder::GenerateQuad("Key1", Color(1, 1, 1),14, 5, 0);
@@ -613,6 +613,7 @@ void PuzzleRoom::Update(double dt)
 		}
 		if (b_draweropen == false && f_drawertranslation <= 1.5 && interactioncomplete == true)
 		{
+			b_draweropen = true;
 			f_drawertranslation += 0.5 * dt;
 			if (f_drawertranslation >=0.5)
 			{
