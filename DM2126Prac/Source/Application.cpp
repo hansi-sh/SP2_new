@@ -21,6 +21,7 @@
 #include "MainMenu.h"
 #include "WinScreen.h"
 #include "LoseScreen.h"
+#include "Cutscene.h"
 
 #include "Sound.h"
 

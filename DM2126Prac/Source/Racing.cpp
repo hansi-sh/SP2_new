@@ -23,7 +23,6 @@ RaceScene::~RaceScene()
 
 void RaceScene::Init() //defines what shader to use
 {
-
 	b_movement = true;
 	//Background color
 	glClearColor(0.0f, 0.14901960784f, 0.3f, 0.0f); //4 parameters (RGBA)
@@ -40,7 +39,7 @@ void RaceScene::Init() //defines what shader to use
 
 	//<---Sound--->
 	music::player.init();
-	music::player.setSoundVol(0.2);
+	music::player.setSoundVol(0.6);
 	music::player.playSound("Sound//Scene3//RaceBGM.wav", true);
 
 	// For pop up screen
@@ -265,14 +264,14 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
-	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
 
 	meshList[GEO_START] = MeshBuilder::GenerateQuad("Stage", Color(0, 0, 1), 25, 20, 0);
 	meshList[GEO_START]->textureID = LoadTGA("Image//Stage3.tga");
 
 	if (Application::timerh == 0)
 	{
-		RaceTimer.v_SetRaceSceneTime(60);
+		RaceTimer.v_SetRaceSceneTime(35);
 	}
 	else
 	{
@@ -292,10 +291,6 @@ void RaceScene::Update(double dt)
 
 	if (RaceTimer.d_GetRaceSceneTime() <= 0)
 	{
-		ofstream saveFile("loli.txt", fstream::app);
-		saveFile << RaceTimer.d_GetRaceSceneTime() << endl;
-		//saveFile << 9 << endl;
-
 		music::player.stopSound();
 
 		timerunout = true;
@@ -704,6 +699,8 @@ void RaceScene::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime <0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (b_pause)
 			b_pause = false;
 		else
@@ -716,6 +713,8 @@ void RaceScene::Update(double dt)
 		b_movement = false;
 		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector > 0)
 				--i_Selector;
 			else
@@ -725,6 +724,8 @@ void RaceScene::Update(double dt)
 		}
 		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if(i_Selector < 2)
 				++i_Selector;
 			else
@@ -735,16 +736,20 @@ void RaceScene::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector == 0)	//Resume
 				b_pause = false;
 			else if (i_Selector == 1)	//Restart
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(3);
 				app.Run();
 			}
 			else if (i_Selector == 2)	//Main menu
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(0);
 				app.Run();
@@ -933,11 +938,11 @@ void RaceScene::Render()
 
 			if (i_Selector == 0)
 			{
-				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29.5);
 			}
 			else if (i_Selector == 1)
 			{
-				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.5);
+				DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.8);
 			}
 			else
 			{
@@ -946,11 +951,11 @@ void RaceScene::Render()
 
 
 			modelStack.PushMatrix();
-			RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29.5);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();
-			RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.3);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.7);
 			modelStack.PopMatrix();
 
 			modelStack.PushMatrix();

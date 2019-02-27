@@ -38,6 +38,9 @@
     <ClCompile Include="Source\HospitalCutScene.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Cutscene.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -153,6 +156,9 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Source\HospitalCutScene.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Cutscene.h">
       <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>

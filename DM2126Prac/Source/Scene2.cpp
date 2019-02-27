@@ -218,8 +218,7 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 
 	meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateOBJ("FirstAidKit", "OBJ//FirstAidKit.obj");
-	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
-	// Obj[OBJ_FIRSTAIDKIT] = new ObjectBox(Vector3(20, 20, -5), 3, 1, 3);
+	meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");;
 
 	meshList[GEO_CABINET] = MeshBuilder::GenerateOBJ("Cabinet", "OBJ//Cabinet.obj"); // main cabinet
 	meshList[GEO_CABINET]->textureID = LoadTGA("Image//Cabinet.tga"); 
@@ -301,7 +300,8 @@ void Scene2::Init() //defines what shader to use
 	meshList[GEO_PAUSE] = MeshBuilder::GenerateQuad("Pause", Color(0, 0, 0), 30, 22.5f, 0);
 	meshList[GEO_PAUSE]->textureID = LoadTGA("Image//pause.tga");
 
-	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.6f, 3.5f, 0.0f);
+	meshList[GEO_PAUSESELECT] = MeshBuilder::GenerateQuad("selectquad", Color(0.86, 0.86, 0.86), 8.9f, 3.5f, 0.0f);
+
 }
 
 
@@ -312,6 +312,7 @@ void Scene2::Update(double dt)
 	// Timer-> aorion added
 	if (AmbulanceTimer->d_GetAmbulanceTimer() <= 0)
 	{
+		music::player.stopSound();
 		b_timerunout = true;
 		Application app;
 		app.SetSceneNumber(8);
@@ -386,7 +387,7 @@ void Scene2::Update(double dt)
 			b_notification1 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("defi", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_DEFIBRILLATOR] = MeshBuilder::GenerateQuad("Defi", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_DEFIBRILLATOR]->textureID = LoadTGA("Image//Defibrillator2.tga");
 			uploadItem(8);
 
@@ -413,7 +414,7 @@ void Scene2::Update(double dt)
 			b_notification2 = true;
 
 			b_itemcollect = true;
-			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("FAK", Color(1, 1, 1), 1, 1, 1);
+			meshList[GEO_FIRSTAIDKIT] = MeshBuilder::GenerateQuad("fak", Color(1, 1, 1), 1, 1, 1);
 			meshList[GEO_FIRSTAIDKIT]->textureID = LoadTGA("Image//FirstAidKit.tga");
 			uploadItem(9);
 
@@ -503,6 +504,8 @@ void Scene2::Update(double dt)
 	}
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
 	{
+		music::player.setSoundVol(0.8);
+		music::player.playSound("Sound//Other//Beep.wav");
 		if (b_pause)
 			b_pause = false;
 		else
@@ -514,6 +517,8 @@ void Scene2::Update(double dt)
 	{
 		if (Application::IsKeyPressed(VK_UP) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector > 0)
 				--i_Selector;
 			else
@@ -523,6 +528,8 @@ void Scene2::Update(double dt)
 		}
 		else if (Application::IsKeyPressed(VK_DOWN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector < 2)
 				++i_Selector;
 			else
@@ -533,16 +540,20 @@ void Scene2::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_RETURN) && d_BounceTime < 0.0f)
 		{
+			music::player.setSoundVol(0.8);
+			music::player.playSound("Sound//Other//Beep.wav");
 			if (i_Selector == 0)	//Resume
 				b_pause = false;
 			else if (i_Selector == 1)	//Restart
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(2);
 				app.Run();
 			}
 			else if (i_Selector == 2)	//Main menu
 			{
+				music::player.stopSound();
 				Application app;
 				app.SetSceneNumber(0);
 				app.Run();
@@ -638,7 +649,6 @@ void Scene2::Render()
 		modelStack.PopMatrix();
 	}
 
-
 	modelStack.PushMatrix();
 	modelStack.Translate(-18, 0, -15);
 	modelStack.Scale(2, 2, 2);
@@ -713,7 +723,7 @@ void Scene2::Render()
 		DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("First Aid Kit added to"), Color(0, 0, 1), 2, 20, 35);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Inventory"), Color(0, 0, 1), 2, 33, 30);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("[M] to close"), Color(0, 0, 1), 2, 29, 25);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("[N] to close"), Color(0, 0, 1), 2, 29, 25);
 		modelStack.PopMatrix();
 	}
 
@@ -766,11 +776,11 @@ void Scene2::Render()
 
 		if (i_Selector == 0)
 		{
-			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29);
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 29.5);
 		}
 		else if (i_Selector == 1)
 		{
-			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.5);
+			DrawHUD(meshList[GEO_PAUSESELECT], Color(0, 0, 0), false, 1, 40, 21.8);
 		}
 		else
 		{
@@ -779,18 +789,17 @@ void Scene2::Render()
 
 
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Resume", Color(0, 0, 0), 2, 36.0f, 29.5);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
-		RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.3);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Restart", Color(0, 0, 0), 2, 35.0f, 21.7);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		RenderTextOnScreen(meshList[GEO_TEXT], "MainMenu", Color(0, 0, 0), 2, 33.8f, 13.9);
 		modelStack.PopMatrix();
 	}
-
 }
 
 void Scene2::RenderMission() // has transparent box now
@@ -837,7 +846,7 @@ void Scene2::EndMission()
 			DrawHUD(meshList[GEO_FRAME], Color(0, 0, 1), false, 1, 40, 30);
 			RenderTextOnScreen(meshList[GEO_TEXT], ("MISSION FAIL"), Color(0, 0, 1), 2, 30, 30);
 			modelStack.PopMatrix();
-			Application::timerh = 30;
+			Application::timerh = 35;
 			b_nextStage = true;
 		}
 		
@@ -867,8 +876,6 @@ void Scene2::EndMission()
 			b_nextStage = true;
 		}
 	}
-
-
 }
 
 void Scene2::RenderMesh(Mesh *mesh, bool enableLight)

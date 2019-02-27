@@ -95,6 +95,10 @@ private:
 	Vector3 currentCamPos;
 	Vector3 currentCamTarget;
 	
+	//pausemenu
+	bool b_pause;
+	double d_BounceTime;
+
 	//Light
 	bool b_switchoneint;
 	bool b_lightoneon;
@@ -213,6 +217,10 @@ private:
 		GEO_TIME,
 		GEO_Centre,//sihan added
 		GEO_NOTE,
+
+		GEO_PAUSE,
+		GEO_PAUSESELECT,
+
 		NUM_GEOMETRY,
 	};
 	enum OBJECT_TYPE
@@ -263,6 +271,7 @@ private:
 	ObjectBox* Obj[NUM_OBJ];
 
 	static Camera2 camera;
+	int i_Selector;
 
 	Light light[2];
 
