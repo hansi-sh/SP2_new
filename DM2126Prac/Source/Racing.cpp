@@ -218,6 +218,7 @@ void RaceScene::Init() //defines what shader to use
 	meshList[GEO_Pedestrains3]->textureID = LoadTGA("Image//oneup.tga");
 	meshList[GEO_AMBULANCE] = MeshBuilder::GenerateOBJ("Ambulance", "OBJ//ambulance.obj");
 	meshList[GEO_AMBULANCE]->textureID = LoadTGA("Image//ambulance.tga");
+
 	Obj[OBJ_PLAYER] = new ObjectBox(Vector3(f_TranslateBodyX, f_TranslateBodyY, f_TranslateBodyZ), 9, 14, 12);//For Player
 
 	meshList[GEO_SPEEDMETER] = MeshBuilder::GenerateQuad("speed", Color(0, 0, 1), 8, 8, 0);
@@ -314,7 +315,7 @@ void RaceScene::Update(double dt)
 		music::player.stopSound();
 
 		Application app;
-		app.SetSceneNumber(7);
+		app.SetSceneNumber(10);
 		app.Run();
 	}
 	if (b_movement == true)

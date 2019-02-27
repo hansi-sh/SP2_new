@@ -164,11 +164,14 @@ void Application::Run()
 	{
 		scene = new Leaderboard();	
 	}
+	else if ((GetSceneNumber() == 10))//cutscene
+	{
+		scene = new HospitalCutScene();
+	}
 	else // change back to PuzzleRoom when pushing 
 	{		
 		scene = new MainMenuScene();
 		//scene = new RaceScene();
-		//scene = new HospitalCutScene();
 	}
 	
 	//Main menu scene = 0 no cam
