@@ -62,9 +62,6 @@ private:
 	unsigned m_parameters[U_TOTAL];
 	float f_LSPEED;
 	float f_fps;
-	Vector3 currentCamPos;
-	Vector3 currentCamTarget;
-	bool b_getCurrentCam;
 
 	bool b_collide;
 	bool b_AIcollide;
