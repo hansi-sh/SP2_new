@@ -189,6 +189,7 @@ private:
 		GEO_LLEG,
 		GEO_CROTCH,
 		GEO_START, // Raphael Added
+		GEO_START2,
 		NUM_GEOMETRY,
 	};
 	
