@@ -701,34 +701,7 @@ void PuzzleRoom::Update(double dt)
 			b_lockeddoortext = true;	
 		}
 	}
-	if (Application::IsKeyPressed('5'))
-	{
 
-	}
-	if (Application::IsKeyPressed('3'))
-	{
-
-	}
-	if (Application::IsKeyPressed('4'))
-	{
-
-	}
-	/*if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}*/
 	
 
 	if (Application::IsKeyPressed('P'))

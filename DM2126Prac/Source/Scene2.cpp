@@ -356,22 +356,6 @@ void Scene2::Update(double dt)
 		app.SetSceneNumber(3); // go to RaceScene when done here -> double check isit 4
 		app.Run();
 	}
-	if (Application::IsKeyPressed('6'))
-	{
-		glEnable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('7'))
-	{
-		glDisable(GL_CULL_FACE);
-	}
-	if (Application::IsKeyPressed('8'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	}
-	if (Application::IsKeyPressed('9'))
-	{
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
 
 	if (Application::IsKeyPressed('P'))
 		b_viewStats = true;
