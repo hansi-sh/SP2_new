@@ -502,7 +502,6 @@ void Scene2::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], light[0].type);
 		//to do: switch light type to SPOT and pass the information to shader
 	}
-
 	if (Application::IsKeyPressed(VK_ESCAPE) && d_BounceTime < 0.0f)
 	{
 		music::player.setSoundVol(0.8);
@@ -567,7 +566,6 @@ void Scene2::Update(double dt)
 		camera.Update(dt, false);
 	else
 		camera.Update(dt, true);
-
 }
 
 void Scene2::Render()

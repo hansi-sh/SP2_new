@@ -53,10 +53,27 @@ public:
 
 private:
 	//player
+	bool b_parking;
+	bool b_out;
 	float f_playerX;
 	float f_playerY;
 	float f_playerZ;
+	float f_playerX2;
+	float f_playerY2;
+	float f_playerZ2;
 
+	//bed
+	float f_bedX;
+	float f_bedY;
+	float f_bedZ;
+
+	//paient
+	float f_paientX;
+	float f_paientY;
+	float f_paientZ;
+
+	//delay
+	double d_delayed;
 
 	void RenderButton(int, int);
 	unsigned m_vertexArrayID;
@@ -68,14 +85,6 @@ private:
 	Vector3 currentCamTarget;
 	bool b_getCurrentCam;
 
-	bool b_collide;
-
-	float f_rotationangle;
-	float f_updatedangle;
-	float f_prevBodyX;
-	float f_prevBodyZ;
-	float f_prevAngle;
-
 	void RenderSkybox();
 
 	bool b_viewStats;
@@ -85,36 +94,25 @@ private:
 	float f_TranslateBodyX;
 	float f_TranslateBodyY;
 	float f_TranslateBodyZ;
-	Physics PlayerCar;
-	Vector3 V_UpdatedPlayerPos;
-	bool b_StepAccelerator;
-	bool b_StepBrakes;
-	bool b_Steer;
-	float f_RotateAmt;
-	float f_UpdatedAngle;
-	int i_CollidedWith;
-	int i_CollidedWith2;
 
 	float f_HeightAIP;	//AI + players car height
 
 	enum GEOMETRY_TYPE
 	{
 		GEO_LIGHTBALL,
-		//GEO_CUBE,
-		GEO_AICUBE,
-		GEO_Pedestrains1,
-		GEO_Pedestrains2,
-		GEO_Pedestrains3,
-		/*GEO_USB,
-		GEO_YELLOWBUTTONCUBOID,
-		GEO_BLUEBUTTONCIRCLE,
-		GEO_BLUEBUTTONCYLINDER,
-		GEO_GREENBUTTONCIRCLE,
-		GEO_GREENBUTTONCYLINDER,
-		GEO_REDBUTTONCIRCLE,
-		GEO_REDBUTTONCYLINDER,
-		GEO_TRIPRISM,*/
-		GEO_AXES,
+		GEO_NURSE,
+		GEO_HAIR, // patient
+		GEO_FACE,
+		GEO_BODY,
+		GEO_RARM,
+		GEO_LARM,
+
+		GEO_RHAND,
+		GEO_LHAND,
+		GEO_RLEG,
+		GEO_LLEG,
+		GEO_CROTCH,
+		GEO_STRETCHER,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -126,16 +124,6 @@ private:
 		GEO_HOSPITAL,
 		GEO_RACETRACK,
 		GEO_AMBULANCE,
-
-		GEO_CAR1,
-		GEO_CAR2,
-		GEO_CAR3,
-		GEO_START,
-		GEO_START2,
-
-		//GEO_BOX1,
-		//GEO_BOX2,
-
 		GEO_TEXT,
 		NUM_GEOMETRY,
 	};
